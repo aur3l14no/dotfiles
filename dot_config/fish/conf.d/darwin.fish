@@ -5,3 +5,5 @@ alias xattr-q 'xattr -d com.apple.quarantine'
 alias xattr-c 'xattr -cr'
 
 fish_add_path --move --prepend '/opt/homebrew/bin'
+
+alias tailscale '/Applications/Tailscale.app/Contents/MacOS/Tailscale'

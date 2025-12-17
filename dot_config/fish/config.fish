@@ -161,6 +161,7 @@ if status is-interactive
     type -q starship; and starship init fish | source
     type -q direnv; and direnv hook fish | source
     type -q atuin; and atuin init fish --disable-up-arrow | source
+    type -q mise; and mise activate fish | source
 end
 
 # Local overrides (not tracked)
