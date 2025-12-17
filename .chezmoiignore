@@ -1,0 +1,11 @@
+# mac-only configs
+{{- if ne .chezmoi.os "darwin" }}
+dot_hammerspoon
+dot_config/karabiner
+dot_config/fish/config.d/darwin.fish
+{{- end }}
+
+# waybar only on opted-in linux hosts
+{{- if or (ne .chezmoi.os "linux") (not .chezmoi.data.waybar) }}
+dot_config/waybar
+{{- end }}

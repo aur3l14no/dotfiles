@@ -1,0 +1,47 @@
+{{- $fish := lookPath "fish" -}}
+
+set -g default-terminal "screen-256color"
+set -g base-index 1
+setw -g pane-base-index 1
+
+set-option -g default-shell "{{ if $fish }}{{ $fish }}{{ else }}/bin/sh{{ end }}"
+
+set -g status-keys vi
+set -g mode-keys vi
+
+# rebind main key: C-a
+unbind C-b
+set -g prefix C-a
+
+# C-a C-a -> send-prefix (for nested tmux over ssh)
+unbind -T prefix C-a
+bind   -T prefix C-a send-prefix
+
+set -g mouse on
+set -g focus-events off
+setw -g aggressive-resize off
+setw -g clock-mode-style 12
+set -s escape-time 1
+set -g history-limit 2000
+
+set -g status-position top
+set -g set-clipboard on
+set -g status-right ""
+set -g renumber-windows on
+set -ga terminal-overrides ",alacritty:Tc"
+
+bind h select-pane -L
+bind j select-pane -D
+bind k select-pane -U
+bind l select-pane -R
+
+bind X kill-pane
+
+bind "|"  split-window -h -c "#{pane_current_path}"
+bind "\\" split-window -fh -c "#{pane_current_path}"
+bind "-"  split-window -v -c "#{pane_current_path}"
+bind "_"  split-window -fv -c "#{pane_current_path}"
+bind "%"  split-window -h -c "#{pane_current_path}"
+bind "\""  split-window -v -c "#{pane_current_path}"
+
+bind-key -T copy-mode-vi y send-keys -X copy-selection -x

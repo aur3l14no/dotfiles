@@ -1,0 +1,67 @@
+[env]
+TERM = "alacritty"
+
+[terminal.shell]
+program = "{{ lookPath "tmux" }}"
+args = ["new-session", "-A", "-s", "main"]
+
+[font]
+size = 14.0
+
+[font.normal]
+family = "JetBrainsMono Nerd Font"
+
+[colors.primary]
+background = '#fdf6e3'
+foreground = '#586e75'
+
+[colors.normal]
+black = '#073642'
+red = '#dc322f'
+green = '#859900'
+yellow = '#b58900'
+blue = '#268bd2'
+magenta = '#d33682'
+cyan = '#2aa198'
+white = '#6e7781'   # override solarized white for a bit more contrast
+
+[colors.bright]
+black = '#002b36'
+red = '#cb4b16'
+green = '#586e75'
+yellow = '#657b83'
+blue = '#839496'
+magenta = '#6c71c4'
+cyan = '#93a1a1'
+white = '#fdf6e3'
+
+[window]
+decorations = "Buttonless"
+option_as_alt = "Both"
+
+[keyboard]
+bindings = [
+  { key = "t", mods = "Command", chars = "\u0001\u0063" },        # Ctrl-a c
+  { key = "d", mods = "Command", chars = "\u0001\u0022" },        # Ctrl-a "
+  { key = "d", mods = "Command|Shift", chars = "\u0001\u0025" },  # Ctrl-a %
+  { key = "w", mods = "Command", chars = "\u0001\u0058" },        # Ctrl-a X
+  { key = "1", mods = "Command", chars = "\u0001\u0031" },
+  { key = "2", mods = "Command", chars = "\u0001\u0032" },
+  { key = "3", mods = "Command", chars = "\u0001\u0033" },
+  { key = "4", mods = "Command", chars = "\u0001\u0034" },
+  { key = "5", mods = "Command", chars = "\u0001\u0035" },
+  { key = "6", mods = "Command", chars = "\u0001\u0036" },
+  { key = "7", mods = "Command", chars = "\u0001\u0037" },
+  { key = "8", mods = "Command", chars = "\u0001\u0038" },
+  { key = "9", mods = "Command", chars = "\u0001\u0039" },
+  { key = "h", mods = "Command|Shift", chars = "\u0001\u0068" },  # Ctrl-a h
+  { key = "j", mods = "Command|Shift", chars = "\u0001\u006a" },  # Ctrl-a j
+  { key = "k", mods = "Command|Shift", chars = "\u0001\u006b" },  # Ctrl-a k
+  { key = "l", mods = "Command|Shift", chars = "\u0001\u006c" },  # Ctrl-a l
+  { key = "Left", mods = "Command", chars = "\u0001\u0068" },     # Ctrl-a h
+  { key = "Down", mods = "Command", chars = "\u0001\u006a" },     # Ctrl-a j
+  { key = "Up", mods = "Command", chars = "\u0001\u006b" },       # Ctrl-a k
+  { key = "Right", mods = "Command", chars = "\u0001\u006c" },    # Ctrl-a l
+  { key = "PageUp", mods = "Command", chars = "\u0001\u007b" },   # Ctrl-a {
+  { key = "PageDown", mods = "Command", chars = "\u0001\u007d" }, # Ctrl-a }
+]

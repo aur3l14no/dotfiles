@@ -1,0 +1,102 @@
+/* From https://github.com/NickCao/flakes/blob/099908bb373cdbaf414fa8ada5229c6f890e75f4/nixos/mainframe/waybar.css */
+* {
+    font-family: FontAwesome, Roboto, Helvetica, Arial, sans-serif;
+    font-weight: bold;
+    font-size: 12px;
+    min-height: 0;
+    /* Avoid rounded borders under each button name */
+    border: none;
+    border-radius: 0;
+}
+
+window#waybar {
+    color: #cad3f5;
+    background-color: #24273a;
+    padding: 0;
+    /* border-radius: 10px; */
+}
+
+#custom-nixos {
+    color: #cad3f5;
+    background-color: #24273a;
+    /* border-radius: 10px; */
+    padding-left: 15px;
+    padding-right: 18px;
+}
+
+#custom-separator {
+    color: #cad3f5;
+    margin: 0 2px;
+}
+
+/* button css from https://github.com/Alexays/Waybar/blob/07eabc5328dc5056f667a93f58549314d10f007b/resources/style.css#L37C1-L68C2 */
+button {
+    /* Use box-shadow instead of border so the text isn't offset */
+    box-shadow: inset 0 -3px transparent;
+}
+
+/* https://github.com/Alexays/Waybar/wiki/FAQ#the-workspace-buttons-have-a-strange-hover-effect */
+button:hover {
+    background: inherit;
+    box-shadow: inset 0 -3px #ffffff;
+}
+
+#workspaces button {
+    padding: 0 5px;
+    background-color: transparent;
+    color: #ffffff;
+}
+
+#workspaces button:hover {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+#workspaces button.focused {
+    background-color: #64727D;
+    box-shadow: inset 0 -3px #ffffff;
+}
+
+#workspaces button.urgent {
+    background-color: #eb4d4b;
+}
+
+#clock,
+#battery,
+#cpu,
+#memory,
+#disk,
+#temperature,
+#backlight,
+#network,
+#pulseaudio,
+#wireplumber,
+#custom-media,
+#tray,
+#mode,
+#idle_inhibitor,
+#scratchpad,
+#mpd {
+    padding: 0 3px;
+    margin: 0 3px;
+    color: #ffffff;
+}
+
+#clock {
+    color: #cad3f5;
+}
+
+#battery {
+    color: #cad3f5;
+}
+
+#battery.warning {
+    color: #eed49f;
+}
+
+#battery.critical {
+    color: #ed8796;
+}
+
+#battery.charging {
+    color: #a6da95;
+}
