@@ -1,36 +1,36 @@
 require("module-config")
 
 presetLayout = {
-  ['fullscreen']   = hs.geometry.unitrect(0      , 0    , 1    , 1   ),
-  ['left']         = hs.geometry.unitrect(0      , 0    , 0.55 , 1   ),
-  ['right']        = hs.geometry.unitrect(0.55   , 0    , 0.45 , 1   ),
-  ['center']       = hs.geometry.unitrect(0.25   , 0.15 , 0.5  , 0.7 ),
-  ['center-large'] = hs.geometry.unitrect(0.15   , 0.1  , 0.7  , 0.8 ),
-  ['left-top']     = hs.geometry.unitrect(0      , 0    , 0.55 , 0.55),
-  ['left-bottom']  = hs.geometry.unitrect(0      , 0.45 , 0.55 , 0.55),
-  ['right-top']    = hs.geometry.unitrect(0.55   , 0    , 0.45 , 0.55),
-  ['right-bottom'] = hs.geometry.unitrect(0.55   , 0.45 , 0.45 , 0.55),
-  ['corner']       = hs.geometry.unitrect(0.95   , 0.95 , 0.05 , 0.05),
-}
-
-savedLayouts = {
-  ['1'] = {'User-1', {}, {}},
-  ['2'] = {'User-2', {}, {}},
-  ['3'] = {'PDF + Emacs', {
-             {'com.readdle.PDFExpert-Mac', nil, nil, presetLayout['left'], nil, nil},
-             {'org.gnu.Emacs', nil, nil, presetLayout['right'], nil, nil},
-  }},
-  ['4'] = {'Firefox + Shell + Finder', {
-             {'org.mozilla.firefox', nil, nil, presetLayout['left'], nil, nil},
-             {'com.googlecode.iterm2', nil, nil, presetLayout['right-top'], nil, nil},
-             {'com.apple.finder', nil, nil, presetLayout['right-bottom'], nil, nil},
-  }},
-  ['5'] = {'Music', {
-             {'com.netease.163music', nil, nil, presetLayout['center-large'], nil, nil},
-  }},
+  ['fullscreen']   = hs.geometry.unitrect(0, 0, 1, 1),
+  ['left']         = hs.geometry.unitrect(0, 0, 0.55, 1),
+  ['right']        = hs.geometry.unitrect(0.55, 0, 0.45, 1),
+  ['center']       = hs.geometry.unitrect(0.25, 0.15, 0.5, 0.7),
+  ['center-large'] = hs.geometry.unitrect(0.15, 0.1, 0.7, 0.8),
+  ['left-top']     = hs.geometry.unitrect(0, 0, 0.55, 0.55),
+  ['left-bottom']  = hs.geometry.unitrect(0, 0.45, 0.55, 0.55),
+  ['right-top']    = hs.geometry.unitrect(0.55, 0, 0.45, 0.55),
+  ['right-bottom'] = hs.geometry.unitrect(0.55, 0.45, 0.45, 0.55),
+  ['corner']       = hs.geometry.unitrect(0.95, 0.95, 0.05, 0.05),
 }
 
 -- Layout switching (unstable due to hs.window.filter)
+
+-- savedLayouts = {
+--   ['1'] = {'User-1', {}, {}},
+--   ['2'] = {'User-2', {}, {}},
+--   ['3'] = {'PDF + Emacs', {
+--              {'com.readdle.PDFExpert-Mac', nil, nil, presetLayout['left'], nil, nil},
+--              {'org.gnu.Emacs', nil, nil, presetLayout['right'], nil, nil},
+--   }},
+--   ['4'] = {'Firefox + Shell + Finder', {
+--              {'org.mozilla.firefox', nil, nil, presetLayout['left'], nil, nil},
+--              {'com.googlecode.iterm2', nil, nil, presetLayout['right-top'], nil, nil},
+--              {'com.apple.finder', nil, nil, presetLayout['right-bottom'], nil, nil},
+--   }},
+--   ['5'] = {'Music', {
+--              {'com.netease.163music', nil, nil, presetLayout['center-large'], nil, nil},
+--   }},
+-- }
 
 -- function saveCurrentLayout(dest)
 --   local wins = hs.window.filter.default:getWindows()

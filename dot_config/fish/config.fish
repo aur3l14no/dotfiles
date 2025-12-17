@@ -1,15 +1,18 @@
 # Quiet startup
 set -g fish_greeting
 
-# Path setup (Nix, system profiles, Homebrew on macOS, user bin)
-set -l __paths "$HOME/.nix-profile/bin" "/etc/profiles/per-user/$USER/bin" /run/current-system/sw/bin /run/wrappers/bin
+# Path setup
+set -l __paths
+# Nix
+set -a __paths /run/wrappers/bin /run/current-system/sw/bin "/etc/profiles/per-user/$USER/bin"
+# Language
+set -a __paths "$HOME/.cargo/bin" "$HOME/go/bin"
+# User
+set -a __paths "$HOME/.local/bin"
 for p in $__paths
     if test -d "$p"
         fish_add_path --move --prepend "$p"
     end
-end
-if test -d "$HOME/.local/bin"
-    fish_add_path --append "$HOME/.local/bin"
 end
 
 # Editor/pager
