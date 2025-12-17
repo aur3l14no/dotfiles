@@ -1,7 +1,7 @@
 README.md
 
 # mac-only configs
-{{ if ne .chezmoi.os "darwin" -}}
+{{- if ne .chezmoi.os "darwin" }}
 .hammerspoon
 .config/karabiner
 .config/fish/conf.d/darwin.fish
