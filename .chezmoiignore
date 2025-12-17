@@ -1,3 +1,5 @@
+README.md
+
 # mac-only configs
 {{- if ne .chezmoi.os "darwin" }}
 dot_hammerspoon
