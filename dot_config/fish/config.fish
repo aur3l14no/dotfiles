@@ -3,17 +3,14 @@ set -g fish_greeting
 
 # Path setup
 set -l __paths
-# Nix
-set -a __paths /run/wrappers/bin /run/current-system/sw/bin "/etc/profiles/per-user/$USER/bin"
-# Language
-set -a __paths "$HOME/.cargo/bin" "$HOME/go/bin"
 # User
 set -a __paths "$HOME/.local/bin"
-for p in $__paths
-    if test -d "$p"
-        fish_add_path --move --prepend "$p"
-    end
-end
+# Language
+set -a __paths "$HOME/.cargo/bin" "$HOME/go/bin"
+# Nix
+set -a __paths "/etc/profiles/per-user/$USER/bin" /run/wrappers/bin /run/current-system/sw/bin
+
+fish_add_path --move --prepend --global $__paths
 
 # Editor/pager
 set -gx EDITOR nvim
