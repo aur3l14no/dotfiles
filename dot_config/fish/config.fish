@@ -153,12 +153,12 @@ bind \eh __fish_help
 
 # Optional integrations when available
 if status is-interactive
+    type -q mise; and mise activate fish | source
     type -q fzf; and fzf --fish | source
     type -q zoxide; and zoxide init fish | source
     type -q starship; and starship init fish | source
     type -q direnv; and direnv hook fish | source
     type -q atuin; and atuin init fish --disable-up-arrow | source
-    type -q mise; and mise activate fish | source
 end
 
 # Local overrides (not tracked)
