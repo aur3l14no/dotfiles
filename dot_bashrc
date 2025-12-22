@@ -1,3 +1,5 @@
+source /etc/profiles/per-user/$USER/etc/profile.d/hm-session-vars.sh
+
 # Auto-attach to tmux for SSH interactive shells
 case $- in
     *i*) ;;
