@@ -27,10 +27,18 @@ set -g history-limit 2000
 set -g status-position top
 set -g set-clipboard on
 set -g status-right ""
-setw -g window-status-format         '#I:#{=|20|…:#{pane_title}} #F'
-setw -g window-status-current-format '#I:#{=|20|…:#{pane_title}} #F'
 set -g renumber-windows on
 set -ga terminal-overrides ",alacritty:Tc"
+
+setw -g window-status-format         ' #I:#{=|20|…:#{pane_title}} #F '
+setw -g window-status-current-format ' #I:#{=|20|…:#{pane_title}} #F '
+
+set -g status-style "bg=colour254,fg=colour241"
+setw -g window-status-style "bg=colour254,fg=colour241"
+setw -g window-status-current-style "bg=colour15,fg=colour241,bold"
+setw -g window-status-last-style "bg=colour231,fg=colour241"
+setw -g window-status-activity-style "bg=colour254,fg=colour166"   # orange
+setw -g window-status-bell-style     "bg=colour254,fg=colour160,bold" # red
 
 bind h select-pane -L
 bind j select-pane -D
