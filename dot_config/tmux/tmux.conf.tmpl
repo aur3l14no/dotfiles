@@ -27,6 +27,8 @@ set -g history-limit 2000
 set -g status-position top
 set -g set-clipboard on
 set -g status-right ""
+setw -g window-status-format         '#I:#{=|20|…:#{pane_title}} #F'
+setw -g window-status-current-format '#I:#{=|20|…:#{pane_title}} #F'
 set -g renumber-windows on
 set -ga terminal-overrides ",alacritty:Tc"
 
