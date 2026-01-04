@@ -1,0 +1,10 @@
+atuin
+direnv
+fd
+fzf
+lazygit
+neovim
+ripgrep
+starship
+yazi
+zoxide

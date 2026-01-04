@@ -1,4 +1,5 @@
 README.md
+mise-packages.txt
 
 # mac-only configs
 {{- if ne .chezmoi.os "darwin" }}

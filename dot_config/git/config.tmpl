@@ -1,12 +1,12 @@
-{{- if .git }}
+{{- with .git }}
 [user]
-{{- with .git.name }}
+{{- with .name }}
   name = {{ . }}
 {{- end }}
-{{- with .git.email }}
+{{- with .email }}
   email = {{ . }}
 {{- end }}
-{{- with .git.signingKey }}
+{{- with .signingKey }}
   signingKey = {{ . }}
 {{- end }}
 {{- end }}
@@ -35,6 +35,9 @@
   r = reset HEAD
   rs = restore --staged
 
+{{- with .git }}
+{{- with .signingKey }}
+
 [commit]
   gpgSign = true
 
@@ -43,6 +46,8 @@
 
 [gpg "ssh"]
   allowedSignersFile = ~/.ssh/allowed_signers
+{{- end }}
+{{- end }}
 
 [pull]
   rebase = true
@@ -64,3 +69,6 @@
   smudge = git-lfs smudge -- %f
   process = git-lfs filter-process
   required = true
+
+[include]
+  path = ~/.config/git/config.local
