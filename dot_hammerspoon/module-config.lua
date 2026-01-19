@@ -17,7 +17,7 @@ key2App = {
 	{ "c", "com.apple.iCal" },
 	{ "t", "com.electron.trilium-notes" },
 	{ "r", "com.apple.reminders" },
-	{ "o", "md.obsidian" },
+	-- { "o", "md.obsidian" },
 	{ "u", "com.apple.ScreenContinuity" },
 	-- { "p", "com.kangfenmao.CherryStudio" },
 	{ "[", "com.electron.lark" },
