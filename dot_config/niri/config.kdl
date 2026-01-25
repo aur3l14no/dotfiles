@@ -53,7 +53,7 @@ window-rule {
 }
 
 window-rule {
-    match at-startup=-true app-id=r#"^steam$"#
+    match at-startup=true app-id=r#"^steam$"#
     open-on-workspace "game"
     open-floating true
 }
