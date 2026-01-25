@@ -1,12 +1,12 @@
-{{- with .git }}
+{{- with (get . "git") }}
 [user]
-{{- with .name }}
+{{- with (get . "name") }}
   name = {{ . }}
 {{- end }}
-{{- with .email }}
+{{- with (get . "email") }}
   email = {{ . }}
 {{- end }}
-{{- with .signingKey }}
+{{- with (get . "signingKey") }}
   signingKey = {{ . }}
 {{- end }}
 {{- end }}
@@ -35,8 +35,8 @@
   r = reset HEAD
   rs = restore --staged
 
-{{- with .git }}
-{{- with .signingKey }}
+{{- with (get . "git") }}
+{{- with (get . "signingKey") }}
 
 [commit]
   gpgSign = true

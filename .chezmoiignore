@@ -7,3 +7,8 @@ mise-packages.txt
 .config/karabiner
 .config/fish/conf.d/darwin.fish
 {{- end }}
+
+# linux desktop configs
+{{- if not (and (eq .chezmoi.os "linux") .de) }}
+.config/niri
+{{- end }}
