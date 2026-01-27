@@ -8,15 +8,11 @@ hotkey-overlay {
 }
 
 input {
-    keyboard {
-        xkb {
-            options "ctrl:nocaps"
-        }
-    }
-    touchpad {
-        tap
-        natural-scroll
-    }
+    // keyboard {
+    //     xkb {
+    //         options "ctrl:nocaps"
+    //     }
+    // }
 }
 
 
@@ -40,22 +36,22 @@ prefer-no-csd
 
 workspace "terminal"
 workspace "browser"
-workspace "game"
+
+// window-rule {
+//     match
+//     open-floating true
+// }
 
 window-rule {
-    match at-startup=true app-id=r#"^Alacritty$"#
-    open-on-workspace "terminal"
+    match app-id=r#"^Alacritty$"#
+    open-on-workspace "terminal"   // or: open-on-workspace 1
+    open-floating false
 }
 
 window-rule {
-    match at-startup=true app-id=r#"^google-chrome$"#
-    open-on-workspace "browser"
-}
-
-window-rule {
-    match at-startup=true app-id=r#"^steam$"#
-    open-on-workspace "game"
-    open-floating true
+    match app-id=r#"^google-chrome$"#
+    open-on-workspace "browser"    // or: open-on-workspace 2
+    open-floating false
 }
 
 window-rule {
