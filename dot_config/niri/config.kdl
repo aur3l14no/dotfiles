@@ -18,7 +18,7 @@ input {
 
 output "Microstep MAG274UPF CC2H623700305" {
     mode "3840x2160@144.000"
-    scale 2
+    scale 1.5
 }
 
 gestures {
