@@ -19,11 +19,8 @@ Why mise? Single-user, works everywhere, relatively good repo.
 # install mise
 curl https://mise.run | sh
 
-mise use --global chezmoi@latest
+~/.local/bin/mise use --global chezmoi@latest
 ~/.local/share/mise/shims/chezmoi init https://github.com/aur3l14no/dotfiles
-
-# restart shell then install packages
-mise use --global <pkg>@latest ...
 ```
 
 ## Chezmoi data
@@ -43,8 +40,6 @@ If `data.git` is omitted, `~/.config/git/config` is still generated but without 
 
 List lives in `mise-packages.txt` and is ignored by chezmoi (so it does not land in `$HOME`).
 
-Install all:
-
 ``` sh
-cat "$(chezmoi source-path)/mise-packages.txt" | xargs mise use --global
+cat "$(chezmoi source-path)/mise-packages.txt" | xargs ~/.local/bin/mise use --global
 ```
