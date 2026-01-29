@@ -9,6 +9,6 @@ mise-packages.txt
 {{- end }}
 
 # linux desktop configs
-{{- if not (and (eq .chezmoi.os "linux") .de) }}
+{{- if not (and (eq .chezmoi.os "linux") (get . "de")) }}
 .config/niri
 {{- end }}
