@@ -1,6 +1,6 @@
 debug {
-  // Allows notification actions and window activation from Noctalia
-  honor-xdg-activation-with-invalid-serial
+    // Allows notification actions and window activation from Noctalia
+    honor-xdg-activation-with-invalid-serial
 }
 
 hotkey-overlay {
@@ -8,11 +8,10 @@ hotkey-overlay {
 }
 
 input {
-    // keyboard {
-    //     xkb {
-    //         options "ctrl:nocaps"
-    //     }
-    // }
+    keyboard {
+        repeat-delay 200
+        repeat-rate 40
+    }
 }
 
 
