@@ -60,6 +60,14 @@ window-rule {
     open-floating true
 }
 
+window-rule {
+    match title="Form"
+    match app-id=r#"^steam_app_default$"#
+    default-column-width { proportion 0.6; }
+    default-window-height { proportion 0.6; }
+    open-floating true
+}
+
 binds {
     Mod+Shift+Slash { show-hotkey-overlay; }
     Mod+Return { spawn "alacritty"; }
