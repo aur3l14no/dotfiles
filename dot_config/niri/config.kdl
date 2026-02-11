@@ -35,6 +35,7 @@ prefer-no-csd
 
 workspace "terminal"
 workspace "browser"
+workspace "gaming"
 
 // window-rule {
 //     match
@@ -61,11 +62,22 @@ window-rule {
 }
 
 window-rule {
+    match app-id=r#"^net\.lutris\.Lutris$"#
+    open-on-workspace "gaming"
+}
+
+window-rule {
     match title="Form"
     match app-id=r#"^steam_app_default$"#
     default-column-width { proportion 0.6; }
     default-window-height { proportion 0.6; }
     open-floating true
+    open-on-workspace "gaming"
+}
+
+window-rule {
+    match app-id=r#"^steam_app_default$"#
+    open-on-workspace "gaming"
 }
 
 binds {
