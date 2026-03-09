@@ -3,10 +3,11 @@ super = { "ctrl", "command", "option", "shift" }
 
 key2App = {
 	{ "0", "com.tencent.xinWeChat" },
-	{ "9", "com.openai.chat" },
+	{ "9", "com.google.Chrome.app.cadlkienfkclaiaibeoongdcgmdikeeg" },
+	-- { "9", "com.openai.chat" },
 	{ "8", "ru.keepcoder.Telegram" },
 	{ "7", "com.spotify.client" },
-	{ "5", "com.google.Chrome.app.idemibpphagihbobmgmaojhjfidlfpdl" },
+	{ "5", "com.google.Chrome.app.ajhljobecncajjcjcdomddhhijkphgmo" },
 	{ "f", "com.apple.finder" },
 	{ "i", "org.alacritty" },
 	{ "k", "com.google.Chrome" },
