@@ -35,13 +35,17 @@ magenta = '#6c71c4'
 cyan = '#93a1a1'
 white = '#fdf6e3'
 
+{{- if eq .chezmoi.os "darwin" }}
 [window]
 decorations = "Buttonless"
 option_as_alt = "Both"
+{{- end }}
 
 [keyboard]
 bindings = [
+{{- if eq .chezmoi.os "darwin" }}
   { key = "t", mods = "Command", chars = "\u0001\u0063" },        # Ctrl-a c
+  { key = "t", mods = "Command|Shift", chars = "\u0001\u0054" },  # Ctrl-a T
   { key = "d", mods = "Command", chars = "\u0001\u0022" },        # Ctrl-a "
   { key = "d", mods = "Command|Shift", chars = "\u0001\u0025" },  # Ctrl-a %
   { key = "w", mods = "Command", chars = "\u0001\u0058" },        # Ctrl-a X
@@ -64,5 +68,31 @@ bindings = [
   { key = "Right", mods = "Command", chars = "\u0001\u006c" },    # Ctrl-a l
   { key = "PageUp", mods = "Command", chars = "\u0001\u007b" },   # Ctrl-a {
   { key = "PageDown", mods = "Command", chars = "\u0001\u007d" }, # Ctrl-a }
+{{- else }}
+  { key = "t", mods = "Control|Shift", chars = "\u0001\u0063" },       # Ctrl-a c
+  { key = "t", mods = "Control|Alt", chars = "\u0001\u0054" },         # Ctrl-a T
+  { key = "d", mods = "Control|Alt", chars = "\u0001\u0022" },         # Ctrl-a "
+  { key = "d", mods = "Control|Alt|Shift", chars = "\u0001\u0025" },   # Ctrl-a %
+  { key = "w", mods = "Control|Shift", chars = "\u0001\u0058" },       # Ctrl-a X
+  { key = "1", mods = "Control|Alt", chars = "\u0001\u0031" },
+  { key = "2", mods = "Control|Alt", chars = "\u0001\u0032" },
+  { key = "3", mods = "Control|Alt", chars = "\u0001\u0033" },
+  { key = "4", mods = "Control|Alt", chars = "\u0001\u0034" },
+  { key = "5", mods = "Control|Alt", chars = "\u0001\u0035" },
+  { key = "6", mods = "Control|Alt", chars = "\u0001\u0036" },
+  { key = "7", mods = "Control|Alt", chars = "\u0001\u0037" },
+  { key = "8", mods = "Control|Alt", chars = "\u0001\u0038" },
+  { key = "9", mods = "Control|Alt", chars = "\u0001\u0039" },
+  { key = "h", mods = "Control|Shift", chars = "\u0001\u0068" },       # Ctrl-a h
+  { key = "j", mods = "Control|Shift", chars = "\u0001\u006a" },       # Ctrl-a j
+  { key = "k", mods = "Control|Shift", chars = "\u0001\u006b" },       # Ctrl-a k
+  { key = "l", mods = "Control|Shift", chars = "\u0001\u006c" },       # Ctrl-a l
+  { key = "Left", mods = "Control|Alt", chars = "\u0001\u0068" },      # Ctrl-a h
+  { key = "Down", mods = "Control|Alt", chars = "\u0001\u006a" },      # Ctrl-a j
+  { key = "Up", mods = "Control|Alt", chars = "\u0001\u006b" },        # Ctrl-a k
+  { key = "Right", mods = "Control|Alt", chars = "\u0001\u006c" },     # Ctrl-a l
+  { key = "PageUp", mods = "Control|Alt", chars = "\u0001\u007b" },    # Ctrl-a {
+  { key = "PageDown", mods = "Control|Alt", chars = "\u0001\u007d" },  # Ctrl-a }
+{{- end }}
   { key = "Tab", mods = "Control", chars = "\u0001\t" },          # Ctrl-a Tab
 ]
