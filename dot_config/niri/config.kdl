@@ -9,6 +9,9 @@ hotkey-overlay {
 
 input {
     keyboard {
+        xkb {
+            options "caps:super"
+        }
         repeat-delay 200
         repeat-rate 40
     }
@@ -35,22 +38,30 @@ prefer-no-csd
 
 workspace "terminal"
 workspace "browser"
-workspace "gaming"
-
-// window-rule {
-//     match
-//     open-floating true
-// }
+workspace "chat"
+workspace "ai"
 
 window-rule {
     match app-id=r#"^Alacritty$"#
-    open-on-workspace "terminal"   // or: open-on-workspace 1
+    open-on-workspace "terminal"
     open-floating false
 }
 
 window-rule {
     match app-id=r#"^google-chrome$"#
-    open-on-workspace "browser"    // or: open-on-workspace 2
+    open-on-workspace "browser"
+    open-floating false
+}
+
+window-rule {
+    match app-id=r#"^chrome-majiogicmcnmdhhlgmkahaleckhjbmlk-Default$"#
+    open-on-workspace "chat"
+    open-floating false
+}
+
+window-rule {
+    match app-id=r#"^chrome-cadlkienfkclaiaibeoongdcgmdikeeg-Default$"#
+    open-on-workspace "ai"
     open-floating false
 }
 
@@ -59,25 +70,6 @@ window-rule {
     default-column-width { proportion 0.6; }
     default-window-height { proportion 0.6; }
     open-floating true
-}
-
-window-rule {
-    match app-id=r#"^net\.lutris\.Lutris$"#
-    open-on-workspace "gaming"
-}
-
-window-rule {
-    match title="Form"
-    match app-id=r#"^steam_app_default$"#
-    default-column-width { proportion 0.6; }
-    default-window-height { proportion 0.6; }
-    open-floating true
-    open-on-workspace "gaming"
-}
-
-window-rule {
-    match app-id=r#"^steam_app_default$"#
-    open-on-workspace "gaming"
 }
 
 binds {
