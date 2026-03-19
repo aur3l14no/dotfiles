@@ -7,7 +7,6 @@ hotkey-overlay {
     skip-at-startup
 }
 
-spawn-at-startup "alacritty"
 spawn-at-startup "google-chrome-stable"
 spawn-at-startup "google-chrome-stable" "--app=https://chatgpt.com"
 spawn-at-startup "google-chrome-stable" "--app=https://web.telegram.org"
@@ -69,14 +68,20 @@ window-rule {
     open-floating false
 }
 
+// Chrome --app= gets URL-based app-id at startup (e.g. chrome-chatgpt.com__-Default)
+// but extension-based app-id from launcher (e.g. chrome-cadlki...-Default).
+// Title is not available at window creation for autostarted apps,
+// so first match uses URL-based app-id for startup; second uses title for launcher.
 window-rule {
-    match app-id=r#"^chrome-majiogicmcnmdhhlgmkahaleckhjbmlk-Default$"#
+    match app-id=r#"^chrome-chatgpt\.com"#
+    match app-id=r#"^chrome-"# title=r#"^ChatGPT"#
     open-on-workspace "chat"
     open-floating false
 }
 
 window-rule {
-    match app-id=r#"^chrome-cadlkienfkclaiaibeoongdcgmdikeeg-Default$"#
+    match app-id=r#"^chrome-web\.telegram\.org"#
+    match app-id=r#"^chrome-"# title=r#"^Telegram"#
     open-on-workspace "ai"
     open-floating false
 }
