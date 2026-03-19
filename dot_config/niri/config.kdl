@@ -58,6 +58,12 @@ window-rule {
 }
 
 window-rule {
+    match app-id=r#"^wechat$"#
+    open-on-workspace "chat"
+    open-floating false
+}
+
+window-rule {
     match app-id=r#"^chrome-majiogicmcnmdhhlgmkahaleckhjbmlk-Default$"#
     open-on-workspace "chat"
     open-floating false
@@ -78,6 +84,7 @@ window-rule {
 
 binds {
     Mod+Shift+Slash { show-hotkey-overlay; }
+    Mod+Space { toggle-overview; }
     Mod+Return { spawn "alacritty"; }
     Mod+D { spawn "noctalia-shell" "ipc" "call" "launcher" "toggle"; }
     Mod+V { spawn "noctalia-shell" "ipc" "call" "launcher" "clipboard"; }
@@ -100,6 +107,8 @@ binds {
     Mod+Shift+Ctrl+J     { move-column-to-monitor-down; }
     Mod+Shift+Ctrl+K     { move-column-to-monitor-up; }
     Mod+Shift+Ctrl+L     { move-column-to-monitor-right; }
+
+    Mod+Shift+M     { move-workspace-to-monitor-next; }
 
     Mod+Tab            { focus-workspace-previous; }
     Mod+J              { focus-workspace-down; }
@@ -144,9 +153,7 @@ binds {
     Mod+Minus { set-column-width "-10%"; }
     Mod+Equal { set-column-width "+10%"; }
 
-    Print { screenshot; }
-    Ctrl+Print { screenshot-screen; }
-    Alt+Print { screenshot-window; }
+    Ctrl+Alt+Shift+A { screenshot; }
 
     Mod+Shift+E { quit; }
 
