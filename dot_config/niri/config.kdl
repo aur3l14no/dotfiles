@@ -17,10 +17,16 @@ input {
     }
 }
 
-
 output "Microstep MAG274UPF CC2H623700305" {
-    mode "3840x2160@144.000"
+    mode "3840x2160@120.000"
     scale 1.5
+    variable-refresh-rate off
+}
+
+// fusco-thinkbook built-in panel
+output "China Star Optoelectronics Technology Co., Ltd MNE507ZA2-4 Unknown" {
+    mode "3072x1920@120.000"
+    variable-refresh-rate off
 }
 
 gestures {
