@@ -88,6 +88,7 @@ binds {
     Mod+Return { spawn "alacritty"; }
     Mod+D { spawn "noctalia-shell" "ipc" "call" "launcher" "toggle"; }
     Mod+V { spawn "noctalia-shell" "ipc" "call" "launcher" "clipboard"; }
+    Mod+E { spawn "nautilus"; }
     Mod+Alt+L { spawn "loginctl" "lock-session"; }
 
     Mod+Q { close-window; }
