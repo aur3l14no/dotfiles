@@ -7,6 +7,12 @@ hotkey-overlay {
     skip-at-startup
 }
 
+spawn-at-startup "alacritty"
+spawn-at-startup "google-chrome-stable"
+spawn-at-startup "google-chrome-stable" "--app=https://chatgpt.com"
+spawn-at-startup "google-chrome-stable" "--app=https://web.telegram.org"
+spawn-at-startup "wechat-uos"
+
 input {
     keyboard {
         xkb {
