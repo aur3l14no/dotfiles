@@ -20,6 +20,10 @@ input {
         repeat-delay 200
         repeat-rate 40
     }
+
+    touchpad {
+        natural-scroll
+    }
 }
 
 output "Microstep MAG274UPF CC2H623700305" {
