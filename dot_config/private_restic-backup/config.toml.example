@@ -1,0 +1,24 @@
+repository = "sftp:backup-storage-box:"
+
+paths = [
+    "~/Projects",
+    "~/Work",
+    "~/Documents",
+    "~/Desktop",
+    "~/.ssh",
+    "/Volumes/T7/Projects",
+    "/Volumes/T7/Work",
+]
+
+excludes = [
+    "node_modules",
+    ".venv",
+    "__pycache__",
+    ".cache",
+    "target/debug",
+    "target/release",
+    ".build",
+    "*.o",
+    "*.pyc",
+    ".DS_Store",
+]
