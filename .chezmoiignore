@@ -1,6 +1,7 @@
 README.md
 mise-packages.txt
 .config/karabiner/automatic_backups
+.config/rustic/*.env
 
 # mac-only configs
 {{- if ne .chezmoi.os "darwin" }}

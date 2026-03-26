@@ -1,0 +1,10 @@
+[backup]
+one-file-system = true
+exclude-if-present = [".nobackup", "CACHEDIR.TAG"]
+glob-files = ["~/.config/rustic/common-globs"]
+
+[forget]
+keep-daily = 7
+keep-weekly = 5
+keep-monthly = 6
+keep-yearly = 0

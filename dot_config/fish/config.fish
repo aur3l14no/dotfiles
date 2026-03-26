@@ -30,12 +30,45 @@ alias cs 'curl -x socks5h://127.0.0.1:3333'
 alias cz chezmoi
 alias nxc "nix copy --from 'https://chuck-lab.leo-jazz.ts.net:59700' --no-check-sigs"
 alias nix-diff "nvd diff (ls -t1d /nix/var/nix/profiles/system-*-link | head -2 | tac)"
+alias pwgen='pwgen -r "\'\"\\\\`\$;&|<>()[]{}"'
 
 function u
     while not $argv
         sleep 5
     end
 end
+
+function __parse_envfile -a file
+    test -f "$file"; or begin; echo "error: file not found: $file" >&2; return 1; end
+    while read --line line
+        string match -qr '^\s*(#|$)' -- $line; and continue
+        set -l item (string split -m 1 '=' -- $line)
+        set -l key $item[1]
+        set -l value $item[2]
+        if string match -qr '^".*"$' -- $value
+            set value (string sub -s 2 -e -2 -- $value)
+        else if string match -qr "^'.*'\$" -- $value
+            set value (string sub -s 2 -e -2 -- $value)
+        end
+        echo "$key=$value"
+    end <$file
+end
+
+function loadenv -a file -d "Export KEY=VALUE pairs from a file"
+    for line in (__parse_envfile $file)
+        set -l item (string split -m 1 '=' -- $line)
+        set -gx $item[1] "$item[2]"
+    end
+end
+
+function withenv -d "Run a command with temporary env vars from a file"
+    set -l file $argv[1]
+    set -l cmd $argv[2..-1]
+    test (count $cmd) -gt 0; or begin; echo "usage: withenv <file> <command...>" >&2; return 1; end
+    env (__parse_envfile $file) $cmd
+end
+complete -c withenv -n "__fish_is_nth_token 1" -F
+complete -c withenv -n "not __fish_is_nth_token 1" -xa "(__fish_complete_subcommand --fcs-skip=2)"
 
 function gitignore
     curl -sL https://www.gitignore.io/api/$argv
