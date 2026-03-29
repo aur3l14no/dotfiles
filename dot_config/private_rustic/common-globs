@@ -18,4 +18,3 @@
 !**/var/lib/docker
 !**/var/lib/containers/storage
 !**/var/lib/postgresql
-!**/var/lib/swapfile

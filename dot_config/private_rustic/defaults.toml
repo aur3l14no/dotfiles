@@ -1,5 +1,4 @@
 [backup]
-init = true
 one-file-system = true
 exclude-if-present = [".nobackup", "CACHEDIR.TAG"]
 glob-files = ["~/.config/rustic/common-globs"]
