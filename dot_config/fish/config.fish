@@ -184,6 +184,12 @@ function __fish_help -d "--help | pager"
 end
 bind \eh __fish_help
 
+# Keep Option/Alt-Left/Right consistent across local macOS and remote Linux fish.
+bind alt-left prevd-or-backward-word
+bind alt-right nextd-or-forward-word
+bind \e\[1\;9D prevd-or-backward-word
+bind \e\[1\;9C nextd-or-forward-word
+
 # Optional integrations when available
 if status is-interactive
     type -q mise; and mise activate fish | source
