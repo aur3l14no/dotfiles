@@ -1,7 +1,7 @@
 [backup]
 one-file-system = true
 exclude-if-present = [".nobackup", "CACHEDIR.TAG"]
-glob-files = ["~/.config/rustic/common-globs"]
+glob-files = ["{{ .chezmoi.homeDir }}/.config/rustic/common-globs"]
 
 [forget]
 keep-daily = 7
