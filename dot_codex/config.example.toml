@@ -1,0 +1,26 @@
+model = "gpt-5.4"
+model_reasoning_effort = "xhigh"
+plan_mode_reasoning_effort = "xhigh"
+
+personality = "pragmatic"
+
+notify = ["/Users/y/.local/bin/ntfy-agent", "--codex"]
+
+# capability
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
+web_search = "cached"
+
+# analytics
+[analytics]
+enabled = false
+
+[feedback]
+enabled = false
+
+# security
+[shell_environment_policy]
+inherit = "core"
+ignore_default_excludes = false
+exclude = ["SOPS_*", "AGE_*"]
+
