@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+# Sync codex config.toml from a new base, preserving [projects.*] entries.
+# Usage: codex-sync-config <old> <new>
+#   old: the existing config to update (e.g. config.toml)
+#   new: the new base config (e.g. config.example.toml)
+set -euo pipefail
+
+if [[ $# -ne 2 ]]; then
+  echo "usage: codex-sync-config <old> <new>" >&2
+  exit 1
+fi
+
+old="$1"
+new="$2"
+
+if [[ ! -f "$new" ]]; then
+  echo "error: $new not found" >&2
+  exit 1
+fi
+
+if [[ ! -f "$old" ]]; then
+  cp "$new" "$old"
+  echo "copied $new -> $old"
+  exit 0
+fi
+
+# Extract [projects.*] blocks from old config
+projects=$(sed -n '/^\[projects\./,$ p' "$old")
+
+# Replace old with new base, append preserved projects
+cp "$new" "$old"
+
+if [[ -n "$projects" ]]; then
+  printf '\n%s\n' "$projects" >> "$old"
+fi
+
+echo "synced from $new, kept $(grep -c '^\[projects\.' <<< "$projects" || echo 0) project entries"
