@@ -36,6 +36,11 @@ signingKey = "ssh-ed25519 AAAA..."
 
 If `data.git` is omitted, `~/.config/git/config` is still generated but without name/email/signing key.
 
+Entries stored as `*.age` are ignored unless your local `chezmoi` config sets
+`encryption = "age"`. This keeps `chezmoi init --apply` working on machines
+without an age identity while still enabling the encrypted files once age is
+configured. New encrypted files should follow the same `*.age` convention.
+
 ## Recommended Packages
 
 List lives in `mise-packages.txt` and is ignored by chezmoi (so it does not land in `$HOME`).
