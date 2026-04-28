@@ -3,9 +3,9 @@ super = { "ctrl", "command", "option", "shift" }
 
 key2App = {
 	{ "0", "com.tencent.xinWeChat" },
-	{ "9", "com.google.Chrome.app.ibblmnobmgdmpoeblocemifbpglakpoi" }, -- Telegram
+	{ "9", "ru.keepcoder.Telegram" },
+	-- { "9", "com.google.Chrome.app.ibblmnobmgdmpoeblocemifbpglakpoi" }, -- Telegram
 	{ "8", "com.google.Chrome.app.cadlkienfkclaiaibeoongdcgmdikeeg" }, -- ChatGPT
-	-- { "9", "ru.keepcoder.Telegram" },
 	-- { "8", "com.openai.chat" },
 	{ "7", "com.google.Chrome.app.fmpnliohjhemenmnlpbfagaolkdacoja" }, -- Claude
 	{ "5", "com.google.Chrome.app.ajhljobecncajjcjcdomddhhijkphgmo" },
