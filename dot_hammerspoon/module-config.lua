@@ -14,7 +14,7 @@ key2App = {
 	{ "i", "org.alacritty" },
 	{ "k", "com.google.Chrome" },
 	-- { "j", "com.apple.Safari" },
-	{ "j", "org.mozilla.firefox" },
+	-- { "j", "org.mozilla.firefox" },
 	{ "b", "com.microsoft.VSCode" },
 	{ "z", "dev.zed.Zed" },
 	{ "c", "com.apple.iCal" },

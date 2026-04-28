@@ -8,3 +8,4 @@ fish_add_path --move --prepend /opt/homebrew/bin
 fish_add_path --move --prepend /opt/homebrew/sbin
 
 alias tailscale '/Applications/Tailscale.app/Contents/MacOS/Tailscale'
+alias ssh-bwagent "ssh -o ForwardAgent=$HOME/Library/Containers/com.bitwarden.desktop/Data/.bitwarden-ssh-agent.sock"
