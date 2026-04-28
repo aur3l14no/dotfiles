@@ -41,6 +41,31 @@ Entries stored as `*.age` are ignored unless your local `chezmoi` config sets
 without an age identity while still enabling the encrypted files once age is
 configured. New encrypted files should follow the same `*.age` convention.
 
+## Rime
+
+`Library/Rime` is the macOS Squirrel Rime overlay. Chezmoi pulls upstream
+rime-ice with `.chezmoiexternal.toml.tmpl`, then applies personal patches and
+the encrypted double-pinyin custom phrase table on top.
+
+Runtime state and vendored upstream data are intentionally not tracked:
+`build/`, `sync/`, `*.userdb/`, `installation.yaml`, `user.yaml`, schema
+snapshots, dictionaries, Lua helpers, OpenCC tables, and the unused full-pinyin
+`custom_phrase.txt`.
+
+### New macOS Setup
+
+Install Squirrel first. The current Homebrew cask is:
+
+``` sh
+brew install --cask squirrel-app
+```
+
+Then run `chezmoi apply`; on Nix-managed macOS hosts, `darwin-rebuild switch`
+already does that. Chezmoi caches the rime-ice archive and refreshes it weekly;
+force a refresh with `chezmoi apply --refresh-externals=always`.
+
+After Rime files change, use Squirrel's menu to redeploy Rime.
+
 ## Recommended Packages
 
 List lives in `mise-packages.txt` and is ignored by chezmoi (so it does not land in `$HOME`).

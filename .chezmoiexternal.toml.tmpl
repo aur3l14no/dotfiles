@@ -1,0 +1,23 @@
+{{- if eq .chezmoi.os "darwin" }}
+["Library/Rime"]
+type = "archive"
+url = "https://github.com/iDvel/rime-ice/archive/refs/heads/main.tar.gz"
+stripComponents = 1
+refreshPeriod = "168h"
+include = [
+  "*/LICENSE",
+  "*/*.dict.yaml",
+  "*/*.schema.yaml",
+  "*/default.yaml",
+  "*/rime.lua",
+  "*/squirrel.yaml",
+  "*/symbols_caps_v.yaml",
+  "*/symbols_v.yaml",
+  "*/t9.schema.yaml",
+  "*/weasel.yaml",
+  "*/cn_dicts/**",
+  "*/en_dicts/**",
+  "*/lua/**",
+  "*/opencc/**",
+]
+{{- end }}

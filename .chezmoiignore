@@ -13,6 +13,7 @@ mise-packages.txt
 .hammerspoon
 .config/karabiner
 .config/fish/conf.d/darwin.fish
+Library/Rime
 {{- end }}
 
 # linux desktop configs
