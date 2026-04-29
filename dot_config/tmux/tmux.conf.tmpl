@@ -49,6 +49,8 @@ bind T command-prompt -I "#{pane_title}" -p "pane title:" "select-pane -T '%%'"
 bind tab last-window
 
 bind X kill-pane
+bind "<" swap-window -t -1
+bind ">" swap-window -t +1
 
 bind "|"  split-window -h -c "#{pane_current_path}"
 bind "\\" split-window -fh -c "#{pane_current_path}"
@@ -60,3 +62,4 @@ bind "\""  split-window -v -c "#{pane_current_path}"
 unbind -T copy-mode-vi MouseDragEnd1Pane
 bind -T copy-mode-vi MouseDragEnd1Pane send -X copy-selection
 bind -T copy-mode-vi y send-keys -X copy-selection
+bind -n MouseDrag1Status swap-window -d -t=
