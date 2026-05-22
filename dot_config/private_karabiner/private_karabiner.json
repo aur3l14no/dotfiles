@@ -202,15 +202,6 @@
                             "to": [{ "key_code": "left_command" }]
                         }
                     ]
-                },
-                {
-                    "identifiers": {
-                        "is_pointing_device": true,
-                        "product_id": 4229,
-                        "vendor_id": 14139
-                    },
-                    "ignore": false,
-                    "mouse_flip_vertical_wheel": true
                 }
             ],
             "fn_function_keys": [
