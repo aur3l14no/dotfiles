@@ -1,19 +1,19 @@
 hm_session_vars="/etc/profiles/per-user/$USER/etc/profile.d/hm-session-vars.sh"
 [ -r "$hm_session_vars" ] && . "$hm_session_vars"
 
-# Make Homebrew tools visible to SSH/bash probes on macOS.
-if [ -d /opt/homebrew/sbin ]; then
-    case ":$PATH:" in
-        *:/opt/homebrew/sbin:*) ;;
-        *) PATH="/opt/homebrew/sbin${PATH:+:$PATH}" ;;
-    esac
-fi
-if [ -d /opt/homebrew/bin ]; then
-    case ":$PATH:" in
-        *:/opt/homebrew/bin:*) ;;
-        *) PATH="/opt/homebrew/bin${PATH:+:$PATH}" ;;
-    esac
-fi
+# User and host-local tools.
+for dir in \
+    /opt/homebrew/sbin \
+    /opt/homebrew/bin \
+    "$HOME/.local/opt/npm-global/bin" \
+    "$HOME/.local/bin"; do
+    if [ -d "$dir" ]; then
+        case ":$PATH:" in
+            *:"$dir":*) ;;
+            *) PATH="$dir${PATH:+:$PATH}" ;;
+        esac
+    fi
+done
 export PATH
 
 # Auto-attach to tmux for SSH interactive shells

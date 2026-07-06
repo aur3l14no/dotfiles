@@ -4,7 +4,7 @@ set -g fish_greeting
 # Path setup
 set -l __paths
 # User
-set -a __paths "$HOME/.local/bin"
+set -a __paths "$HOME/.local/bin" "$HOME/.local/opt/npm-global/bin"
 # Language
 set -a __paths "$HOME/.cargo/bin" "$HOME/go/bin"
 # Nix

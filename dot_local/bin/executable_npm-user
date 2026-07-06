@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+prefix="${NPM_USER_PREFIX:-$HOME/.local/opt/npm-global}"
+cache="${NPM_USER_CACHE:-$HOME/.cache/npm}"
+
+mkdir -p "$prefix" "$cache"
+
+export NPM_CONFIG_PREFIX="$prefix"
+export NPM_CONFIG_CACHE="$cache"
+
+exec npm "$@"
