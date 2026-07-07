@@ -1,0 +1,4 @@
+interface:
+  display_name: "Remote Dev"
+  short_description: "Local-edit, remote-run SSH and rsync flow."
+  default_prompt: "Use $remote-dev to initialize a local-edit remote-run workflow with AGENTS.local.md, justfile.local, and just sync-remote."
