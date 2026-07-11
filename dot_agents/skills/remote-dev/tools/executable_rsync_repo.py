@@ -1,13 +1,33 @@
 #!/usr/bin/env python3
+"""Mirror a local Git worktree into an initialized execution copy.
+
+Contract:
+
+* The local worktree is authoritative. Destination edits are not protected.
+* Git-ignored destination extras are preserved.
+* A local ``filter=lfs`` pointer is present logically but is not transferred.
+  Its destination path must already exist as a file or symlink and is kept as-is.
+* File/directory path blockers are errors; this script never removes them.
+* The command is a dry-run unless ``-y`` is supplied.
+"""
+
 from __future__ import annotations
 
 import argparse
+import re
 import shlex
 import subprocess
 import sys
 import tempfile
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
+
+
+SAFE_HOST = re.compile(r"^(?:[A-Za-z0-9_.-]+@)?[A-Za-z0-9_.-]+$")
+SAFE_REMOTE_PATH = re.compile(r"^/[A-Za-z0-9_./+,@=-]+$")
+LFS_VERSION = "version https://git-lfs.github.com/spec/v1"
+LFS_OID = re.compile(r"oid sha256:[0-9a-f]{64}")
+LFS_SIZE = re.compile(r"size [0-9]+")
 
 
 @dataclass(frozen=True)
@@ -29,14 +49,8 @@ class Endpoint:
         return str(Path(self.path) / rel)
 
     def rsync_arg(self) -> str:
-        path = self.path_with_trailing_slash()
-        if self.remote:
-            return f"{self.host}:{path}"
-        return path
-
-    def path_with_trailing_slash(self) -> str:
-        path = str(PurePosixPath(self.path)) if self.remote else self.path.rstrip("/")
-        return "/" if path == "/" else path.rstrip("/") + "/"
+        path = self.path.rstrip("/") + "/"
+        return f"{self.host}:{path}" if self.remote else path
 
 
 def run_capture(
@@ -62,12 +76,17 @@ def run_at(
     check: bool = True,
 ) -> subprocess.CompletedProcess[bytes]:
     if endpoint.remote:
-        cmd = "cd " + shlex.quote(endpoint.subpath(rel)) + " && " + shlex.join(args)
+        command = "cd " + shlex.quote(endpoint.subpath(rel)) + " && " + shlex.join(args)
         return run_capture(
-            ["ssh", endpoint.host or "", cmd], input_data=input_data, check=check
+            ["ssh", "--", endpoint.host or "", command],
+            input_data=input_data,
+            check=check,
         )
     return run_capture(
-        args, cwd=Path(endpoint.subpath(rel)), input_data=input_data, check=check
+        args,
+        cwd=Path(endpoint.subpath(rel)),
+        input_data=input_data,
+        check=check,
     )
 
 
@@ -76,40 +95,45 @@ def run_shell_at(
     script: str,
     *,
     input_data: bytes | None = None,
-    check: bool = True,
 ) -> subprocess.CompletedProcess[bytes]:
     if endpoint.remote:
-        cmd = "cd " + shlex.quote(endpoint.path) + " && " + script
+        command = "cd " + shlex.quote(endpoint.path) + " && " + script
         return run_capture(
-            ["ssh", endpoint.host or "", cmd], input_data=input_data, check=check
+            ["ssh", "--", endpoint.host or "", command], input_data=input_data
         )
     return run_capture(
-        ["bash", "-lc", script],
-        cwd=Path(endpoint.path),
-        input_data=input_data,
-        check=check,
+        ["bash", "-lc", script], cwd=Path(endpoint.path), input_data=input_data
     )
 
 
 def parse_endpoint(value: str) -> Endpoint:
-    if "\0" in value or "\n" in value:
+    if any(character in value for character in ("\0", "\n", "\r")):
         raise SystemExit(f"Refusing unsafe endpoint: {value!r}")
     if ":" in value and not value.startswith(("/", "./", "../")):
         host, path = value.split(":", 1)
-        remote_path = PurePosixPath(path)
-        if host and remote_path.is_absolute():
-            return Endpoint(value, host, str(remote_path))
-        raise SystemExit("Remote endpoints must look like host:/absolute/path")
+        if not SAFE_HOST.fullmatch(host) or host.startswith("-"):
+            raise SystemExit(f"Refusing unsafe SSH host: {host!r}")
+        posix = PurePosixPath(path)
+        if not posix.is_absolute() or ".." in posix.parts:
+            raise SystemExit("Remote endpoint must use a normalized absolute path")
+        normalized = str(posix)
+        if normalized == "/":
+            raise SystemExit("Refusing to use the remote filesystem root")
+        if not SAFE_REMOTE_PATH.fullmatch(normalized):
+            raise SystemExit("Remote path contains unsupported characters")
+        return Endpoint(value, host, normalized)
 
     path = Path(value).expanduser().resolve(strict=False)
+    if path == Path("/"):
+        raise SystemExit("Refusing to use the local filesystem root")
     return Endpoint(value, None, str(path))
 
 
 def validate_relpath(path: str) -> None:
-    if not path or "\0" in path or "\n" in path:
+    if not path or any(character in path for character in ("\0", "\n", "\r")):
         raise SystemExit(f"Refusing unsafe relative path: {path!r}")
     rel = PurePosixPath(path)
-    if rel.is_absolute() or not rel.parts or ".." in rel.parts:
+    if rel.is_absolute() or ".." in rel.parts:
         raise SystemExit(f"Refusing unsafe relative path: {path!r}")
 
 
@@ -123,28 +147,40 @@ def split_nul(data: bytes) -> list[str]:
     return [decode_path(raw) for raw in data.split(b"\0") if raw]
 
 
+def display(path: str) -> str:
+    return path.encode("utf-8", "backslashreplace").decode("utf-8", "replace")
+
+
+def verify_git_root(endpoint: Endpoint) -> None:
+    physical = run_at(endpoint, ["pwd", "-P"]).stdout.decode().strip()
+    top = run_at(endpoint, ["git", "rev-parse", "--show-toplevel"]).stdout.decode().strip()
+    if endpoint.remote:
+        matches = str(PurePosixPath(physical)) == str(PurePosixPath(top))
+    else:
+        matches = Path(physical).resolve() == Path(top).resolve()
+    if not matches:
+        raise SystemExit(f"Endpoint is not an exact Git worktree root: {endpoint.raw}")
+
+
 def ensure_submodules_initialized(source: Endpoint) -> None:
     result = run_at(source, ["git", "submodule", "status", "--recursive"], check=False)
     if result.returncode != 0:
         sys.stderr.write(result.stderr.decode("utf-8", "replace"))
         raise SystemExit(result.returncode)
-
     missing: list[str] = []
     for line in result.stdout.decode("utf-8", "surrogateescape").splitlines():
-        if not line or line[0] != "-":
-            continue
-        parts = line[1:].strip().split()
-        if len(parts) >= 2:
-            validate_relpath(parts[1])
-            missing.append(parts[1])
-
+        if line.startswith("-"):
+            fields = line[1:].strip().split()
+            if len(fields) >= 2:
+                validate_relpath(fields[1])
+                missing.append(fields[1])
     if missing:
         raise SystemExit("Submodules are not initialized: " + ", ".join(missing))
 
 
 def list_git_roots(source: Endpoint) -> list[str]:
     ensure_submodules_initialized(source)
-    roots_by_prefix: set[str] = {""}
+    roots = {""}
     result = run_at(
         source,
         [
@@ -153,146 +189,206 @@ def list_git_roots(source: Endpoint) -> list[str]:
             "foreach",
             "--recursive",
             "-q",
-            'printf "%s\n" "$displaypath"',
+            'printf "%s\\n" "$displaypath"',
         ],
-        check=False,
     )
-    if result.returncode != 0:
-        sys.stderr.write(result.stderr.decode("utf-8", "replace"))
-        raise SystemExit(result.returncode)
-
     for line in result.stdout.decode("utf-8", "surrogateescape").splitlines():
-        prefix = line.strip("/")
-        if prefix:
-            validate_relpath(prefix)
-            roots_by_prefix.add(prefix)
-
-    return sorted(
-        roots_by_prefix,
-        key=lambda prefix: (prefix.count("/") if prefix else -1, prefix),
-    )
+        root = line.strip("/")
+        if root:
+            validate_relpath(root)
+            roots.add(root)
+    return sorted(roots, key=lambda root: (root.count("/") if root else -1, root))
 
 
-def git_ls_files(source: Endpoint, root: str, args: list[str]) -> set[str]:
+def git_paths(source: Endpoint, root: str, args: list[str]) -> set[str]:
     result = run_at(source, ["git", "ls-files", "-z", *args], rel=root)
     return set(split_nul(result.stdout))
 
 
-def gitlink_paths(source: Endpoint, root: str) -> set[str]:
+def gitlinks(source: Endpoint, root: str) -> set[str]:
     result = run_at(source, ["git", "ls-files", "-z", "--stage"], rel=root)
     paths: set[str] = set()
-    for raw in result.stdout.split(b"\0"):
-        if not raw:
+    for record in result.stdout.split(b"\0"):
+        if not record:
             continue
-        meta, _, path = raw.partition(b"\t")
-        if meta.startswith(b"160000 "):
-            paths.add(decode_path(path))
+        metadata, _, raw_path = record.partition(b"\t")
+        if metadata.startswith(b"160000 "):
+            paths.add(decode_path(raw_path))
     return paths
+
+
+def reject_sparse_checkout(source: Endpoint, root: str) -> None:
+    result = run_at(source, ["git", "ls-files", "-z", "-t"], rel=root)
+    skipped = [
+        decode_path(record[2:])
+        for record in result.stdout.split(b"\0")
+        if record and record[:2].upper() == b"S "
+    ]
+    if skipped:
+        sample = ", ".join(display(path) for path in skipped[:8])
+        raise SystemExit(f"Sparse/skip-worktree entries are unsupported: {sample}")
 
 
 def source_files(source: Endpoint, roots: list[str]) -> set[str]:
     files: set[str] = set()
-    nested_prefixes = {root for root in roots if root}
-
+    nested_roots = {root for root in roots if root}
     for root in roots:
-        candidates = git_ls_files(
+        reject_sparse_checkout(source, root)
+        candidates = git_paths(
             source, root, ["--cached", "--others", "--exclude-standard"]
         )
-        deleted = git_ls_files(source, root, ["--deleted"])
-        gitlinks = gitlink_paths(source, root)
+        deleted = git_paths(source, root, ["--deleted"])
+        links = gitlinks(source, root)
         for rel in sorted(candidates - deleted):
-            if rel.endswith("/") or rel in gitlinks:
+            if rel.endswith("/"):
+                raise SystemExit(
+                    "Embedded or collapsed directory is unsupported: " + display(rel)
+                )
+            if rel in links:
                 continue
             path = str(PurePosixPath(root) / rel) if root else rel
-            # Parent repositories record submodule roots as entries. Their
-            # worktrees are handled by their own Git roots below.
-            if path in nested_prefixes:
+            if path in nested_roots:
                 continue
             validate_relpath(path)
             files.add(path)
-
     return files
 
 
 def find_paths(endpoint: Endpoint, predicate: str) -> set[str]:
-    if not endpoint.remote and not Path(endpoint.path).exists():
-        return set()
-
-    find_cmd = (
-        "find . -mindepth 1 "
+    command = (
+        "find . -xdev -mindepth 1 "
         + r"\( -path './.git' -o -path './*/.git' \) -prune -o "
         + predicate
         + " -print0"
     )
-    result = run_shell_at(endpoint, find_cmd)
+    result = run_shell_at(endpoint, command)
     paths: set[str] = set()
     for raw in result.stdout.split(b"\0"):
         if not raw:
             continue
-        path = raw.decode("utf-8", "surrogateescape")
-        if path.startswith("./"):
-            path = path[2:]
-        validate_relpath(path)
-        paths.add(path)
+        path = raw[2:] if raw.startswith(b"./") else raw
+        paths.add(decode_path(path))
     return paths
 
 
-def source_dirs(paths: set[str]) -> set[str]:
-    dirs: set[str] = set()
+def source_directories(paths: set[str]) -> set[str]:
+    directories: set[str] = set()
     for path in paths:
         parent = PurePosixPath(path).parent
         while str(parent) != ".":
-            dirs.add(str(parent))
+            directories.add(str(parent))
             parent = parent.parent
-    return dirs
+    return directories
 
 
-def route_path(path: str, roots_desc: list[str]) -> tuple[str, str]:
-    for root in roots_desc:
+def route_path(path: str, roots_descending: list[str]) -> tuple[str, str]:
+    for root in roots_descending:
         if root and (path == root or path.startswith(root + "/")):
             return root, path[len(root) + 1 :]
-    return roots_desc[-1], path
+    return "", path
 
 
-def ignored_paths(paths: list[str], source: Endpoint, roots: list[str]) -> set[str]:
-    roots_desc = sorted(roots, key=len, reverse=True)
-
+def git_attribute_values(
+    source: Endpoint, paths: set[str], roots: list[str], attribute: str
+) -> dict[str, str]:
+    roots_descending = sorted(roots, key=len, reverse=True)
     by_root: dict[str, list[tuple[str, str]]] = {}
     for path in paths:
-        root, rel = route_path(path, roots_desc)
-        if rel:
-            by_root.setdefault(root, []).append((path, rel))
+        root, rel = route_path(path, roots_descending)
+        by_root.setdefault(root, []).append((path, rel))
 
-    ignored: set[str] = set()
+    values: dict[str, str] = {}
     for root, entries in by_root.items():
-        stdin = (
-            b"\0".join(rel.encode("utf-8", "surrogateescape") for _, rel in entries)
-            + b"\0"
-        )
+        stdin = b"\0".join(
+            rel.encode("utf-8", "surrogateescape") for _, rel in entries
+        ) + b"\0"
         result = run_at(
             source,
-            ["git", "check-ignore", "-z", "--stdin"],
+            ["git", "check-attr", "-z", "--stdin", attribute],
+            rel=root,
+            input_data=stdin,
+        )
+        fields = result.stdout.split(b"\0")
+        if fields and fields[-1] == b"":
+            fields.pop()
+        if len(fields) % 3:
+            raise SystemExit("Invalid git check-attr output")
+        rel_to_full = {rel: full for full, rel in entries}
+        for offset in range(0, len(fields), 3):
+            rel = decode_path(fields[offset])
+            value = fields[offset + 2].decode("utf-8", "surrogateescape")
+            values[rel_to_full[rel]] = value
+    return values
+
+
+def is_lfs_pointer(path: Path) -> bool:
+    try:
+        if path.stat().st_size >= 1024:
+            return False
+        lines = path.read_text(encoding="ascii").splitlines()
+    except (OSError, UnicodeDecodeError):
+        return False
+    if len(lines) < 3 or lines[0] != LFS_VERSION:
+        return False
+    return bool(LFS_OID.fullmatch(lines[-2]) and LFS_SIZE.fullmatch(lines[-1]))
+
+
+def lfs_pointer_paths(
+    source: Endpoint, logical: set[str], roots: list[str], source_regular: set[str]
+) -> set[str]:
+    filters = git_attribute_values(source, logical, roots, "filter")
+    unknown = {
+        path: value
+        for path, value in filters.items()
+        if value not in {"unspecified", "unset", "lfs"}
+    }
+    if unknown:
+        sample = ", ".join(
+            f"{display(path)}={value}" for path, value in sorted(unknown.items())[:8]
+        )
+        raise SystemExit("Unknown Git filters are unsupported: " + sample)
+    return {
+        path
+        for path in logical & source_regular
+        if filters.get(path) == "lfs" and is_lfs_pointer(Path(source.subpath(path)))
+    }
+
+
+def ignored_paths(
+    paths: list[str], source: Endpoint, roots: list[str]
+) -> set[str]:
+    roots_descending = sorted(roots, key=len, reverse=True)
+    by_root: dict[str, list[tuple[str, str]]] = {}
+    for path in paths:
+        root, rel = route_path(path, roots_descending)
+        by_root.setdefault(root, []).append((path, rel))
+    ignored: set[str] = set()
+    for root, entries in by_root.items():
+        stdin = b"\0".join(
+            rel.encode("utf-8", "surrogateescape") for _, rel in entries
+        ) + b"\0"
+        result = run_at(
+            source,
+            ["git", "check-ignore", "--no-index", "-z", "--stdin"],
             rel=root,
             input_data=stdin,
             check=False,
         )
-        if result.returncode not in (0, 1):
+        if result.returncode not in {0, 1}:
             sys.stderr.write(result.stderr.decode("utf-8", "replace"))
             raise SystemExit(result.returncode)
         ignored_rel = set(split_nul(result.stdout))
         for full, rel in entries:
             if rel in ignored_rel:
                 ignored.add(full)
-
     return ignored
 
 
 def write_files_from(paths: set[str]) -> str:
-    handle = tempfile.NamedTemporaryFile("w", encoding="utf-8", delete=False)
+    handle = tempfile.NamedTemporaryFile("wb", delete=False)
     try:
         for path in sorted(paths):
-            validate_relpath(path)
-            handle.write(path + "\n")
+            handle.write(path.encode("utf-8", "surrogateescape") + b"\0")
         return handle.name
     finally:
         handle.close()
@@ -301,78 +397,46 @@ def write_files_from(paths: set[str]) -> str:
 def rsync_transfer(
     source: Endpoint, dest: Endpoint, files_from: str, *, dry_run: bool
 ) -> int:
-    args = ["rsync", "-rzci", "--links", "--executability", "--files-from", files_from]
+    args = [
+        "rsync",
+        "-rzci",
+        "--links",
+        "--executability",
+        "--delay-updates",
+        "--from0",
+        "--files-from",
+        files_from,
+    ]
     if dry_run:
         args.insert(1, "-n")
-    args.extend([source.rsync_arg(), dest.rsync_arg()])
+    args.extend(["--", source.rsync_arg(), dest.rsync_arg()])
     return subprocess.run(args).returncode
 
 
-def delete_dest_paths(dest: Endpoint, paths: list[str], *, recursive: bool) -> None:
+def delete_files(dest: Endpoint, paths: list[str]) -> None:
     if not paths:
         return
-    for rel in paths:
-        validate_relpath(rel)
-    stdin = b"\0".join(rel.encode("utf-8", "surrogateescape") for rel in paths) + b"\0"
-    rm_flag = "-rf" if recursive else "-f"
-
+    stdin = b"\0".join(path.encode("utf-8", "surrogateescape") for path in paths) + b"\0"
     if dest.remote:
-        cmd = "cd " + shlex.quote(dest.path) + " && xargs -0 rm " + rm_flag + " --"
-        run_capture(["ssh", dest.host or "", cmd], input_data=stdin)
-        return
-
-    run_capture(
-        ["xargs", "-0", "rm", rm_flag, "--"], cwd=Path(dest.path), input_data=stdin
-    )
+        command = "cd " + shlex.quote(dest.path) + " && xargs -0 rm -f --"
+        run_capture(["ssh", "--", dest.host or "", command], input_data=stdin)
+    else:
+        run_capture(["xargs", "-0", "rm", "-f", "--"], cwd=Path(dest.path), input_data=stdin)
 
 
-def ensure_supported_pair(source: Endpoint, dest: Endpoint) -> None:
-    # Remote-to-remote needs a separate transport path for the generated
-    # files-from list. Keep the planner honest until that path is actually
-    # needed and tested.
-    if source.remote and dest.remote:
-        raise SystemExit("SRC and DST cannot both be remote")
-
-    if source.remote or dest.remote:
-        return
-
-    # A local destination inside the source, or vice versa, makes the planner's
-    # source and destination sets overlap. Refuse that before rsync can copy a
-    # tree into itself or deletion can target source files.
-    src = Path(source.path)
-    dst = Path(dest.path)
-    try:
-        src.relative_to(dst)
-        overlaps = True
-    except ValueError:
-        try:
-            dst.relative_to(src)
-            overlaps = True
-        except ValueError:
-            overlaps = False
-    if overlaps:
-        raise SystemExit("Refusing local sync where SRC and DST overlap")
-
-
-def print_list(title: str, paths: list[str], *, limit: int | None = None) -> None:
+def print_paths(title: str, paths: list[str], limit: int = 80) -> None:
     print(f"\n{title} ({len(paths)})")
-    shown = paths if limit is None else paths[:limit]
-    for path in shown:
-        print(f"  {path}")
-    if limit is not None and len(paths) > limit:
+    for path in paths[:limit]:
+        print("  " + display(path))
+    if len(paths) > limit:
         print(f"  ... {len(paths) - limit} more")
 
 
-def main() -> int:
-    parser = argparse.ArgumentParser(
-        description="Rsync a Git source tree using Git's ignore policy."
-    )
-    parser.add_argument(
-        "-y", "--yes", action="store_true", help="Apply the displayed plan"
-    )
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("-y", "--yes", action="store_true", help="Apply the plan")
     parser.add_argument("paths", nargs="+", metavar="PATH", help="[SRC] DST")
-    args = parser.parse_args()
-
+    args = parser.parse_args(argv)
     if len(args.paths) == 1:
         source = parse_endpoint(".")
         dest = parse_endpoint(args.paths[0])
@@ -381,82 +445,107 @@ def main() -> int:
         dest = parse_endpoint(args.paths[1])
     else:
         parser.error("expected DST or SRC DST")
+    if source.remote:
+        raise SystemExit("v2 requires a local source worktree")
+    if not dest.remote:
+        source_path, dest_path = Path(source.path), Path(dest.path)
+        if source_path == dest_path or source_path in dest_path.parents or dest_path in source_path.parents:
+            raise SystemExit("Refusing overlapping local source and destination")
 
-    ensure_supported_pair(source, dest)
-
+    verify_git_root(source)
+    verify_git_root(dest)
     roots = list_git_roots(source)
-    source_set = source_files(source, roots)
-    dest_set = find_paths(dest, r"\( -type f -o -type l \)")
-    dest_dir_set = find_paths(dest, "-type d")
-    source_dir_set = source_dirs(source_set)
-    file_blockers = sorted(dest_set & source_dir_set)
-    dir_blockers = sorted(dest_dir_set & source_set)
-    dir_blocker_set = set(dir_blockers)
-    covered_by_dir_blockers = {
-        path
-        for path in dest_set
-        if any(path.startswith(d + "/") for d in dir_blocker_set)
-    }
-    dest_extra = sorted((dest_set - source_set) - covered_by_dir_blockers)
-    ignored_extra = ignored_paths(
-        [path for path in dest_extra if path not in file_blockers], source, roots
-    )
-    keep_ignored = sorted(ignored_extra)
-    delete_candidates = sorted((set(dest_extra) - ignored_extra) | set(file_blockers))
-    post_transfer_deletes = sorted(set(delete_candidates) - set(file_blockers))
+    logical = source_files(source, roots)
 
-    print(f"SRC: {source.raw} ({'remote' if source.remote else 'local'})")
+    source_regular = find_paths(source, "-type f")
+    source_links = find_paths(source, "-type l")
+    source_special = find_paths(
+        source, r"! \( -type f -o -type l -o -type d \)"
+    )
+    missing_or_bad_source = logical - source_regular - source_links
+    if missing_or_bad_source:
+        raise SystemExit(
+            "Source paths are missing or unsupported: "
+            + ", ".join(display(path) for path in sorted(missing_or_bad_source)[:8])
+        )
+    nonignored_source_special = source_special - ignored_paths(
+        sorted(source_special), source, roots
+    )
+    if nonignored_source_special:
+        raise SystemExit(
+            "Non-ignored source special nodes are unsupported: "
+            + ", ".join(display(path) for path in sorted(nonignored_source_special)[:8])
+        )
+
+    pointers = lfs_pointer_paths(source, logical, roots, source_regular)
+    transfer = logical - pointers
+    source_dirs = source_directories(logical)
+
+    dest_files_links = find_paths(dest, r"\( -type f -o -type l \)")
+    dest_dirs = find_paths(dest, "-type d")
+    dest_special = find_paths(dest, r"! \( -type f -o -type l -o -type d \)")
+    file_blockers = sorted((dest_files_links | dest_special) & source_dirs)
+    dir_blockers = sorted(dest_dirs & logical)
+    special_blockers = sorted(dest_special & logical)
+    missing_lfs = sorted(pointers - dest_files_links)
+
+    dest_leaves = dest_files_links | dest_special
+    extras = sorted(dest_leaves - logical)
+    ignored = ignored_paths(extras, source, roots)
+    special_extras = sorted((dest_special - logical) - ignored)
+    delete_candidates = sorted((dest_files_links - logical) - ignored)
+    errors: list[str] = []
+    if file_blockers:
+        errors.append("Destination files/special nodes block source directories")
+    if dir_blockers:
+        errors.append("Destination directories block source files")
+    if special_blockers:
+        errors.append("Destination special nodes block source files")
+    if missing_lfs:
+        errors.append("Destination LFS paths are missing or not files/symlinks")
+    if special_extras:
+        errors.append("Non-ignored destination special nodes cannot be deleted safely")
+
+    print(f"SRC: {source.raw} (local)")
     print(f"DST: {dest.raw} ({'remote' if dest.remote else 'local'})")
-    print(f"Source files: {len(source_set)}")
-    print(f"Destination files/links: {len(dest_set)}")
-    print(
-        "Planner scope: files/symlinks plus path-blocking directories; "
-        "other extra directories are left untouched."
-    )
-    print_list("Destination directory blockers (source files at these paths)", dir_blockers)
-    print_list(
-        "Destination file/link blockers (source directories at these paths)",
-        file_blockers,
-    )
-    print_list("Destination delete candidates (non-ignored extras)", delete_candidates)
-    print_list("Destination kept extras (ignored by Git)", keep_ignored, limit=80)
-    sys.stdout.flush()
+    print(f"Logical source files: {len(logical)}")
+    print(f"Transfer files: {len(transfer)}")
+    print(f"Preserved LFS paths: {len(pointers)}")
+    print(f"Destination delete files/links: {len(delete_candidates)}")
+    print(f"Destination kept ignored files/links: {len(ignored)}")
+    print_paths("Preserved LFS paths", sorted(pointers))
+    print_paths("Destination file/special blockers", file_blockers)
+    print_paths("Destination directory blockers", dir_blockers)
+    print_paths("Missing/invalid destination LFS paths", missing_lfs)
+    print_paths("Destination delete files/links", delete_candidates)
+    if errors:
+        print(f"\nErrors ({len(errors)})")
+        for error in errors:
+            print("  " + error)
+        print("\nNo changes made.")
+        return 2
 
-    files_from = write_files_from(source_set)
+    files_from = write_files_from(transfer)
     try:
-        if args.yes:
-            delete_dest_paths(dest, dir_blockers, recursive=True)
-            delete_dest_paths(dest, file_blockers, recursive=False)
-            print("\nRsync source transfer:")
-            sys.stdout.flush()
-            rc = rsync_transfer(source, dest, files_from, dry_run=False)
-            if rc != 0:
-                return rc
-            delete_dest_paths(dest, post_transfer_deletes, recursive=False)
-            print(f"\nDeleted destination extras: {len(delete_candidates)}")
-            if dir_blockers:
-                print(f"Deleted destination directory blockers: {len(dir_blockers)}")
-        else:
-            if dir_blockers or file_blockers:
-                print(
-                    "\nRsync source transfer plan skipped until path blockers are removed."
-                )
-            else:
-                print("\nRsync source transfer plan:")
-                sys.stdout.flush()
-                rc = rsync_transfer(source, dest, files_from, dry_run=True)
-                if rc != 0:
-                    return rc
-            print(
-                "\nDry run only. Re-run with -y to transfer source and delete candidates."
-            )
+        print("\nRsync transfer plan:" if not args.yes else "\nRsync transfer:")
+        sys.stdout.flush()
+        rc = rsync_transfer(source, dest, files_from, dry_run=not args.yes)
+        if rc != 0:
+            if args.yes:
+                print("\nRsync failed; destination extras were not deleted.")
+            return rc
+        if not args.yes:
+            print("\nDry run only. Re-run with -y to apply a freshly generated plan.")
+            return 0
+        verify_git_root(dest)
+        delete_files(dest, delete_candidates)
+        print(f"\nDeleted destination extras: {len(delete_candidates)}")
+        return 0
     finally:
         try:
             Path(files_from).unlink()
         except FileNotFoundError:
             pass
-
-    return 0
 
 
 if __name__ == "__main__":

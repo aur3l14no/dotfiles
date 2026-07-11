@@ -56,15 +56,18 @@ root `justfile`. This file is VCS-ignored and dedicated to remote sync.
 - Use `tools/rsync_repo.py` from this skill directory for Git worktree syncs.
   Do not hand-write rsync exclude/delete recipes.
 - `rsync_repo.py` derives source files and deletion candidates from Git plus
-  `.gitignore`, keeps ignored destination extras, deletes non-ignored extras
-  only with `-y`, and plans files/symlinks plus path-blocking directories.
+  `.gitignore`, keeps ignored destination extras, and deletes non-ignored extras
+  only after a successful `-y` transfer.
+- A local `filter=lfs` pointer is not transferred: its existing destination
+  file or symlink is preserved. A missing destination path or any file/directory
+  path blocker stops the sync.
 
 ## Sync And Run
 
 - Local source is authoritative; remote source is an execution copy.
+- Remote source changes are not protected and may be overwritten or deleted.
 - Before remote runs, sync through `just sync-remote` using the
   `justfile.local` contract above.
-- If remote source changed, stop and ask.
 
 Branch switching is ordinary local Git; no workspace slots, manifests, or sync
 sessions.
