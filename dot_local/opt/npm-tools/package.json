@@ -1,0 +1,11 @@
+{
+  "name": "dotfiles-npm-tools",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "@larksuite/cli": "1.0.73"
+  },
+  "allowScripts": {
+    "@larksuite/cli@1.0.73": true
+  }
+}

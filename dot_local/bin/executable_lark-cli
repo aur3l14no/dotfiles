@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+real_cli="$HOME/.local/opt/npm-tools/node_modules/.bin/lark-cli"
+
+if [[ ! -x "$real_cli" ]]; then
+    printf '%s\n' \
+        "lark-cli is not installed from the dotfiles npm lock." \
+        "Install it with:" \
+        "  npm-user ci --prefix \"$HOME/.local/opt/npm-tools\"" >&2
+    exit 127
+fi
+
+if [[ "${1:-}" == "update" ]]; then
+    check_only=false
+    for arg in "$@"; do
+        if [[ "$arg" == "--check" ]]; then
+            check_only=true
+            break
+        fi
+    done
+    if [[ "$check_only" != true ]]; then
+        printf '%s\n' \
+            "lark-cli update is disabled: the binary is managed by the npm lock," \
+            "and Lark skills are managed by APM." >&2
+        exit 2
+    fi
+fi
+
+export LARKSUITE_CLI_NO_SKILLS_NOTIFIER=1
+export LARKSUITE_CLI_NO_UPDATE_NOTIFIER=1
+
+exec "$real_cli" "$@"
+

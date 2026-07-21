@@ -1,0 +1,11 @@
+name: dotfiles-agent-skills
+version: 0.1.0
+
+targets:
+  - agent-skills
+
+dependencies:
+  apm:
+    - git: https://github.com/larksuite/cli.git
+      ref: "^1.0.0"
+  mcp: []

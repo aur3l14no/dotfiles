@@ -73,3 +73,48 @@ List lives in `mise-packages.txt` and is ignored by chezmoi (so it does not land
 ``` sh
 cat "$(chezmoi source-path)/mise-packages.txt" | xargs ~/.local/bin/mise use --global
 ```
+
+## Agent Skills
+
+Remote agent skills are resolved and locked by APM. The global manifest and
+lock are managed by chezmoi under `~/.apm/`; APM deploys skills to the shared
+`~/.agents/skills/` directory used by the agent clients.
+
+Only locally maintained skills belong under `chezmoi/dot_agents/skills/`.
+Do not add APM-deployed skills back to chezmoi: `~/.apm/apm_modules/` is APM's
+runtime store, and `apm install` recreates both that store and the deployed
+skill directories from the checked-in manifest and lock.
+
+Install APM and restore the locked skills:
+
+``` sh
+uv tool install apm-cli
+chezmoi apply
+apm install --global --frozen
+```
+
+Check for upstream changes without installing them:
+
+``` sh
+apm outdated --global
+```
+
+Preview and apply compatible stable skill updates, then save the regenerated
+lock back to chezmoi:
+
+``` sh
+apm update --global --dry-run --target agent-skills larksuite/cli
+apm update --global --yes --target agent-skills larksuite/cli
+chezmoi re-add "$HOME/.apm/apm.lock.yaml"
+```
+
+`lark-cli` is separate from its skills. Its npm package is locked under
+`~/.local/opt/npm-tools/` and can be restored with:
+
+``` sh
+npm-user ci --prefix "$HOME/.local/opt/npm-tools"
+```
+
+Do not run `lark-cli update`: that command also invokes `npx skills` and would
+bypass APM. The managed `lark-cli` wrapper permits `update --check` but blocks
+the mutating update command.

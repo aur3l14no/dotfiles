@@ -1,5 +1,6 @@
 README.md
 mise-packages.txt
+.apm/apm_modules
 .config/karabiner/automatic_backups
 .config/rustic/*.env
 
