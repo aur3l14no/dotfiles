@@ -8,4 +8,10 @@ dependencies:
   apm:
     - git: https://github.com/larksuite/cli.git
       ref: "^1.0.0"
+    - git: https://github.com/mattpocock/skills.git
+      path: skills/productivity/grill-me
+      ref: main
+    - git: https://github.com/mattpocock/skills.git
+      path: skills/productivity/grilling
+      ref: main
   mcp: []
