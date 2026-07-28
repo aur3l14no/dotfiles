@@ -1,0 +1,193 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+umask 077
+
+readonly CONFIG_BASE="${XDG_CONFIG_HOME:-${HOME}/.config}/bitwarden-agent"
+readonly CREDENTIALS_FILE="${BW_AGENT_ENV_FILE:-${CONFIG_BASE}/env}"
+readonly CLI_STATE_DIR="${BITWARDENCLI_APPDATA_DIR:-${CONFIG_BASE}/cli}"
+
+die() {
+  printf 'bw-agent: %s\n' "$*" >&2
+  exit 1
+}
+
+usage() {
+  cat >&2 <<'EOF'
+Usage:
+  bw-agent status
+  bw-agent list
+  bw-agent get username ITEM_ID_OR_EXACT_NAME
+  bw-agent get password ITEM_ID_OR_EXACT_NAME
+  bw-agent get totp ITEM_ID_OR_EXACT_NAME
+EOF
+  exit "${1:-2}"
+}
+
+require_command() {
+  command -v "$1" >/dev/null 2>&1 || die "required command not found: $1"
+}
+
+file_owner_uid() {
+  stat -f '%u' "$1" 2>/dev/null || stat -c '%u' "$1" 2>/dev/null
+}
+
+file_mode() {
+  stat -f '%Lp' "$1" 2>/dev/null || stat -c '%a' "$1" 2>/dev/null
+}
+
+prepare_state() {
+  mkdir -p "$CLI_STATE_DIR"
+  chmod 700 "$CLI_STATE_DIR"
+  export BITWARDENCLI_APPDATA_DIR="$CLI_STATE_DIR"
+
+  if [[ ! -f "$CLI_STATE_DIR/data.json" ]]; then
+    bw config server "$BW_SERVER" >/dev/null
+  fi
+
+  local configured_server
+  configured_server="$(bw status | jq -r '.serverUrl // empty')"
+  [[ "$configured_server" == "$BW_SERVER" ]] ||
+    die "configured server mismatch"
+}
+
+load_credentials() {
+  [[ -f "$CREDENTIALS_FILE" ]] || die "credentials file not found: $CREDENTIALS_FILE"
+
+  local owner_uid mode
+  owner_uid="$(file_owner_uid "$CREDENTIALS_FILE")" ||
+    die "cannot inspect credentials file owner"
+  mode="$(file_mode "$CREDENTIALS_FILE")" ||
+    die "cannot inspect credentials file permissions"
+
+  [[ "$owner_uid" == "$(id -u)" ]] ||
+    die "credentials file must be owned by the current user"
+  [[ "$mode" == "600" || "$mode" == "400" ]] ||
+    die "credentials file mode must be 0600 or 0400"
+
+  set -a
+  # shellcheck disable=SC1090
+  source "$CREDENTIALS_FILE"
+  set +a
+  unset BW_SESSION
+  export BITWARDENCLI_APPDATA_DIR="$CLI_STATE_DIR"
+
+  [[ "${BW_CLIENTID:-}" == user.* ]] ||
+    die "BW_CLIENTID must be a personal API key client id"
+  [[ -n "${BW_CLIENTSECRET:-}" ]] || die "BW_CLIENTSECRET is missing"
+  [[ -n "${BW_PASSWORD:-}" ]] || die "BW_PASSWORD is missing"
+  [[ "${BW_SERVER:-}" == https://* ]] || die "BW_SERVER must be an HTTPS URL"
+}
+
+cleanup() {
+  if [[ -n "${BW_SESSION:-}" ]]; then
+    bw lock --quiet >/dev/null 2>&1 || true
+  fi
+  unset BW_SESSION BW_PASSWORD BW_CLIENTID BW_CLIENTSECRET BW_SERVER
+}
+
+unlock_vault() {
+  local login_state
+  login_state="$(bw status | jq -r '.status')"
+  case "$login_state" in
+    unauthenticated)
+      bw login --apikey --quiet >/dev/null
+      ;;
+    locked | unlocked)
+      ;;
+    *)
+      die "unexpected Bitwarden status: $login_state"
+      ;;
+  esac
+
+  BW_SESSION="$(bw unlock --passwordenv BW_PASSWORD --raw)"
+  export BW_SESSION
+  unset BW_PASSWORD BW_CLIENTID BW_CLIENTSECRET
+
+  bw sync --quiet >/dev/null
+}
+
+list_items() {
+  local collections_json folders_json
+  collections_json="$(bw list collections)"
+  folders_json="$(bw list folders)"
+
+  bw list items |
+    jq --argjson collections "$collections_json" --argjson folders "$folders_json" '
+      def typename:
+        if . == 1 then "login"
+        elif . == 2 then "secure-note"
+        elif . == 3 then "card"
+        elif . == 4 then "identity"
+        elif . == 5 then "ssh-key"
+        else "unknown"
+        end;
+      sort_by(.type, (.name | ascii_downcase))
+      | map({
+          id,
+          name,
+          type: (.type | typename),
+          collections: (
+            [.collectionIds[]? as $cid
+             | $collections[]
+             | select(.id == $cid)
+             | .name]
+            | unique
+          ),
+          folder: (
+            .folderId as $fid
+            | [$folders[] | select(.id == $fid) | .name][0] // null
+          ),
+          customFields: (
+            [.fields[]?.name]
+            | map(select(. != null))
+            | unique
+          )
+        })
+    '
+}
+
+main() {
+  local action="${1:-}"
+  case "$action" in
+    help | --help | -h)
+      usage 0
+      ;;
+  esac
+
+  require_command bw
+  require_command jq
+  load_credentials
+  trap cleanup EXIT
+  prepare_state
+
+  case "$action" in
+    status)
+      [[ "$#" -eq 1 ]] || usage
+      bw status | jq '{serverUrl, status}'
+      ;;
+    list)
+      [[ "$#" -eq 1 ]] || usage
+      unlock_vault
+      list_items
+      ;;
+    get)
+      [[ "$#" -eq 3 ]] || usage
+      local field="$2"
+      case "$field" in
+        username | password | totp)
+          ;;
+        *)
+          die "unsupported field: $field"
+          ;;
+      esac
+      unlock_vault
+      bw get "$field" "$3"
+      ;;
+    *)
+      usage
+      ;;
+  esac
+}
+
+main "$@"
