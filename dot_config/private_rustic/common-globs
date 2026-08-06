@@ -17,4 +17,5 @@
 !**/var/tmp
 !**/var/lib/docker
 !**/var/lib/containers/storage
+!**/.local/share/containers/storage
 !**/var/lib/postgresql
