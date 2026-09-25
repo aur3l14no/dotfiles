@@ -1,193 +1,151 @@
 #!/usr/bin/env bash
+#
+# bw-agent — run any `bw` command against a private, disposable copy of a
+# pre-unlocked template.
+#
+# `bw` WRITES to its state directory: `unlock` rewrites the wrapped user key
+# inside data.json (instantly invalidating any session that unwrapped the
+# previous one) and `lock` deletes it. Two callers sharing one state directory
+# therefore fight — that is the mechanism behind bitwarden/clients#6898. A
+# private copy per call removes the shared state instead of arbitrating it, so
+# concurrency needs no lock and no daemon.
+#
+# The template is a pair of files: `--setup` writes both, `sync` refreshes
+# data.json in place. Neither is usable alone:
+#
+#   template/data.json   CLI state: tokens, wrapped user key, device identity
+#   template/session     the BW_SESSION value that unwraps it
+#
+# The data.json copy is what makes the call writable; the session is passed as
+# an environment variable and never lands in the copy.
+#
+# No credential file is read anywhere. --setup takes the master password from a
+# prompt and writes it nowhere; the runtime path needs no password at all.
+#
+# Treat the template as an unrevocable credential for the whole vault: re-running
+# --setup does NOT invalidate a copy that leaked. Rotating the account encryption
+# key is the only real revocation.
 set -euo pipefail
-
 umask 077
 
-readonly CONFIG_BASE="${XDG_CONFIG_HOME:-${HOME}/.config}/bitwarden-agent"
-readonly CREDENTIALS_FILE="${BW_AGENT_ENV_FILE:-${CONFIG_BASE}/env}"
-readonly CLI_STATE_DIR="${BITWARDENCLI_APPDATA_DIR:-${CONFIG_BASE}/cli}"
+BW_AGENT_DIR="${BW_AGENT_DIR:-${XDG_CONFIG_HOME:-$HOME/.config}/bitwarden-agent}"
+TEMPLATE="${BW_AGENT_DIR}/template"
+RUNTIME_DIR="${XDG_RUNTIME_DIR:-${TMPDIR:-/tmp}}"; RUNTIME_DIR="${RUNTIME_DIR%/}"
+WORK=
 
-die() {
-  printf 'bw-agent: %s\n' "$*" >&2
-  exit 1
+cleanup() { if [[ -n "$WORK" ]]; then rm -rf "$WORK"; WORK=; fi; }
+trap cleanup EXIT INT TERM
+die() { printf 'bw-agent: %s\n' "$*" >&2; exit 1; }
+
+bw_run() {
+  BW_SESSION="$(cat "$TEMPLATE/session")" \
+  BITWARDENCLI_APPDATA_DIR="$WORK" \
+    bw --nointeraction "$@"
 }
 
-usage() {
-  cat >&2 <<'EOF'
-Usage:
-  bw-agent status
-  bw-agent list
-  bw-agent get username ITEM_ID_OR_EXACT_NAME
-  bw-agent get password ITEM_ID_OR_EXACT_NAME
-  bw-agent get totp ITEM_ID_OR_EXACT_NAME
-EOF
-  exit "${1:-2}"
+# `bw` has no field projection and `list items` / `get item` return every field
+# decrypted — login.password, login.totp, login.fido2Credentials, notes,
+# custom-field values, passwordHistory. That output *is* the plaintext vault, so
+# a single `bw list items` in a transcript is a full disclosure. Those two
+# commands are the only ones that emit whole entries; both are projected here
+# through an allow-list, so anything `bw` adds later fails closed. Single-field
+# reads (`get password`, `get totp`) are the intended channel and pass through.
+project_items() {
+  jq '
+    def safe: {
+      id, name, type, object, favorite, reprompt,
+      organizationId, collectionIds, folderId: (.folderId // null),
+      username: (.login.username // null),
+      uris: [.login.uris[]?.uri],
+      customFields: [.fields[]?.name]
+    };
+    if type == "array" then map(safe) else safe end
+  '
 }
 
-require_command() {
-  command -v "$1" >/dev/null 2>&1 || die "required command not found: $1"
-}
+# Every call gets its own state directory, so concurrent callers cannot
+# invalidate each other. Arguments pass straight through: the full `bw` surface
+# is available and nothing here needs extending.
+run_bw() {
+  [[ -f "$TEMPLATE/data.json" && -f "$TEMPLATE/session" ]] ||
+    die "no template at $TEMPLATE — a human must run: bw-agent --setup"
+  command -v bw >/dev/null 2>&1 || die "bw is not on PATH"
 
-file_owner_uid() {
-  stat -f '%u' "$1" 2>/dev/null || stat -c '%u' "$1" 2>/dev/null
-}
+  WORK="$(mktemp -d "${RUNTIME_DIR}/bw-agent.XXXXXX")"
+  cp "$TEMPLATE/data.json" "$WORK/data.json"
 
-file_mode() {
-  stat -f '%Lp' "$1" 2>/dev/null || stat -c '%a' "$1" 2>/dev/null
-}
-
-prepare_state() {
-  mkdir -p "$CLI_STATE_DIR"
-  chmod 700 "$CLI_STATE_DIR"
-  export BITWARDENCLI_APPDATA_DIR="$CLI_STATE_DIR"
-
-  if [[ ! -f "$CLI_STATE_DIR/data.json" ]]; then
-    bw config server "$BW_SERVER" >/dev/null
+  local sub1="${1:-}" sub2="${2:-}"
+  # Only on an explicit request: reads stay served from the copied snapshot.
+  if [[ "$sub1" == "sync" ]]; then
+    bw_run "$@"
+    install -m 600 "$WORK/data.json" "$TEMPLATE/data.json.new"
+    mv -f "$TEMPLATE/data.json.new" "$TEMPLATE/data.json"
+    return
   fi
-
-  local configured_server
-  configured_server="$(bw status | jq -r '.serverUrl // empty')"
-  [[ "$configured_server" == "$BW_SERVER" ]] ||
-    die "configured server mismatch"
-}
-
-load_credentials() {
-  [[ -f "$CREDENTIALS_FILE" ]] || die "credentials file not found: $CREDENTIALS_FILE"
-
-  local owner_uid mode
-  owner_uid="$(file_owner_uid "$CREDENTIALS_FILE")" ||
-    die "cannot inspect credentials file owner"
-  mode="$(file_mode "$CREDENTIALS_FILE")" ||
-    die "cannot inspect credentials file permissions"
-
-  [[ "$owner_uid" == "$(id -u)" ]] ||
-    die "credentials file must be owned by the current user"
-  [[ "$mode" == "600" || "$mode" == "400" ]] ||
-    die "credentials file mode must be 0600 or 0400"
-
-  set -a
-  # shellcheck disable=SC1090
-  source "$CREDENTIALS_FILE"
-  set +a
-  unset BW_SESSION
-  export BITWARDENCLI_APPDATA_DIR="$CLI_STATE_DIR"
-
-  [[ "${BW_CLIENTID:-}" == user.* ]] ||
-    die "BW_CLIENTID must be a personal API key client id"
-  [[ -n "${BW_CLIENTSECRET:-}" ]] || die "BW_CLIENTSECRET is missing"
-  [[ -n "${BW_PASSWORD:-}" ]] || die "BW_PASSWORD is missing"
-  [[ "${BW_SERVER:-}" == https://* ]] || die "BW_SERVER must be an HTTPS URL"
-}
-
-cleanup() {
-  if [[ -n "${BW_SESSION:-}" ]]; then
-    bw lock --quiet >/dev/null 2>&1 || true
-  fi
-  unset BW_SESSION BW_PASSWORD BW_CLIENTID BW_CLIENTSECRET BW_SERVER
-}
-
-unlock_vault() {
-  local login_state
-  login_state="$(bw status | jq -r '.status')"
-  case "$login_state" in
-    unauthenticated)
-      bw login --apikey --quiet >/dev/null
+  case "$sub1 $sub2" in
+    "list items"|"get item")
+      command -v jq >/dev/null 2>&1 || die "jq is required to read items safely"
+      shift 2
+      bw_run "$sub1" "$sub2" "$@" | project_items
       ;;
-    locked | unlocked)
+    "export "*)
+      die "refusing to export the vault in plaintext"
       ;;
     *)
-      die "unexpected Bitwarden status: $login_state"
-      ;;
-  esac
-
-  BW_SESSION="$(bw unlock --passwordenv BW_PASSWORD --raw)"
-  export BW_SESSION
-  unset BW_PASSWORD BW_CLIENTID BW_CLIENTSECRET
-
-  bw sync --quiet >/dev/null
-}
-
-list_items() {
-  local collections_json folders_json
-  collections_json="$(bw list collections)"
-  folders_json="$(bw list folders)"
-
-  bw list items |
-    jq --argjson collections "$collections_json" --argjson folders "$folders_json" '
-      def typename:
-        if . == 1 then "login"
-        elif . == 2 then "secure-note"
-        elif . == 3 then "card"
-        elif . == 4 then "identity"
-        elif . == 5 then "ssh-key"
-        else "unknown"
-        end;
-      sort_by(.type, (.name | ascii_downcase))
-      | map({
-          id,
-          name,
-          type: (.type | typename),
-          collections: (
-            [.collectionIds[]? as $cid
-             | $collections[]
-             | select(.id == $cid)
-             | .name]
-            | unique
-          ),
-          folder: (
-            .folderId as $fid
-            | [$folders[] | select(.id == $fid) | .name][0] // null
-          ),
-          customFields: (
-            [.fields[]?.name]
-            | map(select(. != null))
-            | unique
-          )
-        })
-    '
-}
-
-main() {
-  local action="${1:-}"
-  case "$action" in
-    help | --help | -h)
-      usage 0
-      ;;
-  esac
-
-  require_command bw
-  require_command jq
-  load_credentials
-  trap cleanup EXIT
-  prepare_state
-
-  case "$action" in
-    status)
-      [[ "$#" -eq 1 ]] || usage
-      bw status | jq '{serverUrl, status}'
-      ;;
-    list)
-      [[ "$#" -eq 1 ]] || usage
-      unlock_vault
-      list_items
-      ;;
-    get)
-      [[ "$#" -eq 3 ]] || usage
-      local field="$2"
-      case "$field" in
-        username | password | totp)
-          ;;
-        *)
-          die "unsupported field: $field"
-          ;;
-      esac
-      unlock_vault
-      bw get "$field" "$3"
-      ;;
-    *)
-      usage
+      bw_run "$@"
       ;;
   esac
 }
 
-main "$@"
+# Human-only, one time. Freezes one unlocked session into the template; after
+# this the master password is needed nowhere.
+#
+#   bw-agent --setup <SERVER_URL>               fresh machine; signs in, new device
+#   BW_AGENT_STATE_DIR=<dir> bw-agent --setup   reuse an existing sign-in, no new device
+#
+# Exactly one of the two is required, so setup can never silently sign in to
+# whatever server happens to be the default.
+setup() {
+  local server="${1:-}" password session
+
+  [[ -n "$server" || -n "${BW_AGENT_STATE_DIR:-}" ]] ||
+    die "pass a server URL, or set BW_AGENT_STATE_DIR to an existing CLI state"
+
+  WORK="$(mktemp -d "${RUNTIME_DIR}/bw-agent-setup.XXXXXX")"
+  export BITWARDENCLI_APPDATA_DIR="$WORK"
+
+  if [[ -n "${BW_AGENT_STATE_DIR:-}" ]]; then
+    cp "${BW_AGENT_STATE_DIR}/data.json" "$WORK/data.json" ||
+      die "no data.json under $BW_AGENT_STATE_DIR"
+  else
+    bw config server "$server" --nointeraction >/dev/null 2>&1 ||
+      die "could not point the CLI at $server"
+    printf 'bw-agent: signing in to %s (registers a new device)\n' "$server" >&2
+    bw login || die "sign-in failed"
+  fi
+
+  printf 'bw-agent: master password, used once and stored nowhere: ' >&2
+  IFS= read -rs password || true
+  printf '\n' >&2
+  [[ -n "$password" ]] || die "no password given"
+
+  session="$(BW_AGENT_PW="$password" \
+    bw unlock --passwordenv BW_AGENT_PW --raw --nointeraction)" || die "unlock failed"
+  unset password
+  [[ -n "$session" ]] || die "unlock returned an empty session"
+  bw sync --quiet --nointeraction >/dev/null
+
+  mkdir -p "$TEMPLATE"
+  chmod 700 "$BW_AGENT_DIR" "$TEMPLATE"
+  cp "$WORK/data.json" "$TEMPLATE/data.json"
+  printf '%s\n' "$session" > "$TEMPLATE/session"
+  chmod 600 "$TEMPLATE/data.json" "$TEMPLATE/session"
+  unset session
+
+  printf 'bw-agent: template written to %s\n' "$TEMPLATE"
+}
+
+case "${1:-}" in
+  --setup) shift; setup "$@" ;;
+  *)       run_bw "$@" ;;
+esac

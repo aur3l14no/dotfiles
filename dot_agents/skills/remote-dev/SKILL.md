@@ -1,73 +1,48 @@
 ---
 name: remote-dev
-description: Use for local-edit, remote-run workflows involving AGENTS.local.md, SSH, rsync, remote initialization, sudo, storage, proxies, or remote commands.
+description: Set up and run workflows that edit locally and sync or execute remotely.
 ---
 
 # Remote Dev
 
-Agent guide for repos edited locally and run remotely.
+Edit locally; run tests, installs, downloads, simulators, and robot/runtime
+commands remotely. Keep large or reusable data in the remote data/cache path.
 
-## Read First
-
-- `AGENTS.md`, then ignored `AGENTS.local.md` if present.
-- Development-environment docs named by `AGENTS.md`.
-- Env files only for needed variables; never print secrets.
-
-## Private Files
-
-- `AGENTS.local.md`: SSH alias/host, remote workspace, data/cache path, proxy,
-  and operator notes. Must be kept <50 lines.
-- Env files: development variables such as `UV_CACHE_DIR` and `VENV_*`.
-
-Keep these git-ignored; they are machine-private, not contributor docs.
-
-## Roles
-
-- Local: edit, inspect, and do very light work such as building or serving docs.
-- Remote: run tests, simulators, heavy installs, downloads, and robot/runtime
-  commands.
-- Put large or reusable files under the agreed remote data/cache path, not in
-  source, unless the project explicitly tracks them.
+Read `AGENTS.md` and ignored `AGENTS.local.md`. Keep the latter under 50 lines
+and record only machine-specific host/workspace, storage, environment, network,
+sudo, and runtime facts.
 
 ## Initialize
 
-If facts are missing, ask for the remote host, remote workspace, data/cache
-path, proxy endpoint if downloads are blocked, and whether sudo is needed.
+If connection facts are missing, ask for the remote host, workspace, and
+data/cache path. Inspect the remote read-only for everything else; record only
+durable facts.
 
-After getting enough connection facts, inspect the remote non-destructively
-before asking for details the host can answer. Stop when this checklist is
-filled:
+Create an ignored root `justfile.local`, imported by the root `justfile`:
 
-- Host/workspace: SSH alias or host, remote workspace, and data/cache path.
-- System: OS/arch, CPU, GPU, driver/CUDA when relevant, and usable storage.
-- Project env: env file path, required vars, and venv roles.
-- Constraints: proxy for GitHub/Hugging Face if needed, sudo needs, and any
-  simulator/robot access required by the task.
+- Keep it to thin machine-specific sync recipes; delegate repository mirroring
+  to this skill's `tools/rsync_repo.py`.
+- Hard-code the direction from this machine's fixed role: sender uses `push`,
+  receiver uses `pull`. Accept only optional `-y`; dry-run otherwise.
 
-Record durable facts only.
+## Sync
 
-After initialization, provide a root `justfile.local` and reference it from the
-root `justfile`. This file is VCS-ignored and dedicated to remote sync.
+Run `rsync_repo.py push|pull [-y] REMOTE` locally from the current worktree.
+`push` makes local authoritative; `pull` makes remote authoritative without
+remote access to local. Use `just sync-remote [-y]` for the machine's fixed
+direction and invoke the opposite direction directly.
 
-- It contains exactly one recipe, `sync-remote`; no other recipe is allowed.
-- It is under 10 lines and under 500 total characters.
-- `sync-remote` dry-runs unless invoked with `-y`; only `-y` may perform a real
-  sync.
-- Use `tools/rsync_repo.py` from this skill directory for Git worktree syncs.
-  Do not hand-write rsync exclude/delete recipes.
-- `rsync_repo.py` derives source files and deletion candidates from Git plus
-  `.gitignore`, keeps ignored destination extras, and deletes non-ignored extras
-  only after a successful `-y` transfer.
-- A local `filter=lfs` pointer is not transferred: its existing destination
-  file or symlink is preserved. A missing destination path or any file/directory
-  path blocker stops the sync.
+The selected source may overwrite or delete destination changes. The script
+derives paths from Git and `.gitignore`, keeps ignored destination extras and
+existing files behind source LFS pointers, and aborts on path blockers. It
+mirrors the worktree and staged tree, and sets destination HEAD to the source
+commit in detached state. Destination named branch refs and Git configuration
+remain unchanged.
 
-## Sync And Run
+## Temporary CLI Migration
 
-- Local source is authoritative; remote source is an execution copy.
-- Remote source changes are not protected and may be overwritten or deleted.
-- Before remote runs, sync through `just sync-remote` using the
-  `justfile.local` contract above.
+- `rsync_repo.py [-y] REMOTE` or `rsync_repo.py [-y] . REMOTE` becomes
+  `rsync_repo.py push [-y] REMOTE`.
+- `just sync-remote [-y]` is unchanged for existing sender recipes.
 
-Branch switching is ordinary local Git; no workspace slots, manifests, or sync
-sessions.
+Remove this section after the transition window.

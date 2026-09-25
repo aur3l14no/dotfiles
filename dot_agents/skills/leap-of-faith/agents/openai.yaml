@@ -1,0 +1,7 @@
+interface:
+  display_name: "Leap of Faith"
+  short_description: "Keep only instructions that change an agent's decisions"
+  default_prompt: "Use $leap-of-faith to trim these agent instructions."
+
+policy:
+  allow_implicit_invocation: false

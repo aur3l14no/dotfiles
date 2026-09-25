@@ -1,0 +1,4 @@
+interface:
+  display_name: "Code Simplifier"
+  short_description: "Find and remove unnecessary code concepts"
+  default_prompt: "Use $code-simplifier to simplify the selected code based on actual consumers and constraints, preserving behavior unless a change is authorized."

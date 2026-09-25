@@ -6,8 +6,6 @@ personality = "pragmatic"
 [features]
 remote_connections = true
 
-notify = ["/home/y/.local/bin/ntfy-agent", "--codex"]
-
 # capability
 approval_policy = "on-request"
 sandbox_mode = "workspace-write"

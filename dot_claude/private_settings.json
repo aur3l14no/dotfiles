@@ -5,18 +5,6 @@
     "DISABLE_FEEDBACK_COMMAND": "1",
     "CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY": "1"
   },
-  "hooks": {
-    "Notification": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "command -v ntfy-agent >/dev/null && ntfy-agent --claude-code || true"
-          }
-        ]
-      }
-    ]
-  },
   "enabledPlugins": {
     "codex@openai-codex": true
   },

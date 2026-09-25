@@ -1,13 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-real_cli="$HOME/.local/opt/npm-tools/node_modules/.bin/lark-cli"
-
-if [[ ! -x "$real_cli" ]]; then
-    printf '%s\n' \
-        "lark-cli is not installed from the dotfiles npm lock." \
-        "Install it with:" \
-        "  npm-user ci --prefix \"$HOME/.local/opt/npm-tools\"" >&2
+if ! command -v npm >/dev/null 2>&1 || ! command -v node >/dev/null 2>&1; then
+    printf '%s\n' "lark-cli requires Node.js and npm. Ask the user to initialize them through skill-ops." >&2
     exit 127
 fi
 
@@ -21,7 +16,7 @@ if [[ "${1:-}" == "update" ]]; then
     done
     if [[ "$check_only" != true ]]; then
         printf '%s\n' \
-            "lark-cli update is disabled: the binary is managed by the npm lock," \
+            "lark-cli update is disabled: the executable version is pinned in this wrapper," \
             "and Lark skills are managed by APM." >&2
         exit 2
     fi
@@ -29,6 +24,10 @@ fi
 
 export LARKSUITE_CLI_NO_SKILLS_NOTIFIER=1
 export LARKSUITE_CLI_NO_UPDATE_NOTIFIER=1
+export NPM_CONFIG_UPDATE_NOTIFIER=false
 
-exec "$real_cli" "$@"
-
+# An empty cache-owned prefix avoids resolving a package from the caller's project.
+cache="${NPM_USER_CACHE:-$HOME/.cache/npm}"
+mkdir -p "$cache/skill-tools/lark-cli"
+exec npm --cache "$cache" --prefix "$cache/skill-tools/lark-cli" exec \
+    --yes --package=@larksuite/cli@1.0.94 -- lark-cli "$@"

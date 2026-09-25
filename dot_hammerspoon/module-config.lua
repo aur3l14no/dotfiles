@@ -7,7 +7,7 @@ key2App = {
 	{ "8", "com.openai.codex" },
 	-- { "9", "com.google.Chrome.app.ibblmnobmgdmpoeblocemifbpglakpoi" }, -- Telegram
 	-- { "8", "com.google.Chrome.app.cadlkienfkclaiaibeoongdcgmdikeeg" }, -- ChatGPT
-	{ "7", "com.google.Chrome.app.fmpnliohjhemenmnlpbfagaolkdacoja" }, -- Claude
+	{ "7", "com.google.Chrome.app.bkglifinmphohpcalfapchifmphcimjg" }, -- DSH
 	{ "5", "com.google.Chrome.app.ajhljobecncajjcjcdomddhhijkphgmo" },
 	{ "3", "com.spotify.client" },
 	{ "f", "com.apple.finder" },
@@ -21,7 +21,7 @@ key2App = {
 	{ "t", "com.electron.trilium-notes" },
 	{ "r", "com.apple.reminders" },
 	-- { "o", "md.obsidian" },
-	{ "u", "com.apple.ScreenContinuity" },
+	-- { "u", "com.apple.ScreenContinuity" },
 	-- { "p", "com.kangfenmao.CherryStudio" },
 	{ "[", "com.electron.lark" },
 	{ "]", "org.zotero.zotero" },

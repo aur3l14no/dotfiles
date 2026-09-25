@@ -1,17 +1,18 @@
 #!/usr/bin/env python3
-"""Mirror a local Git worktree and Git state into an execution copy.
+"""Mirror a Git worktree between the current directory and another endpoint.
 
 Contract:
 
-* The local worktree is authoritative. Destination edits are not protected.
+* The selected source worktree is authoritative. ``push`` selects the current
+  worktree; ``pull`` selects the other endpoint. Destination edits are not protected.
 * Git-ignored destination extras are preserved.
-* A local ``filter=lfs`` pointer is present logically but is not transferred.
+* A source ``filter=lfs`` pointer is present logically but is not transferred.
   Its destination path must already exist as a file or symlink and is kept as-is.
 * File/directory path blockers are errors; this script never removes them.
-* Git transports the current HEAD plus index and tracked-worktree snapshots.
-  The destination reuses those objects before rsync verifies the final files.
-* The destination HEAD is detached at the source commit. Named branches and
-  branch/upstream configuration are destination-local and are not mirrored.
+* Rsync transfers the final worktree, while Git transports the source HEAD and
+  staged tree. The destination HEAD is detached at that commit and its staged
+  tree mirrors the source.
+  Named branches and branch/upstream configuration remain destination-local.
 * Missing destination submodule worktrees are initialized on apply.
 * Non-ignored destination Git roots absent from the source stop the sync.
 * The command is a dry-run unless ``-y`` is supplied.
@@ -20,24 +21,18 @@ Contract:
 from __future__ import annotations
 
 import argparse
-import os
 import re
 import shlex
-import stat
 import subprocess
 import sys
-import tempfile
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 
 SAFE_HOST = re.compile(r"^(?:[A-Za-z0-9_.-]+@)?[A-Za-z0-9_.-]+$")
 SAFE_REMOTE_PATH = re.compile(r"^/[A-Za-z0-9_./+,@=-]+$")
 LFS_VERSION = "version https://git-lfs.github.com/spec/v1"
-LFS_OID = re.compile(r"oid sha256:[0-9a-f]{64}")
-LFS_SIZE = re.compile(r"size [0-9]+")
 SYNC_HEAD = "refs/rsync-repo/head"
 SYNC_INDEX = "refs/rsync-repo/index"
-SYNC_WORKTREE = "refs/rsync-repo/worktree"
 
 
 @dataclass(frozen=True)
@@ -72,8 +67,6 @@ class GitSnapshot:
     root: str
     head_oid: str
     index_tree: str
-    worktree_tree: str
-    worktree_files: frozenset[str]
 
 
 def run_capture(
@@ -180,7 +173,11 @@ def display(path: str) -> str:
     return path.encode("utf-8", "backslashreplace").decode("utf-8", "replace")
 
 
-def is_exact_git_root(endpoint: Endpoint, rel: str = "") -> bool:
+def emit(message: str = "", *, stderr: bool = False) -> None:
+    print(message, file=sys.stderr if stderr else sys.stdout, flush=True)
+
+
+def is_exact_git_root(endpoint: Endpoint, rel: str = "", *, report_failure: bool = False) -> bool:
     result = run_at(
         endpoint,
         ["sh", "-c", "pwd -P && git rev-parse --show-toplevel"],
@@ -188,9 +185,15 @@ def is_exact_git_root(endpoint: Endpoint, rel: str = "") -> bool:
         check=False,
     )
     if result.returncode != 0:
+        if report_failure:
+            sys.stderr.write(result.stderr.decode("utf-8", "replace"))
+            raw = endpoint.raw if not rel else f"{endpoint.raw}/{display(rel)}"
+            raise SystemExit(f"Failed to inspect Git worktree: {raw}")
         return False
     paths = result.stdout.decode().splitlines()
     if len(paths) != 2:
+        if report_failure:
+            raise SystemExit("Invalid Git worktree inspection output")
         return False
     physical, top = paths
     if endpoint.remote:
@@ -199,7 +202,7 @@ def is_exact_git_root(endpoint: Endpoint, rel: str = "") -> bool:
 
 
 def verify_git_root(endpoint: Endpoint, rel: str = "") -> None:
-    if not is_exact_git_root(endpoint, rel):
+    if not is_exact_git_root(endpoint, rel, report_failure=True):
         raw = endpoint.raw if not rel else f"{endpoint.raw}/{display(rel)}"
         raise SystemExit(f"Endpoint is not an exact Git worktree root: {raw}")
 
@@ -316,6 +319,16 @@ def source_files(source: Endpoint, roots: list[str]) -> set[str]:
     nested_roots = {root for root in roots if root}
     for root in roots:
         reject_sparse_checkout(source, root)
+        unmerged = split_nul(
+            run_at(
+                source,
+                ["git", "diff", "--name-only", "--diff-filter=U", "-z"],
+                rel=root,
+            ).stdout
+        )
+        if unmerged:
+            sample = ", ".join(display(path) for path in unmerged[:8])
+            raise SystemExit(f"Unresolved index entries are unsupported: {sample}")
         candidates = git_paths(source, root, ["--cached", "--others", "--exclude-standard"])
         deleted = git_paths(source, root, ["--deleted"])
         links = gitlinks(source, root)
@@ -332,96 +345,23 @@ def source_files(source: Endpoint, roots: list[str]) -> set[str]:
     return files
 
 
-def tracked_worktree_files(source: Endpoint, roots: list[str]) -> set[str]:
-    files: set[str] = set()
-    nested_roots = {root for root in roots if root}
-    for root in roots:
-        candidates = git_paths(source, root, ["--cached"])
-        deleted = git_paths(source, root, ["--deleted"])
-        links = gitlinks(source, root)
-        for rel in candidates - deleted - links:
-            path = str(PurePosixPath(root) / rel) if root else rel
-            if path in nested_roots:
-                continue
-            validate_relpath(path)
-            files.add(path)
-    return files
-
-
 def classify_source_paths(source: Endpoint, paths: set[str]) -> tuple[set[str], set[str]]:
-    regular: set[str] = set()
-    invalid: set[str] = set()
-    root_device = Path(source.path).stat().st_dev
-    for path in paths:
-        source_path = Path(source.subpath(path))
-        try:
-            mode = source_path.lstat().st_mode
-            parent_device = source_path.parent.stat().st_dev
-        except OSError:
-            invalid.add(path)
-            continue
-        if parent_device != root_device:
-            invalid.add(path)
-        elif stat.S_ISREG(mode):
-            regular.add(path)
-        elif not stat.S_ISLNK(mode):
-            invalid.add(path)
-    return regular, invalid
-
-
-def tree_files(source: Endpoint, root: str, tree: str) -> frozenset[str]:
-    result = run_at(source, ["git", "ls-tree", "-r", "-z", tree], rel=root)
-    files: set[str] = set()
-    for record in result.stdout.split(b"\0"):
-        if not record:
-            continue
-        metadata, separator, raw_path = record.partition(b"\t")
-        fields = metadata.split()
-        if not separator or len(fields) != 3:
-            raise SystemExit("Invalid git ls-tree output")
-        mode = fields[0]
-        if mode == b"160000":
-            continue
-        if mode not in {b"100644", b"100755", b"120000"}:
-            raise SystemExit(f"Unsupported Git tree mode: {mode.decode()}")
-        files.add(decode_path(raw_path))
-    return frozenset(files)
+    regular = paths & find_paths(source, "-type f")
+    links = paths & find_paths(source, "-type l")
+    return regular, paths - regular - links
 
 
 def create_git_snapshot(source: Endpoint, root: str) -> GitSnapshot:
-    head_oid = (
+    head_oid = source_head(source, root)
+    index_tree = run_at(source, ["git", "write-tree"], rel=root).stdout.decode().strip()
+    return GitSnapshot(root=root, head_oid=head_oid, index_tree=index_tree)
+
+
+def source_head(source: Endpoint, root: str) -> str:
+    return (
         run_at(source, ["git", "rev-parse", "--verify", "HEAD^{commit}"], rel=root)
         .stdout.decode()
         .strip()
-    )
-    index_tree = run_at(source, ["git", "write-tree"], rel=root).stdout.decode().strip()
-    handle = tempfile.NamedTemporaryFile(delete=False)
-    index_path = Path(handle.name)
-    handle.close()
-    index_path.unlink()
-    env = os.environ.copy()
-    env["GIT_INDEX_FILE"] = str(index_path)
-    try:
-        run_at(source, ["git", "read-tree", index_tree], rel=root, env=env)
-        run_at(source, ["git", "add", "-u"], rel=root, env=env)
-        worktree_tree = (
-            run_at(source, ["git", "write-tree"], rel=root, env=env).stdout.decode().strip()
-        )
-    finally:
-        try:
-            index_path.unlink()
-        except FileNotFoundError:
-            pass
-        try:
-            index_path.with_name(index_path.name + ".lock").unlink()
-        except FileNotFoundError:
-            pass
-    return GitSnapshot(
-        root=root,
-        head_oid=head_oid,
-        index_tree=index_tree,
-        worktree_tree=worktree_tree,
-        worktree_files=tree_files(source, root, worktree_tree),
     )
 
 
@@ -517,18 +457,6 @@ def git_attribute_values(
     return values
 
 
-def is_lfs_pointer(path: Path) -> bool:
-    try:
-        if path.stat().st_size >= 1024:
-            return False
-        lines = path.read_text(encoding="ascii").splitlines()
-    except (OSError, UnicodeDecodeError):
-        return False
-    if len(lines) < 3 or lines[0] != LFS_VERSION:
-        return False
-    return bool(LFS_OID.fullmatch(lines[-2]) and LFS_SIZE.fullmatch(lines[-1]))
-
-
 def lfs_paths(source: Endpoint, logical: set[str], roots: list[str]) -> set[str]:
     filters = git_attribute_values(source, logical, roots, "filter")
     unknown = {
@@ -545,7 +473,35 @@ def lfs_paths(source: Endpoint, logical: set[str], roots: list[str]) -> set[str]
 
 
 def lfs_pointer_paths(source: Endpoint, lfs: set[str], source_regular: set[str]) -> set[str]:
-    return {path for path in lfs & source_regular if is_lfs_pointer(Path(source.subpath(path)))}
+    candidates = sorted(lfs & source_regular)
+    if not candidates:
+        return set()
+    stdin = b"".join(path.encode("utf-8", "surrogateescape") + b"\0" for path in candidates)
+    script = rf'''
+for path do
+    file="./$path"
+    size=$(wc -c <"$file") || continue
+    test "$size" -lt 1024 || continue
+    if awk '
+        {{ sub(/\r$/, "") }}
+        NR == 1 {{ version = ($0 == "{LFS_VERSION}") }}
+        {{ penultimate = last; last = $0; count += 1 }}
+        END {{
+            valid_oid = penultimate ~ /^oid sha256:[0-9a-f]+$/ && length(penultimate) == 75
+            valid_size = last ~ /^size [0-9]+$/
+            exit !(count >= 3 && version && valid_oid && valid_size)
+        }}
+    ' "$file"; then
+        printf '%s\000' "$path"
+    fi
+done
+'''
+    result = run_at(
+        source,
+        ["xargs", "-0", "sh", "-c", script, "sh"],
+        input_data=stdin,
+    )
+    return set(split_nul(result.stdout))
 
 
 def ignored_paths(
@@ -581,53 +537,67 @@ def ignored_paths(
     return ignored
 
 
-def write_files_from(paths: set[str]) -> str:
-    handle = tempfile.NamedTemporaryFile("wb", delete=False)
-    try:
-        for path in sorted(paths):
-            handle.write(path.encode("utf-8", "surrogateescape") + b"\0")
-        return handle.name
-    finally:
-        handle.close()
-
-
-def push_git_snapshot(source: Endpoint, dest: Endpoint, snapshot: GitSnapshot) -> None:
-    args = [
-        "git",
-        "push",
-        "--atomic",
-        "--force",
-        "--no-verify",
-        dest.git_arg(snapshot.root),
-        f"+{snapshot.head_oid}:{SYNC_HEAD}",
-        f"+{snapshot.index_tree}:{SYNC_INDEX}",
-        f"+{snapshot.worktree_tree}:{SYNC_WORKTREE}",
-    ]
-    run_at(source, args, rel=snapshot.root)
-
-
-def materialize_git_snapshot(dest: Endpoint, snapshot: GitSnapshot, paths: set[str]) -> None:
-    if not paths:
+def transfer_git_snapshot(source: Endpoint, dest: Endpoint, snapshot: GitSnapshot) -> None:
+    if dest.remote:
+        run_at(
+            source,
+            [
+                "git",
+                "push",
+                "--atomic",
+                "--force",
+                "--no-verify",
+                dest.git_arg(snapshot.root),
+                f"+{snapshot.head_oid}:{SYNC_HEAD}",
+                f"+{snapshot.index_tree}:{SYNC_INDEX}",
+            ],
+            rel=snapshot.root,
+        )
         return
-    input_data = b"".join(path.encode("utf-8", "surrogateescape") + b"\0" for path in sorted(paths))
-    script = rf"""
-set -eu
-tmp=$(mktemp -d)
-trap 'rm -rf "$tmp"' EXIT
-mkdir "$tmp/tree"
-cat >"$tmp/paths"
-GIT_INDEX_FILE="$tmp/index" git read-tree {SYNC_WORKTREE}
-GIT_INDEX_FILE="$tmp/index" git checkout-index \
-    --force --stdin -z --prefix="$tmp/tree/" <"$tmp/paths"
-rsync -rci --links --executability --from0 --files-from="$tmp/paths" -- "$tmp/tree/" ./
-"""
-    run_shell_at(dest, script, rel=snapshot.root, input_data=input_data)
+
+    run_at(
+        dest,
+        [
+            "git",
+            "fetch",
+            "--no-tags",
+            "--force",
+            source.git_arg(snapshot.root),
+            f"+HEAD:{SYNC_HEAD}",
+        ],
+        rel=snapshot.root,
+    )
+    fetched = run_at(dest, ["git", "rev-parse", SYNC_HEAD], rel=snapshot.root).stdout
+    if fetched.decode().strip() != snapshot.head_oid:
+        raise SystemExit(f"Source HEAD changed during sync: {snapshot.root or '.'}")
+    has_index = (
+        run_at(
+            dest,
+            ["git", "cat-file", "-e", f"{snapshot.index_tree}^{{tree}}"],
+            rel=snapshot.root,
+            check=False,
+        ).returncode
+        == 0
+    )
+    if not has_index:
+        revisions = f"{snapshot.index_tree}\n^{snapshot.head_oid}\n".encode()
+        pack = run_at(
+            source,
+            ["git", "pack-objects", "--stdout", "--revs", "--thin"],
+            rel=snapshot.root,
+            input_data=revisions,
+        ).stdout
+        run_at(
+            dest,
+            ["git", "index-pack", "--stdin", "--fix-thin"],
+            rel=snapshot.root,
+            input_data=pack,
+        )
+    run_at(dest, ["git", "update-ref", SYNC_INDEX, snapshot.index_tree], rel=snapshot.root)
 
 
 def apply_git_snapshot(dest: Endpoint, snapshot: GitSnapshot) -> None:
-    update_head = shlex.join(
-        ["git", "update-ref", "--no-deref", "HEAD", snapshot.head_oid]
-    )
+    update_head = shlex.join(["git", "update-ref", "--no-deref", "HEAD", snapshot.head_oid])
     restore_index = shlex.join(["git", "read-tree", SYNC_INDEX])
     run_shell_at(dest, update_head + " && " + restore_index, rel=snapshot.root)
 
@@ -644,7 +614,7 @@ def verify_git_snapshot(dest: Endpoint, snapshot: GitSnapshot) -> None:
         raise SystemExit(f"Git index differs after sync: {snapshot.root or '.'}")
 
 
-def rsync_transfer(source: Endpoint, dest: Endpoint, files_from: str, *, dry_run: bool) -> int:
+def rsync_transfer(source: Endpoint, dest: Endpoint, paths: set[str], *, dry_run: bool) -> int:
     args = [
         "rsync",
         "-rzci",
@@ -652,13 +622,13 @@ def rsync_transfer(source: Endpoint, dest: Endpoint, files_from: str, *, dry_run
         "--executability",
         "--delay-updates",
         "--from0",
-        "--files-from",
-        files_from,
+        "--files-from=-",
     ]
     if dry_run:
         args.insert(1, "-n")
     args.extend(["--", source.rsync_arg(), dest.rsync_arg()])
-    return subprocess.run(args).returncode
+    stdin = b"".join(path.encode("utf-8", "surrogateescape") + b"\0" for path in sorted(paths))
+    return subprocess.run(args, input=stdin).returncode
 
 
 def delete_files(dest: Endpoint, paths: list[str]) -> None:
@@ -673,50 +643,57 @@ def delete_files(dest: Endpoint, paths: list[str]) -> None:
 
 
 def print_paths(title: str, paths: list[str], limit: int = 80) -> None:
-    print(f"\n{title} ({len(paths)})")
+    if not paths:
+        return
+    emit(f"\n{title} ({len(paths)})")
     for path in paths[:limit]:
-        print("  " + display(path))
+        emit("  " + display(path))
     if len(paths) > limit:
-        print(f"  ... {len(paths) - limit} more")
+        emit(f"  ... {len(paths) - limit} more")
 
 
-def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("-y", "--yes", action="store_true", help="Apply the plan")
-    parser.add_argument("paths", nargs="+", metavar="PATH", help="[SRC] DST")
-    args = parser.parse_args(argv)
-    if len(args.paths) == 1:
-        source = parse_endpoint(".")
-        dest = parse_endpoint(args.paths[0])
-    elif len(args.paths) == 2:
-        source = parse_endpoint(args.paths[0])
-        dest = parse_endpoint(args.paths[1])
-    else:
-        parser.error("expected DST or SRC DST")
-    if source.remote:
-        raise SystemExit("Source must be a local Git worktree")
-    if not dest.remote:
-        source_path, dest_path = Path(source.path), Path(dest.path)
-        if (
-            source_path == dest_path
-            or source_path in dest_path.parents
-            or dest_path in source_path.parents
-        ):
-            raise SystemExit("Refusing overlapping local source and destination")
+def endpoint_label(endpoint: Endpoint) -> str:
+    return endpoint.raw if endpoint.remote else endpoint.path
 
+
+def destination_head_updates(
+    dest: Endpoint, source_heads: dict[str, str], roots_to_initialize: list[str]
+) -> list[str]:
+    pending = set(roots_to_initialize)
+    updates: list[str] = []
+    for root, head_oid in source_heads.items():
+        label = root or "."
+        if root in pending:
+            current = "(new)"
+        else:
+            result = run_at(
+                dest,
+                ["git", "rev-parse", "--verify", "HEAD^{commit}"],
+                rel=root,
+                check=False,
+            )
+            current = result.stdout.decode().strip() if result.returncode == 0 else "(none)"
+        if current != head_oid:
+            before = current if current.startswith("(") else current[:12]
+            updates.append(f"{label}: {before} -> {head_oid[:12]}")
+    return updates
+
+
+def sync_repository(source: Endpoint, dest: Endpoint, *, apply: bool) -> int:
+    emit("\nPhase: inspect source and destination")
     verify_git_root(source)
     roots = list_git_roots(source)
     roots_to_initialize = destination_git_roots_to_initialize(dest, roots)
     logical = source_files(source, roots)
-    tracked = tracked_worktree_files(source, roots)
+    source_heads = {root: source_head(source, root) for root in roots}
 
     source_regular, missing_or_bad_source = classify_source_paths(source, logical)
-    source_special = find_paths(source, r"! \( -type f -o -type l -o -type d \)")
     if missing_or_bad_source:
         raise SystemExit(
             "Source paths are missing or unsupported: "
             + ", ".join(display(path) for path in sorted(missing_or_bad_source)[:8])
         )
+    source_special = find_paths(source, r"! \( -type f -o -type l -o -type d \)")
     nonignored_source_special = source_special - ignored_paths(
         sorted(source_special), source, roots
     )
@@ -729,8 +706,6 @@ def main(argv: list[str] | None = None) -> int:
     lfs = lfs_paths(source, logical, roots)
     pointers = lfs_pointer_paths(source, lfs, source_regular)
     transfer = logical - pointers
-    materialized = tracked - lfs
-    overlay = transfer - materialized
     source_dirs = source_directories(logical)
 
     dest_files_links, dest_git_roots = find_destination_files_and_git_roots(dest)
@@ -745,10 +720,7 @@ def main(argv: list[str] | None = None) -> int:
         and not any(current.startswith(root + "/") for current in roots if current)
     }
     ignored_git_roots = ignored_paths(
-        sorted(remote_only_git_roots),
-        source,
-        roots,
-        directories=True,
+        sorted(remote_only_git_roots), source, roots, directories=True
     )
     stale_git_roots = sorted(extra_git_roots - ignored_git_roots)
     file_blockers = sorted((dest_files_links | dest_special) & source_dirs)
@@ -761,6 +733,8 @@ def main(argv: list[str] | None = None) -> int:
     ignored = ignored_paths(extras, source, roots)
     special_extras = sorted((dest_special - logical) - ignored)
     delete_candidates = sorted((dest_files_links - logical) - ignored)
+    head_updates = destination_head_updates(dest, source_heads, roots_to_initialize)
+
     errors: list[str] = []
     if stale_git_roots:
         errors.append("Destination contains non-ignored stale Git roots")
@@ -775,61 +749,55 @@ def main(argv: list[str] | None = None) -> int:
     if special_extras:
         errors.append("Non-ignored destination special nodes cannot be deleted safely")
 
-    print(f"SRC: {source.raw} (local)")
-    print(f"DST: {dest.raw} ({'remote' if dest.remote else 'local'})")
-    print(f"Git roots: {len(roots)}")
-    print(f"Destination Git worktrees to initialize: {len(roots_to_initialize)}")
-    print(f"Logical source files: {len(logical)}")
-    print(f"Git-materialized tracked files: {len(materialized)}")
-    print(f"Rsync overlay files: {len(overlay)}")
-    print(f"Preserved LFS paths: {len(pointers)}")
-    print(f"Destination stale Git roots: {len(stale_git_roots)}")
-    print(f"Destination delete files/links: {len(delete_candidates)}")
-    print(f"Destination kept ignored files/links: {len(ignored)}")
+    emit("\nPlan summary")
+    emit(f"  Git roots: {len(roots)}")
+    emit(f"  Source files: {len(logical)}")
+    emit(f"  Files eligible for transfer: {len(transfer)}")
+    emit(f"  Preserved LFS paths: {len(pointers)}")
+    emit(f"  Destination files/links to delete: {len(delete_candidates)}")
+    emit(f"  Destination ignored files/links kept: {len(ignored)}")
     print_paths("Destination Git worktrees to initialize", roots_to_initialize)
+    print_paths("Destination Git HEAD updates", head_updates)
     print_paths("Preserved LFS paths", sorted(pointers))
     print_paths("Destination stale Git roots", stale_git_roots)
     print_paths("Destination file/special blockers", file_blockers)
     print_paths("Destination directory blockers", dir_blockers)
+    print_paths("Destination special-node blockers", special_blockers)
     print_paths("Missing/invalid destination LFS paths", missing_lfs)
-    print_paths("Destination delete files/links", delete_candidates)
+    print_paths("Non-ignored destination special nodes", special_extras)
+    print_paths("Destination files/links to delete", delete_candidates)
     if errors:
-        print(f"\nErrors ({len(errors)})")
+        emit(f"\nErrors ({len(errors)})")
         for error in errors:
-            print("  " + error)
-        print("\nNo changes made.")
+            emit("  " + error)
+        emit("\nNo changes made.")
         return 2
 
-    files_from = write_files_from(transfer if args.yes else overlay)
-    try:
-        if not args.yes:
-            print("\nRsync overlay plan after planned Git materialization:")
-            sys.stdout.flush()
-            rc = rsync_transfer(source, dest, files_from, dry_run=True)
-            if rc != 0:
-                return rc
-            print("\nGit pack transfer size is not estimated in dry-run.")
-            print("Dry run only. Re-run with -y to apply a freshly generated plan.")
-            return 0
-
-        snapshots = [create_git_snapshot(source, root) for root in roots]
-        initialize_destination_git_roots(dest, roots_to_initialize)
-        for snapshot in snapshots:
-            push_git_snapshot(source, dest, snapshot)
-        for snapshot in snapshots:
-            paths = {
-                rel
-                for rel in snapshot.worktree_files
-                if (str(PurePosixPath(snapshot.root) / rel) if snapshot.root else rel) not in lfs
-            }
-            materialize_git_snapshot(dest, snapshot, paths)
-
-        print("\nRsync verification and overlay:")
-        sys.stdout.flush()
-        rc = rsync_transfer(source, dest, files_from, dry_run=False)
+    if not apply:
+        emit("\nPhase: preview final worktree changes")
+        rc = rsync_transfer(source, dest, transfer, dry_run=True)
         if rc != 0:
-            print("\nRsync failed; destination extras and Git state were not applied.")
+            emit("\nDry-run transfer check failed. No changes made.")
             return rc
+        emit("\nGit object transfer size is not estimated in dry-run.")
+        emit("Dry run only. Re-run with -y to apply a freshly generated plan.")
+        return 0
+
+    snapshots = [create_git_snapshot(source, root) for root in roots]
+    try:
+        emit("\nPhase: initialize destination Git worktrees")
+        initialize_destination_git_roots(dest, roots_to_initialize)
+
+        emit("\nPhase: transfer source Git HEAD and staged-tree objects")
+        for snapshot in snapshots:
+            transfer_git_snapshot(source, dest, snapshot)
+
+        emit("\nPhase: transfer final worktree")
+        rc = rsync_transfer(source, dest, transfer, dry_run=False)
+        if rc != 0:
+            raise SystemExit(rc)
+
+        emit("\nPhase: delete extras and apply Git state")
         verify_git_root(dest)
         delete_files(dest, delete_candidates)
         deepest_first = sorted(
@@ -841,14 +809,61 @@ def main(argv: list[str] | None = None) -> int:
             apply_git_snapshot(dest, snapshot)
         for snapshot in deepest_first:
             verify_git_snapshot(dest, snapshot)
-        print(f"\nDeleted destination extras: {len(delete_candidates)}")
-        print(f"Verified Git roots: {len(snapshots)}")
-        return 0
-    finally:
-        try:
-            Path(files_from).unlink()
-        except FileNotFoundError:
-            pass
+    except BaseException:
+        emit(
+            "\nApply failed after destination mutation began; Git refs, worktree files, "
+            "or extras may be partially updated.",
+            stderr=True,
+        )
+        raise
+
+    emit("\nSync applied successfully.")
+    emit(f"Deleted destination extras: {len(delete_candidates)}")
+    emit(f"Verified Git roots: {len(snapshots)}")
+    return 0
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(
+        description="Mirror a Git worktree; the selected source is authoritative."
+    )
+    parser.add_argument(
+        "direction",
+        choices=("push", "pull"),
+        help="push from the current worktree or pull from ENDPOINT",
+    )
+    parser.add_argument("-y", "--yes", action="store_true", help="apply the generated plan")
+    parser.add_argument("endpoint", metavar="ENDPOINT", help="HOST:/absolute/path or local path")
+    raw_args = sys.argv[1:] if argv is None else argv
+    first_positional = next(
+        (argument for argument in raw_args if argument not in {"-y", "--yes"}), None
+    )
+    if not any(argument in {"-h", "--help"} for argument in raw_args) and first_positional not in {
+        "push",
+        "pull",
+    }:
+        parser.error("missing direction; use 'push [-y] ENDPOINT' or 'pull [-y] ENDPOINT'")
+    args = parser.parse_args(raw_args)
+
+    local = parse_endpoint(".")
+    other = parse_endpoint(args.endpoint)
+    source, dest = (local, other) if args.direction == "push" else (other, local)
+    if not source.remote and not dest.remote:
+        source_path, dest_path = Path(source.path), Path(dest.path)
+        if (
+            source_path == dest_path
+            or source_path in dest_path.parents
+            or dest_path in source_path.parents
+        ):
+            raise SystemExit("Refusing overlapping local source and destination")
+
+    emit(f"MODE: {'APPLY' if args.yes else 'DRY RUN'}")
+    emit(f"DIRECTION: {args.direction.upper()}")
+    emit(f"AUTHORITY: {endpoint_label(source)}")
+    emit(f"DESTINATION: {endpoint_label(dest)}")
+    if args.yes:
+        emit("WARNING: destination files and Git state may be overwritten or deleted.")
+    return sync_repository(source, dest, apply=args.yes)
 
 
 if __name__ == "__main__":

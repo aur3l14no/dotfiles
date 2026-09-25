@@ -85,10 +85,12 @@ Do not add APM-deployed skills back to chezmoi: `~/.apm/apm_modules/` is APM's
 runtime store, and `apm install` recreates both that store and the deployed
 skill directories from the checked-in manifest and lock.
 
-Install APM and restore the locked skills:
+Initialize through `~/.agents/skills/skill-ops/SKILL.md`. Establish uv/Python
+and APM before restoring locked skills. Skill Ops delegates documentation
+adaptation to a sub-agent using `skill-patcher` after installation or updates;
+direct APM commands do not automatically patch skills.
 
 ``` sh
-uv tool install apm-cli
 chezmoi apply
 apm install --global --frozen
 ```
@@ -108,13 +110,16 @@ apm update --global --yes --target agent-skills larksuite/cli
 chezmoi re-add "$HOME/.apm/apm.lock.yaml"
 ```
 
-`lark-cli` is separate from its skills. Its npm package is locked under
-`~/.local/opt/npm-tools/` and can be restored with:
-
-``` sh
-npm-user ci --prefix "$HOME/.local/opt/npm-tools"
-```
+`lark-cli` is separate from its skills. Its chezmoi-owned wrapper pins the npm
+package version and runs it through npm's cache; Node.js and npm must already
+be available. First use fetches the package into the cache. Update its pin
+through Skill Ops after checking compatibility with the skill text.
 
 Do not run `lark-cli update`: that command also invokes `npx skills` and would
-bypass APM. The managed `lark-cli` wrapper permits `update --check` but blocks
-the mutating update command.
+bypass APM. The wrapper permits `update --check`, blocks the mutating update
+command, and suppresses update notifications.
+
+After install/update, Skill Ops waits for the patch sub-agent's handoff,
+resolves executable prerequisites and user decisions, and completes any
+remaining adaptation. No lifecycle hook, dedicated runner, or report file is
+required.

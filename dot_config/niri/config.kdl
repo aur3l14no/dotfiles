@@ -36,6 +36,19 @@ output "China Star Optoelectronics Technology Co., Ltd MNE507ZA2-4 Unknown" {
     mode "3072x1920@120.000"
 }
 
+// gus-nix Dell monitor
+output "Dell Inc. DELL S2725QC F20S464" {
+    mode "3840x2160@120.000"
+    scale 1.5
+}
+
+// gus-nix NanoKVM: keep the recovery display out of the normal desktop.
+// Over SSH as the desktop user (replace "on" with "off" to disable):
+// systemd-run --user --quiet --pipe --wait --collect niri msg output "PNP(VCS) Connector 0x00451531" on
+output "PNP(VCS) Connector 0x00451531" {
+    off
+}
+
 gestures {
     hot-corners {
         off
@@ -101,8 +114,8 @@ binds {
     Mod+Shift+Slash { show-hotkey-overlay; }
     Mod+Space { toggle-overview; }
     Mod+Return { spawn "alacritty"; }
-    Mod+D { spawn "noctalia-shell" "ipc" "call" "launcher" "toggle"; }
-    Mod+V { spawn "noctalia-shell" "ipc" "call" "launcher" "clipboard"; }
+    Mod+D { spawn "noctalia" "msg" "panel-toggle" "launcher"; }
+    Mod+V { spawn "noctalia" "msg" "panel-toggle" "clipboard"; }
     Mod+E { spawn "nautilus"; }
     Mod+Alt+L { spawn "loginctl" "lock-session"; }
 
