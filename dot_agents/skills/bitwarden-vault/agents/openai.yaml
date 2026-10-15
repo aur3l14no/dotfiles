@@ -1,4 +1,0 @@
-interface:
-  display_name: "Bitwarden Vault"
-  short_description: "Read credentials from the dedicated self-hosted vault"
-  default_prompt: "Use $bitwarden-vault to list available credentials or retrieve one for the current task."

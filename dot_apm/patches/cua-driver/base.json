@@ -1,0 +1,16 @@
+{
+  "host": "github.com",
+  "repo": "trycua/cua",
+  "commit": "45d78fedcf2c7033ba33f10dd30f8af8ba31ec3f",
+  "path": "libs/cua-driver/rust/Skills/cua-driver",
+  "files": [
+    "BROWSER.md",
+    "EMBEDDING.md",
+    "LINUX.md",
+    "MACOS.md",
+    "README.md",
+    "RECORDING.md",
+    "SKILL.md",
+    "WINDOWS.md"
+  ]
+}

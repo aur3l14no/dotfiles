@@ -41,6 +41,32 @@ Entries stored as `*.age` are ignored unless your local `chezmoi` config sets
 without an age identity while still enabling the encrypted files once age is
 configured. New encrypted files should follow the same `*.age` convention.
 
+## SSH
+
+The SSH client configuration is managed on `groves`, `john-macbook`, and
+`fusco-thinkbook`. Shared aliases live in `private_dot_ssh/private_config.d/`;
+templates retain the few device-specific settings and service identities.
+
+`~/.ssh/config.local` is an optional, unmanaged file for local overrides and
+additional aliases. Only `config.d/*.conf` is included automatically, so editor
+backups and old extensionless files do not affect connections.
+
+Custom key filenames use kebab-case, for example `keys/fishnet-vps`,
+`keys/sjn-lab`, and `keys/hzhs-admin`. Standard OpenSSH
+filenames such as `id_ed25519`, `id_rsa`, and `ssh_host_*` retain their standard
+spelling. Private keys and `known_hosts` are not stored in this subtree.
+
+All `sjn-*` aliases use only `keys/sjn-lab`. `pty-screen` uses `pty-wrt-ts`
+as its jump host on all three workstations; `pty-screen-b` jumps through
+`pty-screen`. The default server-alive policy is six unanswered probes at
+20-second intervals. Legacy `ssh-rsa` signatures are enabled only for `pty-hsf`.
+
+Apply just the SSH configuration with:
+
+``` sh
+chezmoi apply ~/.ssh/config ~/.ssh/config.d
+```
+
 ## Rime
 
 `Library/Rime` is the macOS Squirrel Rime overlay. Chezmoi pulls upstream

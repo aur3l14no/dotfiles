@@ -1,0 +1,10 @@
+{
+  "host": "github.com",
+  "repo": "mattpocock/skills",
+  "commit": "d81f3a183412e71a5b1e84ca21bc1a35eea03a60",
+  "path": "skills/engineering/grill-with-docs",
+  "files": [
+    "SKILL.md",
+    "agents/openai.yaml"
+  ]
+}

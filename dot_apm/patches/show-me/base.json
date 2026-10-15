@@ -1,0 +1,9 @@
+{
+  "host": "github.com",
+  "repo": "humanlayer/skills",
+  "commit": "3c2629142c5d437428269b1b722b08c0b87f574d",
+  "path": "plugins/show-me/skills/show-me",
+  "files": [
+    "SKILL.md"
+  ]
+}

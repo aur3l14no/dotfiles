@@ -1,6 +1,6 @@
 ---
 name: review-change-residue
-description: Use when committing a change that corrects, replaces, or backs out an earlier attempt.
+description: Use only when explicitly invoked by the user to review a change for residue from an abandoned attempt.
 ---
 
 # Review Change Residue

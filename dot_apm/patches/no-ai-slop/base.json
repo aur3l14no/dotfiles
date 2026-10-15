@@ -1,0 +1,11 @@
+{
+  "host": "github.com",
+  "repo": "petergyang/no-ai-slop",
+  "commit": "000650b156983f5159695b441477f4e63b25dc85",
+  "path": "skills/no-ai-slop",
+  "files": [
+    "SKILL.md",
+    "agents/openai.yaml",
+    "eval.md"
+  ]
+}

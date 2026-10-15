@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if ! command -v npm >/dev/null 2>&1 || ! command -v node >/dev/null 2>&1; then
+    printf '%s\n' "opencli requires Node.js and npm. Ask the user to initialize them through skill-ops." >&2
+    exit 127
+fi
+
+# The version is pinned here and OpenCLI skills are managed by APM; this only
+# silences opencli's "npm install -g" upgrade notice.
+export CONTINUOUS_INTEGRATION=1
+export NPM_CONFIG_UPDATE_NOTIFIER=false
+
+# An empty cache-owned prefix avoids resolving a package from the caller's project.
+cache="${NPM_USER_CACHE:-$HOME/.cache/npm}"
+mkdir -p "$cache/skill-tools/opencli"
+exec npm --cache "$cache" --prefix "$cache/skill-tools/opencli" exec \
+    --yes --package=@jackwener/opencli@1.8.8 -- opencli "$@"

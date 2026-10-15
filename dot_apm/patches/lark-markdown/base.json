@@ -1,0 +1,14 @@
+{
+  "host": "github.com",
+  "repo": "larksuite/cli",
+  "commit": "72579c80027c863ca51d5f9affda72a70ab0d8a6",
+  "path": "skills/lark-markdown",
+  "files": [
+    "SKILL.md",
+    "references/lark-markdown-create.md",
+    "references/lark-markdown-diff.md",
+    "references/lark-markdown-fetch.md",
+    "references/lark-markdown-overwrite.md",
+    "references/lark-markdown-patch.md"
+  ]
+}

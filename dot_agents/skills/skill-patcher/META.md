@@ -1,18 +1,6 @@
-# Adaptation completion templates
+# Local policy block
 
-Choose one form after reviewing the skill and its related documentation. Both forms mark completed adaptation; the marker name does not imply APM ownership. Do not add both forms.
-
-## Instructions-only skills
-
-Use this exact empty marker when normal operation needs only instructions or existing tools/APIs and has no executable dependencies, installation or repair prerequisites, or enduring local execution exceptions. Do not add a visible META heading.
-
-```markdown
-<!-- local-policy:start --><!-- local-policy:end -->
-```
-
-## Skills with execution or dependency policy
-
-Use this exact block when the skill uses scripts, CLIs, executable dependencies, system integrations, or enduring local execution exceptions. Keep concrete invocation choices in the relevant documentation.
+Add this exact block when the skill uses scripts, CLIs, executable dependencies, system integrations, or enduring local execution exceptions. Keep concrete invocation choices in the relevant documentation. Instructions-only skills get no block; completion is recorded by Skill Ops, not by the block.
 
 ```markdown
 ## META INSTRUCTION

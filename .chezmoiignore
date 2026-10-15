@@ -1,8 +1,14 @@
 README.md
 mise-packages.txt
 .apm/apm_modules
+.apm/patches
 .config/karabiner/automatic_backups
 .config/rustic/*.env
+
+# SSH client configuration belongs to the three administrative workstations.
+{{- if not (has .chezmoi.hostname (list "groves" "john-macbook" "fusco-thinkbook")) }}
+.ssh
+{{- end }}
 
 # Skip encrypted entries until age is configured.
 {{- if ne .chezmoi.config.encryption "age" }}

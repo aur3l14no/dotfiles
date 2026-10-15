@@ -1,3 +1,4 @@
+{{- $isFusco := eq .chezmoi.hostname "fusco-thinkbook" -}}
 debug {
     // Allows notification actions and window activation from Noctalia
     honor-xdg-activation-with-invalid-serial
@@ -8,9 +9,11 @@ hotkey-overlay {
 }
 
 spawn-at-startup "google-chrome-stable"
+{{- if $isFusco }}
 spawn-at-startup "google-chrome-stable" "--app=https://chatgpt.com"
 spawn-at-startup "google-chrome-stable" "--app=https://web.telegram.org"
 spawn-at-startup "wechat-uos"
+{{- end }}
 
 input {
     keyboard {
@@ -64,8 +67,10 @@ prefer-no-csd
 
 workspace "terminal"
 workspace "browser"
+{{- if $isFusco }}
 workspace "chat"
 workspace "ai"
+{{- end }}
 
 window-rule {
     match app-id=r#"^Alacritty$"#
@@ -78,6 +83,7 @@ window-rule {
     open-on-workspace "browser"
     open-floating false
 }
+{{- if $isFusco }}
 
 window-rule {
     match app-id=r#"^wechat$"#
@@ -102,6 +108,7 @@ window-rule {
     open-on-workspace "ai"
     open-floating false
 }
+{{- end }}
 
 window-rule {
     match app-id=r#"^org\.pulseaudio\.pavucontrol$"#

@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Tencent Docs CLI; the program lives with its skill and reads TENCENT_DOCS_TOKEN.
+exec uv run --quiet --no-project --script "$HOME/.agents/skills/tencent-docs/scripts/tdocs.py" "$@"

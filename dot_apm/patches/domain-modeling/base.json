@@ -1,0 +1,12 @@
+{
+  "host": "github.com",
+  "repo": "mattpocock/skills",
+  "commit": "d81f3a183412e71a5b1e84ca21bc1a35eea03a60",
+  "path": "skills/engineering/domain-modeling",
+  "files": [
+    "ADR-FORMAT.md",
+    "GLOSSARY-FORMAT.md",
+    "SKILL.md",
+    "agents/openai.yaml"
+  ]
+}

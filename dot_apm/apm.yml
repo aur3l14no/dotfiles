@@ -8,6 +8,15 @@ dependencies:
   apm:
     - git: https://github.com/larksuite/cli.git
       ref: "^1.0.0"
+      skills:
+        - lark-doc
+        - lark-drive
+        - lark-im
+        - lark-markdown
+        - lark-openapi-explorer
+        - lark-shared
+        - lark-sheets
+        - lark-wiki
     - git: https://github.com/mattpocock/skills.git
       path: skills/productivity/grill-me
       ref: main
@@ -18,15 +27,22 @@ dependencies:
       ref: ^0.8.0
     - git: https://github.com/public-clis/bilibili-cli.git
       ref: ^0.6.2
-    - git: https://github.com/iFurySt/open-browser-use.git
-      path: skills/open-browser-use
-      ref: v0.1.42
-    - git: https://github.com/ifuryst/open-codex-computer-use.git
-      path: skills/open-computer-use
-      ref: ^0.3.0
     - git: https://github.com/humanlayer/skills.git
       path: plugins/show-me/skills/show-me
       ref: main
     - petergyang/no-ai-slop/skills/no-ai-slop#000650b156983f5159695b441477f4e63b25dc85
     - trycua/cua/libs/cua-driver/rust/Skills/cua-driver#45d78fedcf2c7033ba33f10dd30f8af8ba31ec3f
+    - mattpocock/skills/skills/engineering/tdd#d81f3a183412e71a5b1e84ca21bc1a35eea03a60
+    - mattpocock/skills/skills/engineering/codebase-design#d81f3a183412e71a5b1e84ca21bc1a35eea03a60
+    - mattpocock/skills/skills/engineering/grill-with-docs#d81f3a183412e71a5b1e84ca21bc1a35eea03a60
+    - mattpocock/skills/skills/engineering/domain-modeling#d81f3a183412e71a5b1e84ca21bc1a35eea03a60
+    - mattpocock/skills/skills/engineering/setup-matt-pocock-skills#d81f3a183412e71a5b1e84ca21bc1a35eea03a60
+    - tommy0103/obelisk-skill/skills/obelisk#5b8c789ce8f5e243805c10905ba99bdcef008619
+    - git: https://github.com/jackwener/OpenCLI.git
+      ref: v1.8.8
+      skills:
+        - opencli-usage
+        - opencli-browser
+        - smart-search
+    - tommy0103/better-readme-skill/skills/better-readme#fa3dce198b4b6f798ffc61c6483e7e7aa15b8cde
   mcp: []
