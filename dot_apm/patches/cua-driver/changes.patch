@@ -1,11 +1,11 @@
 diff --git base/EMBEDDING.md work/EMBEDDING.md
-index f21d82c..e88bdca 100644
+index 428d32c..b9e5ddf 100644
 --- base/EMBEDDING.md
 +++ work/EMBEDDING.md
-@@ -548,14 +548,14 @@ the driver child after any grant change — TCC answers are cached per process.
+@@ -636,14 +636,14 @@ the driver child after any grant change: TCC answers are cached per process.
  `AXIsProcessTrusted()` is false for the effective identity. The host hasn't
  been granted Accessibility, or was granted it _after_ the driver child
- started (per-process cache again — restart the child), or the app was
+ started (per-process cache again: restart the child), or the app was
 -re-signed/moved so the existing grant row no longer matches it (remove and
 -re-add it in System Settings, or `tccutil reset Accessibility <your-bundle-id>`
 -and re-grant).
@@ -23,12 +23,12 @@ index f21d82c..e88bdca 100644
  ## Platform notes (Windows / Linux)
  
 diff --git base/MACOS.md work/MACOS.md
-index 2e44241..9b4f855 100644
+index 53daadc..3793194 100644
 --- base/MACOS.md
 +++ work/MACOS.md
-@@ -215,14 +215,13 @@ editor state.
+@@ -236,14 +236,13 @@ editor state.
  
- ## Prerequisites — macOS
+ ## Prerequisites: macOS
  
 -1. `cua-driver` is on `$PATH` (`which cua-driver`). If not, point the
 -   user at `scripts/install-local.sh` and stop.
@@ -36,17 +36,17 @@ index 2e44241..9b4f855 100644
 +   managed app or CLI is missing, stop affected operations and route installation
 +   or repair through [skill-ops](../skill-ops/SKILL.md).
  2. Start the daemon with `open -n -g -a CuaDriver --args serve` (the
-    recommended form — goes through LaunchServices so TCC attributes
+    recommended form: goes through LaunchServices so TCC attributes
 -   the process to CuaDriver.app). `cua-driver serve &` also works;
 -   the CLI auto-relaunches through `open -n -g -a CuaDriver` when it
 -   detects a wrong-TCC context (any IDE-spawned shell: Claude Code,
 -   Cursor, VS Code, Conductor). Verify with `cua-driver status`.
-+   the process to CuaDriver.app). Use this LaunchServices form explicitly to keep permissions on
-+   `com.trycua.driver`. Verify with `cua-driver status`.
++   the process to CuaDriver.app). Use this LaunchServices form explicitly to keep
++   permissions on `com.trycua.driver`. Verify with `cua-driver status`.
  3. Run `cua-driver permissions status --json`. This
     path is read-only: it checks Accessibility and Screen Recording but
     deliberately does not run Tahoe's prompt-capable direct-capture probe.
-@@ -243,6 +242,20 @@ editor state.
+@@ -264,6 +263,20 @@ editor state.
       the user should click **+**, add `/Applications/CuaDriver.app` (or
       `/Applications/CuaDriverLocal.app`), enable it, and rerun the command.
  
@@ -64,29 +64,21 @@ index 2e44241..9b4f855 100644
 +For screenshot output directories, use real absolute paths such as
 +`/private/tmp/...`; the driver rejects symlink paths such as `/tmp/...`.
 +
- ## Resolve target pid — always via `launch_app`
+ ## Resolve the requested application
  
- **Always start with `launch_app`**, whether or not the target is already
+ Reuse a discovered live target when available. Otherwise use `launch_app`
 diff --git base/README.md work/README.md
-index ca550f7..8f43bd4 100644
+index f227b28..1683985 100644
 --- base/README.md
 +++ work/README.md
-@@ -11,49 +11,28 @@ automation, session recording, and platform-specific limitations. The skill
+@@ -12,49 +12,32 @@ platform-specific limitations. The skill
  defaults to background delivery and requires structured refusal or observed
  failure before a caller escalates to foreground input.
  
 -## Install Cua Driver
-+## Managed dependency and maintenance
- 
+-
 -macOS or Linux:
-+Skill text is managed by APM; installation, updates, removal, source builds,
-+and repair must use [skill-ops](../skill-ops/SKILL.md). Do not use upstream skill
-+installers or overwrite the adapted bundle with the driver's skill commands.
-+The macOS dependency is official CuaDriver.app release 0.25.0 at
-+`/Applications/CuaDriver.app`, exposed by `~/.local/bin/cua-driver`.
-+The maintenance source is the official Cua Driver release distribution; the
-+app and skill revisions must be checked for compatibility during updates.
- 
+-
 -```bash
 -/bin/bash -c "$(curl -fsSL https://cua.ai/driver/install.sh)"
 -```
@@ -96,13 +88,29 @@ index ca550f7..8f43bd4 100644
 -```powershell
 -irm https://cua.ai/driver/install.ps1 | iex
 -```
--
++## Managed dependency and maintenance
++
++Skill text is managed by APM; installation, updates, removal, source builds,
++and repair must use [skill-ops](../skill-ops/SKILL.md). Do not use upstream skill
++installers or overwrite the adapted bundle with the driver's skill commands.
++The macOS dependency is official CuaDriver.app release 0.36.0 at
++`/Applications/CuaDriver.app`, exposed by `~/.local/bin/cua-driver`.
++The maintenance source is the official Cua Driver release distribution; the
++app and skill revisions must be checked for compatibility during updates.
++The pack version does not identify the running daemon; inspect the live tool
++schema when versions differ. Launching a raw binary is not a substitute for the
++stable app identity that owns macOS TCC grants.
+ 
 -Then verify the current host:
--
--```bash
--cua-driver doctor
--```
--
++Start the service through LaunchServices and verify the current host:
+ 
+ ```bash
++open -n -g -a CuaDriver --args serve
++cua-driver status
++cua-driver permissions status --json
+ cua-driver doctor
+ ```
+ 
 -On macOS, the installed `CuaDriver.app` needs Accessibility and Screen
 -Recording permission. On Windows, the daemon must run in an interactive user
 -desktop rather than Session 0. On Linux, the daemon must share the graphical
@@ -118,15 +126,11 @@ index ca550f7..8f43bd4 100644
 -
 -Or let the installed driver add the version-matched skill to detected agent
 -directories:
-+Start the service through LaunchServices:
- 
- ```bash
+-
+-```bash
 -cua-driver skills install
-+open -n -g -a CuaDriver --args serve
-+cua-driver status
-+cua-driver permissions status --json
- ```
- 
+-```
+-
 -The direct installer keeps only the current host's platform guide by default.
 -Use `--all-platforms` when the agent assists users across operating systems.
 -`cua-driver skills update` refreshes the pack to match a later driver release.
@@ -137,14 +141,16 @@ index ca550f7..8f43bd4 100644
  
  ## Reading order
  
-@@ -92,21 +71,6 @@ and optional MP4 video. macOS uses ScreenCaptureKit. Windows uses ffmpeg with
+@@ -99,23 +82,6 @@ and optional MP4 video. macOS uses ScreenCaptureKit. Windows uses ffmpeg with
  Availability is reported honestly when a host dependency or portal grant is
  missing. See `RECORDING.md`.
  
 -## Updates and source builds
 -
--The skill is versioned with Cua Driver releases. For bleeding-edge validation
--against `main`:
+-The skill is versioned with Cua Driver releases. Back up personal edits before updating: updates replace the installed pack.
+-The pack version does not identify the running daemon; inspect the live tool
+-schema when versions differ. For bleeding-edge validation against a matching
+-source build (not an arbitrary installed release):
 -
 -```bash
 -cua-driver skills install --from main
@@ -160,28 +166,50 @@ index ca550f7..8f43bd4 100644
  
  Repository source files are MIT licensed. Copies published through ClawHub are
 diff --git base/RECORDING.md work/RECORDING.md
-index c3bbea9..8d7343f 100644
+index 1090ef5..761a2b9 100644
 --- base/RECORDING.md
 +++ work/RECORDING.md
-@@ -30,9 +30,10 @@ subprocess prompt, no fast-fail, no second TCC dance. Requires macOS
+@@ -55,6 +55,10 @@ assuming the convenience command supports every raw-tool argument.
+ - Linux X11 video uses ffmpeg `x11grab`. Native Wayland needs a supported
+   compositor-specific recorder and any portal grant; see [LINUX.md](LINUX.md).
+   A successful desktop PNG does not establish video availability.
++- When ffmpeg is not on `PATH`, per-turn capture continues without video and
++  `last_error` reports the missing dependency. Report that limitation; do not
++  prompt the user to install ffmpeg or act on installer hints. Any dependency
++  setup goes through [skill-ops](../skill-ops/SKILL.md).
  
- **Windows / Linux — ffmpeg subprocess.** Outside macOS the recorder
- shells to ffmpeg with `gdigrab` (Windows) or `x11grab` (Linux). The
--binary needs to be on PATH (`winget install Gyan.FFmpeg` /
--`apt install ffmpeg`); when missing, the per-turn capture continues
--without video and `last_error` carries the install hint. ffmpeg
-+binary needs to be on PATH. If missing, route dependency setup through
-+[skill-ops](../skill-ops/SKILL.md); do not act on installer hints automatically.
-+Per-turn capture can continue without video when that meets the task, while
-+`last_error` reports the missing video dependency. ffmpeg
- startup failures fast-fail with a stderr tail in the error.
+ ## What each turn folder contains
  
- ## Start / stop
+diff --git base/RUNTIME.md work/RUNTIME.md
+index d25161b..b2525e1 100644
+--- base/RUNTIME.md
++++ work/RUNTIME.md
+@@ -25,9 +25,9 @@ Use the CLI by default when a shell is available, or the existing MCP connection
+ 
+ Bare MCP owns a runtime on Windows/Linux and uses the signed service identity on macOS. `cua-driver mcp --socket <endpoint>` explicitly selects a service. One-shot CLI calls are service-backed. Starting a process that serves MCP is not the same as connecting a client: use the harness's MCP integration, not independent shell writes to a dead stdin.
+ 
+-For missing software, use the installation instructions in [README.md](README.md) with user approval. `check-update` is read-only; `update --apply` installs software. After an approved update, check both the executable and daemon. Do not interpret a nonzero updater exit as proof that nothing changed.
++For missing or outdated software, stop the affected operation and route installation or updates through [skill-ops](../skill-ops/SKILL.md). `check-update` is read-only and allowed; `update --apply` and `channel set` change the installation and belong to skill-ops. After an approved update, check both the executable and daemon. Do not interpret a nonzero updater exit as proof that nothing changed.
+ 
+-`skills update` replaces the installed pack. Back up personal edits before refreshing. `skills install --from main` is for source validation, not proof of compatibility with a release binary. Other platform guides are installed only with `--all-platforms`.
++This pack is managed by APM with local adaptations; `skills install|update|uninstall` would replace or unlink it, so pack maintenance also goes through skill-ops. `skills status` and `skills path` are read-only. `skills install --from main` is for source validation, not proof of compatibility with a release binary.
+ 
+ The old computer-use compatibility flag does not add a screenshot tool. Use `get_window_state` or explicitly authorized `get_desktop_state`.
+ 
+@@ -98,7 +98,7 @@ Pixel `click` already animates the cursor. Do not precede it with `move_cursor`
+ 
+ The default theme provides session-colored pointer/glow, action marks, and activity animations. Named sessions have stable palette colors. Native hosts own delivery/target badges separately from theme artwork; cursor state is scoped to the private lifecycle.
+ 
+-`set_agent_cursor_enabled` controls idle visibility. `set_agent_cursor_motion` takes `style` (`signature_arc` default, `spring_settle`, `magnetic`, `comet_swoop`, `adaptive`, `classic`), `timing` (`native`, `fitts`, `fixed`), `effects` (`trail`, `glow`, `magnet`, `ripple`, `squish` as `on`, `off`, or `default`; `default` restores the style default, and an omitted effect keeps its current setting), and the arc knobs `start_handle`, `end_handle`, `arc_size`, `arc_flow` (bezier styles) plus `spring` and `turn_radius` (`classic`) where advertised. Choose preinstalled artwork with `set_agent_cursor_theme`; `cursor_id` on input tools is not a theme selector. Never supply inline theme code or arbitrary source paths through agent tools. The trusted local `cursor-theme` workflow owns validation, compilation, preview, installation, and removal.
++`set_agent_cursor_enabled` controls idle visibility. `set_agent_cursor_motion` takes `style` (`signature_arc` default, `spring_settle`, `magnetic`, `comet_swoop`, `adaptive`, `classic`), `timing` (`native`, `fitts`, `fixed`), `effects` (`trail`, `glow`, `magnet`, `ripple`, `squish` as `on`, `off`, or `default`; `default` restores the style default, and an omitted effect keeps its current setting), and the arc knobs `start_handle`, `end_handle`, `arc_size`, `arc_flow` (bezier styles) plus `spring` and `turn_radius` (`classic`) where advertised. Choose preinstalled artwork with `set_agent_cursor_theme`; `cursor_id` on input tools is not a theme selector. Never supply inline theme code or arbitrary source paths through agent tools. The trusted local `cursor-theme` workflow owns validation, compilation, inspection, preview, and listing; route persistent `cursor-theme install|uninstall` through [skill-ops](../skill-ops/SKILL.md).
+ 
+ Overlay operations need a suitable UI event loop. macOS direct SDK/MCP runtimes without a certified host main-thread adapter can return `facility_unavailable`; do not report that as a successful move. See [EMBEDDING.md](EMBEDDING.md).
+ 
 diff --git base/SKILL.md work/SKILL.md
-index 08bb4ac..4069d97 100644
+index eb38aab..29af943 100644
 --- base/SKILL.md
 +++ work/SKILL.md
-@@ -31,6 +31,31 @@ metadata:
+@@ -31,6 +31,43 @@ metadata:
  
  # cua-driver
  
@@ -196,62 +224,100 @@ index 08bb4ac..4069d97 100644
 +## Local execution
 +
 +Use the managed native `cua-driver` CLI at `~/.local/bin/cua-driver`, linked to
-+`/Applications/CuaDriver.app/Contents/MacOS/cua-driver` (release 0.25.0).
-+No Python/npm wrapper or MCP registration is required. Prefer the CLI; use an
++`/Applications/CuaDriver.app/Contents/MacOS/cua-driver` (official CuaDriver.app
++release 0.36.0, bundle id `com.trycua.driver`). Release 0.36.0 refuses to run
++as a bare binary outside the app bundle; the link resolves into the bundle and
++works. No Python/npm wrapper or MCP registration is required. Prefer the CLI; use an
 +existing persistent MCP connection only when the workflow requires shared state.
-+Installation, updates, source builds, removal, and repair go through
-+[skill-ops](../skill-ops/SKILL.md), which owns APM skill maintenance and the
-+persistent app dependency. Do not invoke upstream skill installers.
++Two local DSH instances already spawn `cua-driver mcp` through `PATH`; preserve
++that integration, but do not add or change MCP registrations from this skill.
 +
-+On this Mac, start the app service with `open -n -g -a CuaDriver --args serve`.
++On this Mac, start the app service with `open -n -g -a CuaDriver --args serve`,
++then verify with `cua-driver status` and `cua-driver permissions status --json`.
 +This is an exception for starting the driver itself, not for launching task apps.
 +The responsible permission identity must be `com.trycua.driver`. Do not grant
-+Accessibility or Screen Recording to the SSH launch entry or switch to the
-+Python CLI's host backend. Read `MACOS.md` for status checks and authorization.
-+Existing user authorization counts; do not ask again for already authorized work.
++Accessibility or Screen Recording to the SSH launch entry
++(`sshd-keygen-wrapper`) or switch to the Python CLI's host backend. Use
++`cua-driver permissions grant` only when permission setup is authorized. Read
++`MACOS.md` for status checks and authorization. Existing user authorization
++counts; do not ask again for already authorized work.
 +
- Orchestrates cross-platform app automation via `cua-driver`. Whenever
- a user asks to drive a native app, follow the loop in this skill
- rather than calling tools ad-hoc — the snapshot-before-action
-@@ -212,11 +237,8 @@ when MCP is requested.
++Installation, updates (`update --apply`, `channel set`, `install.sh`,
++`install.ps1`), `skills install|update|uninstall`, ClawHub installs, source
++builds and `install-local.sh`, persistent MCP registration (`mcp-config`),
++`cursor-theme install|uninstall`, `extension install|update|remove`, TCC resets,
++re-signing, and relocation go through [skill-ops](../skill-ops/SKILL.md), which
++owns APM skill maintenance and the persistent app dependency. Read-only
++`check-update`, `doctor`, `status`, and `skills status` remain available.
++
+ Operate one exact target, observe it narrowly, act by element, and verify the user's postcondition at checkpoints.
  
- For normal Claude Code use, keep the default CLI or `cua-driver` MCP
- server path above. If the user explicitly wants Claude Code's
--vision/computer-use-style flow, they can register:
+ ## Efficient loop
+diff --git base/VISUAL.md work/VISUAL.md
+index e3d3a43..2285525 100644
+--- base/VISUAL.md
++++ work/VISUAL.md
+@@ -18,8 +18,14 @@ material, and AGPL network source path.
+ ## Inspect before installing
+ 
+ Never install the extension merely because a parse returned `not_installed`.
+-Use the signed catalog for this platform from a `cua-perception-v<version>`
+-GitHub release, downloaded beside its archive, then inspect the exact artifact:
++Check its state with the read-only `cua-driver extension status cua-perception`.
++Installing, updating, or removing the extension is persistent maintenance:
++route it through [skill-ops](../skill-ops/SKILL.md) and the user's
++authorization, never as task setup.
++
++For that maintenance, use the signed catalog for this platform from a
++`cua-perception-v<version>` GitHub release, downloaded beside its archive, then
++inspect the exact artifact:
+ 
+ ```bash
+ cua-driver extension inspect cua-perception --catalog <catalog.json>
+@@ -27,17 +33,10 @@ cua-driver extension inspect cua-perception --catalog <catalog.json>
+ 
+ Review its version, target, capabilities, protocol range, worker and model
+ sizes, hashes, destination, licenses, publisher, and provenance. Installation
+-must be an explicit caller decision after that review:
 -
 -```bash
--cua-driver mcp-config --client claude   # then paste + run the printed line
+-cua-driver extension install cua-perception --catalog <catalog.json>
+-cua-driver extension status cua-perception
 -```
-+vision/computer-use-style flow, handle persistent MCP registration through
-+[skill-ops](../skill-ops/SKILL.md).
+-
+-Use `cua-driver extension update cua-perception --catalog <catalog.json>` only
+-after inspecting the proposed replacement. Use
+-`cua-driver extension remove cua-perception` to remove extension-owned artifacts
+-when they are not in use.
++must be an explicit caller decision after that review, carried out under
++skill-ops with `extension install`. Inspect a proposed replacement before
++`extension update`, and use `extension remove` only for extension-owned
++artifacts that are not in use; both also go through skill-ops.
  
- The compatibility flag is retained for old setup snippets, but the standalone
- `screenshot` tool was removed. It does not add or replace tools. Use
-@@ -238,7 +260,7 @@ Tool names are `snake_case`, management subcommands are
- - `cua-driver stop` / `status`
- - `cua-driver list-tools`, `describe <tool>`
- - `cua-driver recording start|stop|status` — see `RECORDING.md`
--- `cua-driver check-update [--json] [--no-cache]` — read-only "is a newer release available?" probe. Same payload as the `check_for_update` MCP tool; pair with `cua-driver update --apply` to install.
-+- `cua-driver check-update [--json] [--no-cache]` — read-only "is a newer release available?" probe. Same payload as the `check_for_update` MCP tool; route updates through [skill-ops](../skill-ops/SKILL.md).
+ If `inspect` cannot present authenticated metadata for the exact artifact,
+ stop. Do not invent an artifact URL, substitute an unsigned archive, or infer
+@@ -94,13 +93,14 @@ move, scroll, navigation, display-layout change, or target-identity change.
  
- Canonical multi-step workflow within one persistent MCP connection (example
- shape — platform-specific launch idioms in the per-OS companion file):
-@@ -303,9 +325,7 @@ name a virtual pointer; it never selects artwork. The default cursor is Cua
- blue, while each named session receives a stable fill from the built-in
- palette. Select only preinstalled
- themes with `set_agent_cursor_theme`; theme source paths and inline animation
--data are never accepted through an agent tool. Use the trusted local
--`cua-driver cursor-theme` workflow to validate, compile, preview, install,
--list, or remove custom themes.
-+data are never accepted through an agent tool. Use `cua-driver cursor-theme` for validation, preview, and listing; route persistent custom-theme installation or removal through skill-ops.
- 
- **Visibility caveat (AX runs).** On a pure accessibility-action run
- (clicking by `element_index`), the first action **seeds the cursor
+ - `not_installed`: the optional `cua-perception` extension is absent. Continue with
+   accessibility, browser, or caller-owned visual reasoning unless the user has
+-  chosen to inspect and install the extension.
++  chosen to inspect and install the extension through skill-ops.
+ - `capture_not_found`, `capture_expired`, `capture_stale`, or
+   `capture_generation_mismatch`: take a fresh capture and parse that new ID.
+ - `unsupported_target` or `unsupported_platform`: use another observation
+   route and preserve the reported limitation.
+ - `incompatible_protocol` or `artifact_invalid`: stop using the extension;
+-  inspect its exact installed state before any update or reinstall.
++  inspect its exact installed state and route any update or reinstall through
++  skill-ops.
+ - `worker_launch_failed`, `worker_crashed`, `worker_cancelled`, `timeout`, or
+   `inference_failed`: do not act from a partial or old result. Reobserve before
+   a bounded retry or fallback.
 diff --git base/WINDOWS.md work/WINDOWS.md
-index 504b5f4..030554e 100644
+index 3f1a101..b8c8a12 100644
 --- base/WINDOWS.md
 +++ work/WINDOWS.md
-@@ -463,11 +463,8 @@ your prior tool calls earned.
+@@ -445,11 +445,8 @@ your prior tool calls earned.
     `where.exe cua-driver`. Install location:
     `%LOCALAPPDATA%\Programs\trycua\cua-driver-rs\bin\cua-driver.exe`,
     added to the user PATH by the install script.
@@ -265,7 +331,28 @@ index 504b5f4..030554e 100644
  2. **The runtime owner must run in an interactive session (Session 1+),
     NOT Session 0.** This is the daemon for one-shot CLI/service mode and the
     MCP process for bare stdio MCP. Windows isolates services into Session 0 with no
-@@ -861,6 +858,6 @@ registered to auto-start at logon AND whether it's currently running:
+@@ -502,7 +499,9 @@ subcommands:
+ - **`cua-driver autostart {enable|disable|status|kick}`**: manage the
+   Scheduled Task that auto-starts the daemon at logon. `enable`
+   registers it (idempotent: replaces existing). `kick` runs it
+-  immediately without waiting for a fresh logon.
++  immediately without waiting for a fresh logon. `enable` and `disable`
++  change persistent registration; route them through
++  [skill-ops](../skill-ops/SKILL.md).
+ - **`cua-driver recording start|stop|status`**: see `RECORDING.md`.
+   Windows video uses ffmpeg with `gdigrab`; trajectory evidence continues
+   without video when ffmpeg is unavailable.
+@@ -812,7 +811,8 @@ trace back to one of these checks reading "false."
+ registered to auto-start at logon AND whether it's currently running:
+ 
+ - `not-registered`: Task Scheduler explicitly reported that the named task
+-  does not exist. Re-register via `cua-driver autostart enable`.
++  does not exist. Route re-registration (`cua-driver autostart enable`)
++  through skill-ops.
+ - `registered (not running)`: autostart task exists but no daemon
+   process. Kick it with `cua-driver autostart kick`.
+ - `registered (running)`: happy path.
+@@ -826,6 +826,6 @@ registered to auto-start at logon AND whether it's currently running:
  ## Recording
  
  Windows recording uses ffmpeg with `gdigrab` and writes the same trajectory

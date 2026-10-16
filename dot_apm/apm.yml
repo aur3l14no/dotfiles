@@ -25,13 +25,11 @@ dependencies:
       ref: main
     - git: https://github.com/jackwener/twitter-cli.git
       ref: ^0.8.0
-    - git: https://github.com/public-clis/bilibili-cli.git
-      ref: ^0.6.2
     - git: https://github.com/humanlayer/skills.git
       path: plugins/show-me/skills/show-me
       ref: main
     - petergyang/no-ai-slop/skills/no-ai-slop#000650b156983f5159695b441477f4e63b25dc85
-    - trycua/cua/libs/cua-driver/rust/Skills/cua-driver#45d78fedcf2c7033ba33f10dd30f8af8ba31ec3f
+    - trycua/cua/libs/cua-driver/rust/Skills/cua-driver#6d6c734c127025fb39ad5d585a10382808b39dc1
     - mattpocock/skills/skills/engineering/tdd#d81f3a183412e71a5b1e84ca21bc1a35eea03a60
     - mattpocock/skills/skills/engineering/codebase-design#d81f3a183412e71a5b1e84ca21bc1a35eea03a60
     - mattpocock/skills/skills/engineering/grill-with-docs#d81f3a183412e71a5b1e84ca21bc1a35eea03a60

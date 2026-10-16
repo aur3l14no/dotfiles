@@ -5,10 +5,10 @@ description: Use when changing or diagnosing (not just using) the user's own hos
 
 # My Infra
 
-Overview: `~/Projects/Rosetta/USER/My Infra/README.md`. Use its Pointers to find the
+Overview: `~/Projects/Infra/my-infra/README.md`. Use its Pointers to find the
 repo that manages the host or network, then read that repo's `AGENTS.md` before
 working in it.
 
-- If the path is missing (for example, this machine has no Rosetta checkout), report
-  what is missing. Do not search the entire filesystem or reconstruct host facts
+- If the path is missing (only core hosts have this checkout), report what is
+  missing. Do not search the entire filesystem or reconstruct host facts
   from memory.

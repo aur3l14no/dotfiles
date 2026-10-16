@@ -1,7 +1,7 @@
 {
   "host": "github.com",
   "repo": "trycua/cua",
-  "commit": "45d78fedcf2c7033ba33f10dd30f8af8ba31ec3f",
+  "commit": "6d6c734c127025fb39ad5d585a10382808b39dc1",
   "path": "libs/cua-driver/rust/Skills/cua-driver",
   "files": [
     "BROWSER.md",
@@ -10,7 +10,10 @@
     "MACOS.md",
     "README.md",
     "RECORDING.md",
+    "RUNTIME.md",
     "SKILL.md",
-    "WINDOWS.md"
+    "VISUAL.md",
+    "WINDOWS.md",
+    "WORKFLOW.md"
   ]
 }

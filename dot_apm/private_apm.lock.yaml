@@ -808,94 +808,6 @@ dependencies:
     .agents/skills/no-ai-slop/agents/openai.yaml: sha256:51aa33afd4a3287a618c681212a86ce01cc7da4d9c37e54e65166acffa24519a
     .agents/skills/no-ai-slop/eval.md: sha256:8ad8d83ed1abe7fc054ad74966bfca64fc182bc71f59d701b24b962c39d11ad7
   content_hash: sha256:4e08df8589aae8fea9747ed2f6a23aaf22bb83b5cfa5c771deaeeba9de1fd393
-- repo_url: public-clis/bilibili-cli
-  name: bilibili-cli
-  host: github.com
-  resolved_commit: 489607468f967e0e11f3cdff6efc022d011e982a
-  resolved_ref: v0.6.2
-  version: 0.6.2
-  package_type: claude_skill
-  deployed_files:
-  - .agents/skills/bilibili-cli
-  - .agents/skills/bilibili-cli/.github/ISSUE_TEMPLATE/bug_report.yml
-  - .agents/skills/bilibili-cli/.github/ISSUE_TEMPLATE/feature_request.yml
-  - .agents/skills/bilibili-cli/.github/workflows/ci.yml
-  - .agents/skills/bilibili-cli/.github/workflows/publish-clawhub.yml
-  - .agents/skills/bilibili-cli/.github/workflows/publish.yml
-  - .agents/skills/bilibili-cli/.gitignore
-  - .agents/skills/bilibili-cli/CHANGELOG.md
-  - .agents/skills/bilibili-cli/LICENSE
-  - .agents/skills/bilibili-cli/README.md
-  - .agents/skills/bilibili-cli/SCHEMA.md
-  - .agents/skills/bilibili-cli/SKILL.md
-  - .agents/skills/bilibili-cli/bili_cli/__init__.py
-  - .agents/skills/bilibili-cli/bili_cli/auth.py
-  - .agents/skills/bilibili-cli/bili_cli/cli.py
-  - .agents/skills/bilibili-cli/bili_cli/client.py
-  - .agents/skills/bilibili-cli/bili_cli/commands/__init__.py
-  - .agents/skills/bilibili-cli/bili_cli/commands/account.py
-  - .agents/skills/bilibili-cli/bili_cli/commands/audio.py
-  - .agents/skills/bilibili-cli/bili_cli/commands/collections.py
-  - .agents/skills/bilibili-cli/bili_cli/commands/common.py
-  - .agents/skills/bilibili-cli/bili_cli/commands/discovery.py
-  - .agents/skills/bilibili-cli/bili_cli/commands/interactions.py
-  - .agents/skills/bilibili-cli/bili_cli/commands/user_search.py
-  - .agents/skills/bilibili-cli/bili_cli/commands/video.py
-  - .agents/skills/bilibili-cli/bili_cli/exceptions.py
-  - .agents/skills/bilibili-cli/bili_cli/formatter.py
-  - .agents/skills/bilibili-cli/bili_cli/payloads.py
-  - .agents/skills/bilibili-cli/pyproject.toml
-  - .agents/skills/bilibili-cli/tests/conftest.py
-  - .agents/skills/bilibili-cli/tests/test_audio.py
-  - .agents/skills/bilibili-cli/tests/test_auth.py
-  - .agents/skills/bilibili-cli/tests/test_cli.py
-  - .agents/skills/bilibili-cli/tests/test_client.py
-  - .agents/skills/bilibili-cli/tests/test_helpers.py
-  - .agents/skills/bilibili-cli/tests/test_smoke.py
-  - .agents/skills/bilibili-cli/tests/test_subtitle.py
-  - .agents/skills/bilibili-cli/uv.lock
-  deployed_file_hashes:
-    .agents/skills/bilibili-cli/.github/ISSUE_TEMPLATE/bug_report.yml: sha256:070d0233cfa4dd32b2017b6df2fef4ee18e047ce3c27ec6b09c68f6c8e194c11
-    .agents/skills/bilibili-cli/.github/ISSUE_TEMPLATE/feature_request.yml: sha256:a5a8529b81f5e0ad0c48290e5950571e1938700a500f6e4fdf3d98c645de7721
-    .agents/skills/bilibili-cli/.github/workflows/ci.yml: sha256:e194d9e02c4cf4a250b65b1e7153244cfb0a5b88d14154c733176267b1f67ebb
-    .agents/skills/bilibili-cli/.github/workflows/publish-clawhub.yml: sha256:1ce013bbca268b7c5d2679bb97e2b309fa5b89aa2ab77701ff00e3c8867301a5
-    .agents/skills/bilibili-cli/.github/workflows/publish.yml: sha256:3de200208574fb7f0329f864e7856f2ef6741d4d582a289d0fe1affa8f878929
-    .agents/skills/bilibili-cli/.gitignore: sha256:7e78f3cfb372760e9a771be30ae451ba662b0aaca62e85905d1a275f6a5ef578
-    .agents/skills/bilibili-cli/CHANGELOG.md: sha256:8270ade6b24892e69f5669b541fcd78374ec4383e67c8c54e160e04c2ccdc764
-    .agents/skills/bilibili-cli/LICENSE: sha256:6f6f5c994967f3bfbe09ae0bdbbc8d26886e7265b985fc98d43748e6f9fe31e5
-    .agents/skills/bilibili-cli/README.md: sha256:61406081f7e254581850e40de3c7ee32db8389efa54bfc95555651a305d8683c
-    .agents/skills/bilibili-cli/SCHEMA.md: sha256:2281291a03824cb7f6586b61e8ef37520a6ac5e576052f9e3fbf2cd5e8e033fc
-    .agents/skills/bilibili-cli/SKILL.md: sha256:ab30fd3b4eab93a8525fffaae2d0da6751f656bfdabeba8b119decfd0fa08531
-    .agents/skills/bilibili-cli/bili_cli/__init__.py: sha256:857304b882a58abf98caaed81f09db7692e957c4d063f15de546be91d7987905
-    .agents/skills/bilibili-cli/bili_cli/auth.py: sha256:eab5e26eb1796316e9c7ee7b99cf3a7d905d762b7d245b02adcc3b7d9877f7d3
-    .agents/skills/bilibili-cli/bili_cli/cli.py: sha256:0a8a3f30d55b49eeb58a6aab6ef7c0765e5ffcd3b7a073c157f4578936613e2d
-    .agents/skills/bilibili-cli/bili_cli/client.py: sha256:8a94c6144b9b1c7b00a4d3c34d3659ba4c6be1e112045125732181782cbcf243
-    .agents/skills/bilibili-cli/bili_cli/commands/__init__.py: sha256:810ead9d4d11be6d3e11258550153e28397976934ea544c6e74f615ce4108f06
-    .agents/skills/bilibili-cli/bili_cli/commands/account.py: sha256:0ea501646b4a1f13de40bf781239fdf450ccdb076c91eaef5c80c0a7b6dd2183
-    .agents/skills/bilibili-cli/bili_cli/commands/audio.py: sha256:809fae1de722eb287c7ad078540160c7b623683a0c30a719b2d1f9a3695954a9
-    .agents/skills/bilibili-cli/bili_cli/commands/collections.py: sha256:112b2a113005f7a2d25d7eee956abdeddfc46e5c16002b6d6e904d47d60ecf8f
-    .agents/skills/bilibili-cli/bili_cli/commands/common.py: sha256:a069078ab351f764949b71577cf2aedcee75f99c4e6dbbc6ba1d28693ce33286
-    .agents/skills/bilibili-cli/bili_cli/commands/discovery.py: sha256:373c6b3a32b39ce4dc1094bc05ebe3edb8d5529e10b5d60c822c79e60f8a22a4
-    .agents/skills/bilibili-cli/bili_cli/commands/interactions.py: sha256:61efacf0d73c04ecd5bb1dc555a14601136ad210d690638ced278beb4528340b
-    .agents/skills/bilibili-cli/bili_cli/commands/user_search.py: sha256:c957e2d35848df8d19023fa62b0c3a52ec7ef7748b0ed58eb347b0cf68ac1e48
-    .agents/skills/bilibili-cli/bili_cli/commands/video.py: sha256:eb830bedbbf7941609872a7e88f6a131c5b75832e7fab97e4e37fd6f1f133167
-    .agents/skills/bilibili-cli/bili_cli/exceptions.py: sha256:80b5fd9de203b2544718ab5dda7364a6591ad05165d665a3df7a96148efa1452
-    .agents/skills/bilibili-cli/bili_cli/formatter.py: sha256:05d11d563cdb95b820ced96157caaccc97945f21733236aee720befb5f70ee8b
-    .agents/skills/bilibili-cli/bili_cli/payloads.py: sha256:6e07af1b11fd80b28bff8014a32568bb0b0b2bf6ebc35f7e8cd9686123253bc0
-    .agents/skills/bilibili-cli/pyproject.toml: sha256:547a0880a9d6cde0a1437d2b6f631b99cea6cafcad5e0eb3a972e3a28ee6e9f0
-    .agents/skills/bilibili-cli/tests/conftest.py: sha256:882a49253b390a85c1187d740d6c1795c5654164a35109b73d9b13fee67f1797
-    .agents/skills/bilibili-cli/tests/test_audio.py: sha256:4905c09a3d2882e60d414ea8eaf6f7f80530a0c55cf7cbd75d80f4548c0a5fb6
-    .agents/skills/bilibili-cli/tests/test_auth.py: sha256:183006507032814a6e6a1c0f3f8efb3685be9322236813ae3a3b65f8066fba4f
-    .agents/skills/bilibili-cli/tests/test_cli.py: sha256:142f35b9973d55e124f7d2a7293b2c6db19c0adf176dab67285ff81bc9f32549
-    .agents/skills/bilibili-cli/tests/test_client.py: sha256:ef43995f7630db44d13a72dc43c4fb06029372c367425474768e391aa9596710
-    .agents/skills/bilibili-cli/tests/test_helpers.py: sha256:bc30a28e8b0aed698da45c1bb37535c6499653e7b74889706e41c5cc5cad9dfb
-    .agents/skills/bilibili-cli/tests/test_smoke.py: sha256:81e8f2b171de6587d791524dcc0f9f63f9ef9518a91a0fc343d6595a1872e161
-    .agents/skills/bilibili-cli/tests/test_subtitle.py: sha256:02b25fdd61713550746377c55331ecf44edcd4ff649e34fb6701eea5275dd384
-    .agents/skills/bilibili-cli/uv.lock: sha256:eb987218315487709faf1ff08ab5638f6fe757dd84a1cdcd96db260cf4e394a4
-  content_hash: sha256:e3a4dd24faa4fdf790a2164da4b48a4b0f1eb33de41278de0501be719c27cf6b
-  constraint: ^0.6.2
-  resolved_tag: v0.6.2
-  resolved_at: '2026-09-04T14:18:22+00:00'
 - repo_url: tommy0103/better-readme-skill
   name: better-readme
   host: github.com
@@ -969,8 +881,8 @@ dependencies:
 - repo_url: trycua/cua
   name: cua-driver
   host: github.com
-  resolved_commit: 45d78fedcf2c7033ba33f10dd30f8af8ba31ec3f
-  resolved_ref: 45d78fedcf2c7033ba33f10dd30f8af8ba31ec3f
+  resolved_commit: 6d6c734c127025fb39ad5d585a10382808b39dc1
+  resolved_ref: 6d6c734c127025fb39ad5d585a10382808b39dc1
   version: unknown
   virtual_path: libs/cua-driver/rust/Skills/cua-driver
   is_virtual: true
@@ -983,21 +895,27 @@ dependencies:
   - .agents/skills/cua-driver/MACOS.md
   - .agents/skills/cua-driver/README.md
   - .agents/skills/cua-driver/RECORDING.md
+  - .agents/skills/cua-driver/RUNTIME.md
   - .agents/skills/cua-driver/SKILL.md
+  - .agents/skills/cua-driver/VISUAL.md
   - .agents/skills/cua-driver/WINDOWS.md
+  - .agents/skills/cua-driver/WORKFLOW.md
   deployed_file_hashes:
-    .agents/skills/cua-driver/BROWSER.md: sha256:376960a136247d8ac2850f789fb7761c9619967c85e0f30c410f32890902e5d4
-    .agents/skills/cua-driver/EMBEDDING.md: sha256:206e2c5ad3b5be5d7d5a0214975df9fa9e59026e72165c97eed4b59669db9715
-    .agents/skills/cua-driver/LINUX.md: sha256:4d096f19eab5c56f0231bed98e2048abc09f969a92e70311be9e1f5ecc5209e0
-    .agents/skills/cua-driver/MACOS.md: sha256:8e5013cb7a9a3cb4cbae6fe43593f14627597f1f41395d769602ed9e3c0e1603
-    .agents/skills/cua-driver/README.md: sha256:07580cc0a7df49dc088939e88d8c95ae387aeb4a94d61142f4527fade4b4328c
-    .agents/skills/cua-driver/RECORDING.md: sha256:83a13ec47f18084969c765eca934812f182f8bcb4667c0cf2f9eee7bcf9883f1
-    .agents/skills/cua-driver/SKILL.md: sha256:da04f757d061e779792794f3636106654cd2ba26d588a65b4854f34ab4a2f7cd
-    .agents/skills/cua-driver/WINDOWS.md: sha256:0f42710550c9b6583f7cb705fbc1ffe320c790350b6a829c3689887747c909c5
-  content_hash: sha256:92c5408606e3eb4ee69470e74a1a686bfbaebfc6db79b5b6a3318fb945b3ed26
+    .agents/skills/cua-driver/BROWSER.md: sha256:b008c6bfef08beaf030304adee72a297ddc0df436af32ee8fa643c0dff77efbf
+    .agents/skills/cua-driver/EMBEDDING.md: sha256:e090a7dc065d181da6e28b7bd29807a56086a459adbf9a355a36502702a1f46a
+    .agents/skills/cua-driver/LINUX.md: sha256:0560bc227d2e1d6f5a6da6ebd3bc9b1149b85580f7d2170f9882ce86e2c3fc6e
+    .agents/skills/cua-driver/MACOS.md: sha256:765a3e8840650cf752712fa7f7916f2ec6792a4325b0af0186248bf198c8bd3c
+    .agents/skills/cua-driver/README.md: sha256:3e6e3266a0a8a7249ac57f9be6eaaeeee68336789c7c4556d14889d0e8a0ca65
+    .agents/skills/cua-driver/RECORDING.md: sha256:6d1d5f8ff192f37bd9c67efcda59154f3242b0fae72e86ba7e2ba5a4899fd248
+    .agents/skills/cua-driver/RUNTIME.md: sha256:79d8fa37b29ba4008805629afaaf61bb880a2f476ed79e1939bb5dc2362081a2
+    .agents/skills/cua-driver/SKILL.md: sha256:0f19a22accd7b4bb2d126a2826b4491c9bbf570f28a09131502b6d941213d7f0
+    .agents/skills/cua-driver/VISUAL.md: sha256:66aa0fadd643ee4cd0deda751af1f3ebc2cec0b77607eec61c9b2a4ee7d4a256
+    .agents/skills/cua-driver/WINDOWS.md: sha256:21bf71d599c7481a10b3ecb9d02731c72b34b21367e769d554c9341071bf837d
+    .agents/skills/cua-driver/WORKFLOW.md: sha256:79f24525aa70bb3925aa56831a069a2a40f50eaf37f3522c1902c300330aa135
+  content_hash: sha256:c3e0e8e2cce4cc0675aaca92457c562adcf6660f0dfdc2756a6d949d68677f54
 deployments:
 - kind: project-relative
-  target: agent-skills
+  target: agents
   value: .agents/skills/better-readme
   runtime: null
   scope: project
@@ -1006,7 +924,7 @@ deployments:
   active_owner: tommy0103/better-readme-skill/skills/better-readme
   content_hash: null
 - kind: project-relative
-  target: agent-skills
+  target: agents
   value: .agents/skills/better-readme/SKILL.md
   runtime: null
   scope: project
@@ -1015,7 +933,7 @@ deployments:
   active_owner: tommy0103/better-readme-skill/skills/better-readme
   content_hash: sha256:cbc24d8526dc6a60b44c79040201d9708352743b1f8bb8bd47a90d289c7c223a
 - kind: project-relative
-  target: agent-skills
+  target: agents
   value: .agents/skills/better-readme/references/art-of-readme.md
   runtime: null
   scope: project
@@ -1023,348 +941,6 @@ deployments:
   - tommy0103/better-readme-skill/skills/better-readme
   active_owner: tommy0103/better-readme-skill/skills/better-readme
   content_hash: sha256:7cf75d36f0cc62bb10a2e36a3718f7fb3d8cf3152264a1267528ee96fa48662b
-- kind: project-relative
-  target: agents
-  value: .agents/skills/bilibili-cli
-  runtime: null
-  scope: project
-  owners:
-  - public-clis/bilibili-cli
-  active_owner: public-clis/bilibili-cli
-  content_hash: null
-- kind: project-relative
-  target: agents
-  value: .agents/skills/bilibili-cli/.github/ISSUE_TEMPLATE/bug_report.yml
-  runtime: null
-  scope: project
-  owners:
-  - public-clis/bilibili-cli
-  active_owner: public-clis/bilibili-cli
-  content_hash: sha256:070d0233cfa4dd32b2017b6df2fef4ee18e047ce3c27ec6b09c68f6c8e194c11
-- kind: project-relative
-  target: agents
-  value: .agents/skills/bilibili-cli/.github/ISSUE_TEMPLATE/feature_request.yml
-  runtime: null
-  scope: project
-  owners:
-  - public-clis/bilibili-cli
-  active_owner: public-clis/bilibili-cli
-  content_hash: sha256:a5a8529b81f5e0ad0c48290e5950571e1938700a500f6e4fdf3d98c645de7721
-- kind: project-relative
-  target: agents
-  value: .agents/skills/bilibili-cli/.github/workflows/ci.yml
-  runtime: null
-  scope: project
-  owners:
-  - public-clis/bilibili-cli
-  active_owner: public-clis/bilibili-cli
-  content_hash: sha256:e194d9e02c4cf4a250b65b1e7153244cfb0a5b88d14154c733176267b1f67ebb
-- kind: project-relative
-  target: agents
-  value: .agents/skills/bilibili-cli/.github/workflows/publish-clawhub.yml
-  runtime: null
-  scope: project
-  owners:
-  - public-clis/bilibili-cli
-  active_owner: public-clis/bilibili-cli
-  content_hash: sha256:1ce013bbca268b7c5d2679bb97e2b309fa5b89aa2ab77701ff00e3c8867301a5
-- kind: project-relative
-  target: agents
-  value: .agents/skills/bilibili-cli/.github/workflows/publish.yml
-  runtime: null
-  scope: project
-  owners:
-  - public-clis/bilibili-cli
-  active_owner: public-clis/bilibili-cli
-  content_hash: sha256:3de200208574fb7f0329f864e7856f2ef6741d4d582a289d0fe1affa8f878929
-- kind: project-relative
-  target: agents
-  value: .agents/skills/bilibili-cli/.gitignore
-  runtime: null
-  scope: project
-  owners:
-  - public-clis/bilibili-cli
-  active_owner: public-clis/bilibili-cli
-  content_hash: sha256:7e78f3cfb372760e9a771be30ae451ba662b0aaca62e85905d1a275f6a5ef578
-- kind: project-relative
-  target: agents
-  value: .agents/skills/bilibili-cli/CHANGELOG.md
-  runtime: null
-  scope: project
-  owners:
-  - public-clis/bilibili-cli
-  active_owner: public-clis/bilibili-cli
-  content_hash: sha256:8270ade6b24892e69f5669b541fcd78374ec4383e67c8c54e160e04c2ccdc764
-- kind: project-relative
-  target: agents
-  value: .agents/skills/bilibili-cli/LICENSE
-  runtime: null
-  scope: project
-  owners:
-  - public-clis/bilibili-cli
-  active_owner: public-clis/bilibili-cli
-  content_hash: sha256:6f6f5c994967f3bfbe09ae0bdbbc8d26886e7265b985fc98d43748e6f9fe31e5
-- kind: project-relative
-  target: agents
-  value: .agents/skills/bilibili-cli/README.md
-  runtime: null
-  scope: project
-  owners:
-  - public-clis/bilibili-cli
-  active_owner: public-clis/bilibili-cli
-  content_hash: sha256:61406081f7e254581850e40de3c7ee32db8389efa54bfc95555651a305d8683c
-- kind: project-relative
-  target: agents
-  value: .agents/skills/bilibili-cli/SCHEMA.md
-  runtime: null
-  scope: project
-  owners:
-  - public-clis/bilibili-cli
-  active_owner: public-clis/bilibili-cli
-  content_hash: sha256:2281291a03824cb7f6586b61e8ef37520a6ac5e576052f9e3fbf2cd5e8e033fc
-- kind: project-relative
-  target: agents
-  value: .agents/skills/bilibili-cli/SKILL.md
-  runtime: null
-  scope: project
-  owners:
-  - public-clis/bilibili-cli
-  active_owner: public-clis/bilibili-cli
-  content_hash: sha256:ab30fd3b4eab93a8525fffaae2d0da6751f656bfdabeba8b119decfd0fa08531
-- kind: project-relative
-  target: agents
-  value: .agents/skills/bilibili-cli/bili_cli/__init__.py
-  runtime: null
-  scope: project
-  owners:
-  - public-clis/bilibili-cli
-  active_owner: public-clis/bilibili-cli
-  content_hash: sha256:857304b882a58abf98caaed81f09db7692e957c4d063f15de546be91d7987905
-- kind: project-relative
-  target: agents
-  value: .agents/skills/bilibili-cli/bili_cli/auth.py
-  runtime: null
-  scope: project
-  owners:
-  - public-clis/bilibili-cli
-  active_owner: public-clis/bilibili-cli
-  content_hash: sha256:eab5e26eb1796316e9c7ee7b99cf3a7d905d762b7d245b02adcc3b7d9877f7d3
-- kind: project-relative
-  target: agents
-  value: .agents/skills/bilibili-cli/bili_cli/cli.py
-  runtime: null
-  scope: project
-  owners:
-  - public-clis/bilibili-cli
-  active_owner: public-clis/bilibili-cli
-  content_hash: sha256:0a8a3f30d55b49eeb58a6aab6ef7c0765e5ffcd3b7a073c157f4578936613e2d
-- kind: project-relative
-  target: agents
-  value: .agents/skills/bilibili-cli/bili_cli/client.py
-  runtime: null
-  scope: project
-  owners:
-  - public-clis/bilibili-cli
-  active_owner: public-clis/bilibili-cli
-  content_hash: sha256:8a94c6144b9b1c7b00a4d3c34d3659ba4c6be1e112045125732181782cbcf243
-- kind: project-relative
-  target: agents
-  value: .agents/skills/bilibili-cli/bili_cli/commands/__init__.py
-  runtime: null
-  scope: project
-  owners:
-  - public-clis/bilibili-cli
-  active_owner: public-clis/bilibili-cli
-  content_hash: sha256:810ead9d4d11be6d3e11258550153e28397976934ea544c6e74f615ce4108f06
-- kind: project-relative
-  target: agents
-  value: .agents/skills/bilibili-cli/bili_cli/commands/account.py
-  runtime: null
-  scope: project
-  owners:
-  - public-clis/bilibili-cli
-  active_owner: public-clis/bilibili-cli
-  content_hash: sha256:0ea501646b4a1f13de40bf781239fdf450ccdb076c91eaef5c80c0a7b6dd2183
-- kind: project-relative
-  target: agents
-  value: .agents/skills/bilibili-cli/bili_cli/commands/audio.py
-  runtime: null
-  scope: project
-  owners:
-  - public-clis/bilibili-cli
-  active_owner: public-clis/bilibili-cli
-  content_hash: sha256:809fae1de722eb287c7ad078540160c7b623683a0c30a719b2d1f9a3695954a9
-- kind: project-relative
-  target: agents
-  value: .agents/skills/bilibili-cli/bili_cli/commands/collections.py
-  runtime: null
-  scope: project
-  owners:
-  - public-clis/bilibili-cli
-  active_owner: public-clis/bilibili-cli
-  content_hash: sha256:112b2a113005f7a2d25d7eee956abdeddfc46e5c16002b6d6e904d47d60ecf8f
-- kind: project-relative
-  target: agents
-  value: .agents/skills/bilibili-cli/bili_cli/commands/common.py
-  runtime: null
-  scope: project
-  owners:
-  - public-clis/bilibili-cli
-  active_owner: public-clis/bilibili-cli
-  content_hash: sha256:a069078ab351f764949b71577cf2aedcee75f99c4e6dbbc6ba1d28693ce33286
-- kind: project-relative
-  target: agents
-  value: .agents/skills/bilibili-cli/bili_cli/commands/discovery.py
-  runtime: null
-  scope: project
-  owners:
-  - public-clis/bilibili-cli
-  active_owner: public-clis/bilibili-cli
-  content_hash: sha256:373c6b3a32b39ce4dc1094bc05ebe3edb8d5529e10b5d60c822c79e60f8a22a4
-- kind: project-relative
-  target: agents
-  value: .agents/skills/bilibili-cli/bili_cli/commands/interactions.py
-  runtime: null
-  scope: project
-  owners:
-  - public-clis/bilibili-cli
-  active_owner: public-clis/bilibili-cli
-  content_hash: sha256:61efacf0d73c04ecd5bb1dc555a14601136ad210d690638ced278beb4528340b
-- kind: project-relative
-  target: agents
-  value: .agents/skills/bilibili-cli/bili_cli/commands/user_search.py
-  runtime: null
-  scope: project
-  owners:
-  - public-clis/bilibili-cli
-  active_owner: public-clis/bilibili-cli
-  content_hash: sha256:c957e2d35848df8d19023fa62b0c3a52ec7ef7748b0ed58eb347b0cf68ac1e48
-- kind: project-relative
-  target: agents
-  value: .agents/skills/bilibili-cli/bili_cli/commands/video.py
-  runtime: null
-  scope: project
-  owners:
-  - public-clis/bilibili-cli
-  active_owner: public-clis/bilibili-cli
-  content_hash: sha256:eb830bedbbf7941609872a7e88f6a131c5b75832e7fab97e4e37fd6f1f133167
-- kind: project-relative
-  target: agents
-  value: .agents/skills/bilibili-cli/bili_cli/exceptions.py
-  runtime: null
-  scope: project
-  owners:
-  - public-clis/bilibili-cli
-  active_owner: public-clis/bilibili-cli
-  content_hash: sha256:80b5fd9de203b2544718ab5dda7364a6591ad05165d665a3df7a96148efa1452
-- kind: project-relative
-  target: agents
-  value: .agents/skills/bilibili-cli/bili_cli/formatter.py
-  runtime: null
-  scope: project
-  owners:
-  - public-clis/bilibili-cli
-  active_owner: public-clis/bilibili-cli
-  content_hash: sha256:05d11d563cdb95b820ced96157caaccc97945f21733236aee720befb5f70ee8b
-- kind: project-relative
-  target: agents
-  value: .agents/skills/bilibili-cli/bili_cli/payloads.py
-  runtime: null
-  scope: project
-  owners:
-  - public-clis/bilibili-cli
-  active_owner: public-clis/bilibili-cli
-  content_hash: sha256:6e07af1b11fd80b28bff8014a32568bb0b0b2bf6ebc35f7e8cd9686123253bc0
-- kind: project-relative
-  target: agents
-  value: .agents/skills/bilibili-cli/pyproject.toml
-  runtime: null
-  scope: project
-  owners:
-  - public-clis/bilibili-cli
-  active_owner: public-clis/bilibili-cli
-  content_hash: sha256:547a0880a9d6cde0a1437d2b6f631b99cea6cafcad5e0eb3a972e3a28ee6e9f0
-- kind: project-relative
-  target: agents
-  value: .agents/skills/bilibili-cli/tests/conftest.py
-  runtime: null
-  scope: project
-  owners:
-  - public-clis/bilibili-cli
-  active_owner: public-clis/bilibili-cli
-  content_hash: sha256:882a49253b390a85c1187d740d6c1795c5654164a35109b73d9b13fee67f1797
-- kind: project-relative
-  target: agents
-  value: .agents/skills/bilibili-cli/tests/test_audio.py
-  runtime: null
-  scope: project
-  owners:
-  - public-clis/bilibili-cli
-  active_owner: public-clis/bilibili-cli
-  content_hash: sha256:4905c09a3d2882e60d414ea8eaf6f7f80530a0c55cf7cbd75d80f4548c0a5fb6
-- kind: project-relative
-  target: agents
-  value: .agents/skills/bilibili-cli/tests/test_auth.py
-  runtime: null
-  scope: project
-  owners:
-  - public-clis/bilibili-cli
-  active_owner: public-clis/bilibili-cli
-  content_hash: sha256:183006507032814a6e6a1c0f3f8efb3685be9322236813ae3a3b65f8066fba4f
-- kind: project-relative
-  target: agents
-  value: .agents/skills/bilibili-cli/tests/test_cli.py
-  runtime: null
-  scope: project
-  owners:
-  - public-clis/bilibili-cli
-  active_owner: public-clis/bilibili-cli
-  content_hash: sha256:142f35b9973d55e124f7d2a7293b2c6db19c0adf176dab67285ff81bc9f32549
-- kind: project-relative
-  target: agents
-  value: .agents/skills/bilibili-cli/tests/test_client.py
-  runtime: null
-  scope: project
-  owners:
-  - public-clis/bilibili-cli
-  active_owner: public-clis/bilibili-cli
-  content_hash: sha256:ef43995f7630db44d13a72dc43c4fb06029372c367425474768e391aa9596710
-- kind: project-relative
-  target: agents
-  value: .agents/skills/bilibili-cli/tests/test_helpers.py
-  runtime: null
-  scope: project
-  owners:
-  - public-clis/bilibili-cli
-  active_owner: public-clis/bilibili-cli
-  content_hash: sha256:bc30a28e8b0aed698da45c1bb37535c6499653e7b74889706e41c5cc5cad9dfb
-- kind: project-relative
-  target: agents
-  value: .agents/skills/bilibili-cli/tests/test_smoke.py
-  runtime: null
-  scope: project
-  owners:
-  - public-clis/bilibili-cli
-  active_owner: public-clis/bilibili-cli
-  content_hash: sha256:81e8f2b171de6587d791524dcc0f9f63f9ef9518a91a0fc343d6595a1872e161
-- kind: project-relative
-  target: agents
-  value: .agents/skills/bilibili-cli/tests/test_subtitle.py
-  runtime: null
-  scope: project
-  owners:
-  - public-clis/bilibili-cli
-  active_owner: public-clis/bilibili-cli
-  content_hash: sha256:02b25fdd61713550746377c55331ecf44edcd4ff649e34fb6701eea5275dd384
-- kind: project-relative
-  target: agents
-  value: .agents/skills/bilibili-cli/uv.lock
-  runtime: null
-  scope: project
-  owners:
-  - public-clis/bilibili-cli
-  active_owner: public-clis/bilibili-cli
-  content_hash: sha256:eb987218315487709faf1ff08ab5638f6fe757dd84a1cdcd96db260cf4e394a4
 - kind: project-relative
   target: agents
   value: .agents/skills/codebase-design
@@ -1427,7 +1003,7 @@ deployments:
   owners:
   - trycua/cua/libs/cua-driver/rust/Skills/cua-driver
   active_owner: trycua/cua/libs/cua-driver/rust/Skills/cua-driver
-  content_hash: sha256:376960a136247d8ac2850f789fb7761c9619967c85e0f30c410f32890902e5d4
+  content_hash: sha256:b008c6bfef08beaf030304adee72a297ddc0df436af32ee8fa643c0dff77efbf
 - kind: project-relative
   target: agents
   value: .agents/skills/cua-driver/EMBEDDING.md
@@ -1436,7 +1012,7 @@ deployments:
   owners:
   - trycua/cua/libs/cua-driver/rust/Skills/cua-driver
   active_owner: trycua/cua/libs/cua-driver/rust/Skills/cua-driver
-  content_hash: sha256:206e2c5ad3b5be5d7d5a0214975df9fa9e59026e72165c97eed4b59669db9715
+  content_hash: sha256:e090a7dc065d181da6e28b7bd29807a56086a459adbf9a355a36502702a1f46a
 - kind: project-relative
   target: agents
   value: .agents/skills/cua-driver/LINUX.md
@@ -1445,7 +1021,7 @@ deployments:
   owners:
   - trycua/cua/libs/cua-driver/rust/Skills/cua-driver
   active_owner: trycua/cua/libs/cua-driver/rust/Skills/cua-driver
-  content_hash: sha256:4d096f19eab5c56f0231bed98e2048abc09f969a92e70311be9e1f5ecc5209e0
+  content_hash: sha256:0560bc227d2e1d6f5a6da6ebd3bc9b1149b85580f7d2170f9882ce86e2c3fc6e
 - kind: project-relative
   target: agents
   value: .agents/skills/cua-driver/MACOS.md
@@ -1454,7 +1030,7 @@ deployments:
   owners:
   - trycua/cua/libs/cua-driver/rust/Skills/cua-driver
   active_owner: trycua/cua/libs/cua-driver/rust/Skills/cua-driver
-  content_hash: sha256:8e5013cb7a9a3cb4cbae6fe43593f14627597f1f41395d769602ed9e3c0e1603
+  content_hash: sha256:765a3e8840650cf752712fa7f7916f2ec6792a4325b0af0186248bf198c8bd3c
 - kind: project-relative
   target: agents
   value: .agents/skills/cua-driver/README.md
@@ -1463,7 +1039,7 @@ deployments:
   owners:
   - trycua/cua/libs/cua-driver/rust/Skills/cua-driver
   active_owner: trycua/cua/libs/cua-driver/rust/Skills/cua-driver
-  content_hash: sha256:07580cc0a7df49dc088939e88d8c95ae387aeb4a94d61142f4527fade4b4328c
+  content_hash: sha256:3e6e3266a0a8a7249ac57f9be6eaaeeee68336789c7c4556d14889d0e8a0ca65
 - kind: project-relative
   target: agents
   value: .agents/skills/cua-driver/RECORDING.md
@@ -1472,7 +1048,16 @@ deployments:
   owners:
   - trycua/cua/libs/cua-driver/rust/Skills/cua-driver
   active_owner: trycua/cua/libs/cua-driver/rust/Skills/cua-driver
-  content_hash: sha256:83a13ec47f18084969c765eca934812f182f8bcb4667c0cf2f9eee7bcf9883f1
+  content_hash: sha256:6d1d5f8ff192f37bd9c67efcda59154f3242b0fae72e86ba7e2ba5a4899fd248
+- kind: project-relative
+  target: agents
+  value: .agents/skills/cua-driver/RUNTIME.md
+  runtime: null
+  scope: project
+  owners:
+  - trycua/cua/libs/cua-driver/rust/Skills/cua-driver
+  active_owner: trycua/cua/libs/cua-driver/rust/Skills/cua-driver
+  content_hash: sha256:79d8fa37b29ba4008805629afaaf61bb880a2f476ed79e1939bb5dc2362081a2
 - kind: project-relative
   target: agents
   value: .agents/skills/cua-driver/SKILL.md
@@ -1481,7 +1066,16 @@ deployments:
   owners:
   - trycua/cua/libs/cua-driver/rust/Skills/cua-driver
   active_owner: trycua/cua/libs/cua-driver/rust/Skills/cua-driver
-  content_hash: sha256:da04f757d061e779792794f3636106654cd2ba26d588a65b4854f34ab4a2f7cd
+  content_hash: sha256:0f19a22accd7b4bb2d126a2826b4491c9bbf570f28a09131502b6d941213d7f0
+- kind: project-relative
+  target: agents
+  value: .agents/skills/cua-driver/VISUAL.md
+  runtime: null
+  scope: project
+  owners:
+  - trycua/cua/libs/cua-driver/rust/Skills/cua-driver
+  active_owner: trycua/cua/libs/cua-driver/rust/Skills/cua-driver
+  content_hash: sha256:66aa0fadd643ee4cd0deda751af1f3ebc2cec0b77607eec61c9b2a4ee7d4a256
 - kind: project-relative
   target: agents
   value: .agents/skills/cua-driver/WINDOWS.md
@@ -1490,7 +1084,16 @@ deployments:
   owners:
   - trycua/cua/libs/cua-driver/rust/Skills/cua-driver
   active_owner: trycua/cua/libs/cua-driver/rust/Skills/cua-driver
-  content_hash: sha256:0f42710550c9b6583f7cb705fbc1ffe320c790350b6a829c3689887747c909c5
+  content_hash: sha256:21bf71d599c7481a10b3ecb9d02731c72b34b21367e769d554c9341071bf837d
+- kind: project-relative
+  target: agents
+  value: .agents/skills/cua-driver/WORKFLOW.md
+  runtime: null
+  scope: project
+  owners:
+  - trycua/cua/libs/cua-driver/rust/Skills/cua-driver
+  active_owner: trycua/cua/libs/cua-driver/rust/Skills/cua-driver
+  content_hash: sha256:79f24525aa70bb3925aa56831a069a2a40f50eaf37f3522c1902c300330aa135
 - kind: project-relative
   target: agents
   value: .agents/skills/domain-modeling
