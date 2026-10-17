@@ -1,11 +1,11 @@
 lockfile_version: '2'
-generated_at: '2026-10-10T08:39:09.253947+00:00'
-apm_version: 0.26.0
+generated_at: '2026-10-17T03:12:17.241248+00:00'
+apm_version: 0.33.0
 dependencies:
 - repo_url: humanlayer/skills
   name: show-me
   host: github.com
-  resolved_commit: 3c2629142c5d437428269b1b722b08c0b87f574d
+  resolved_commit: 653b6411c1f70c275a18e37673b042ff99f67ceb
   resolved_ref: main
   version: unknown
   virtual_path: plugins/show-me/skills/show-me
@@ -14,11 +14,14 @@ dependencies:
   deployed_files:
   - .agents/skills/show-me
   - .agents/skills/show-me/SKILL.md
+  - .agents/skills/show-me/agents/openai.yaml
   deployed_file_hashes:
-    .agents/skills/show-me/SKILL.md: sha256:bea6da70a58096730b9aeb0bae293ddf4726103a98efc9ce13c481619942a810
-  content_hash: sha256:de32a72f802801f08a84641b467f2c6306d35a58ce5e59ea607ac3a993a18c91
+    .agents/skills/show-me/SKILL.md: sha256:434a2346cc95e313b0d367d477dda2e23ba642dd2181757415a09500664af100
+    .agents/skills/show-me/agents/openai.yaml: sha256:a1499d95abd8447558c535fe5554adcc3c9b988a0a39264a6283d430effe1e94
+  content_hash: sha256:2756b5bd62fd54b18e98e1f7a9b90855cd5d5b27935be516bb44720f824e6573
 - repo_url: jackwener/opencli
-  name: opencli
+  materialization_repo_url: jackwener/OpenCLI
+  name: OpenCLI
   host: github.com
   resolved_commit: 8271afc67e8504bda94c147f446ee29775d08274
   resolved_ref: v1.8.8
@@ -169,13 +172,13 @@ dependencies:
   content_hash: sha256:781dbca42c420d11b91808d3474bd139ae06d48957aaf4efb9be3f9980b25cbd
   constraint: ^0.8.0
   resolved_tag: v0.8.5
-  resolved_at: '2026-08-19T11:03:48+00:00'
+  resolved_at: '2026-10-17T03:11:57+00:00'
 - repo_url: larksuite/cli
   name: cli
   host: github.com
-  resolved_commit: 72579c80027c863ca51d5f9affda72a70ab0d8a6
-  resolved_ref: v1.0.97
-  version: 1.0.97
+  resolved_commit: ac81f5056ab88f37d581d25916f3dab85abfca76
+  resolved_ref: v1.0.98
+  version: 1.0.98
   package_type: skill_bundle
   deployed_files:
   - .agents/skills/lark-doc
@@ -411,7 +414,7 @@ dependencies:
   - .agents/skills/lark-wiki/references/lark-wiki-space-create.md
   - .agents/skills/lark-wiki/references/lark-wiki-space-list.md
   deployed_file_hashes:
-    .agents/skills/lark-doc/SKILL.md: sha256:a535ea346a8d1eb9694899e188076b799700a8bd213359e4dc66019ff73f1599
+    .agents/skills/lark-doc/SKILL.md: sha256:1e8d049f6f3103984e8de3b1e3471b5815db1f875e138eeed81467f559f8cc70
     .agents/skills/lark-doc/references/genres/business-analysis.md: sha256:8aaab9e07737ea36dca4427778cc28af0087abb90710c1f2806bb1a51962ef78
     .agents/skills/lark-doc/references/genres/data-report.md: sha256:ea0cb3df6c9b466bfa16eb0090a0a91965ecd242dacdd903d0cffb20f9061cbe
     .agents/skills/lark-doc/references/genres/email.md: sha256:8a83a390d1736991f69f66e7dda5a748da1bda925be300c01e240e0bcf47a82c
@@ -635,7 +638,7 @@ dependencies:
     .agents/skills/lark-wiki/references/lark-wiki-node-list.md: sha256:771cce93c4755916f92136e283d2b85d0e901a505e852c5e8c9d6f70787082d6
     .agents/skills/lark-wiki/references/lark-wiki-space-create.md: sha256:b936ab670f525e6e9433ee6b145ed2eafee296df2c3062abdc651000a88c86ad
     .agents/skills/lark-wiki/references/lark-wiki-space-list.md: sha256:d4921cfbfaba564217f214b6f87daf7e3ccbfda5b9759f73ab6a999c682913ae
-  content_hash: sha256:f79bb311052a41f06f9b4eebcc4ef30038a8f0ab2ea086d43f06327dd426fea8
+  content_hash: sha256:9fa029d0df5751d777b5efcd80b9b75fe7a472ec8103a2cd775dbb44ab3b3562
   skill_subset:
   - lark-doc
   - lark-drive
@@ -646,13 +649,13 @@ dependencies:
   - lark-sheets
   - lark-wiki
   constraint: ^1.0.0
-  resolved_tag: v1.0.97
-  resolved_at: '2026-10-10T08:18:56+00:00'
+  resolved_tag: v1.0.98
+  resolved_at: '2026-10-17T03:11:57+00:00'
 - repo_url: mattpocock/skills
   name: codebase-design
   host: github.com
-  resolved_commit: d81f3a183412e71a5b1e84ca21bc1a35eea03a60
-  resolved_ref: d81f3a183412e71a5b1e84ca21bc1a35eea03a60
+  resolved_commit: 24fe0ef7737efae15c87225755e9f6f5965e4888
+  resolved_ref: 24fe0ef7737efae15c87225755e9f6f5965e4888
   version: unknown
   virtual_path: skills/engineering/codebase-design
   is_virtual: true
@@ -669,11 +672,12 @@ dependencies:
     .agents/skills/codebase-design/SKILL.md: sha256:2c20617f87ec8af6a434859f381b2f061a69b530444e74eb39e78bb016a6d1e2
     .agents/skills/codebase-design/agents/openai.yaml: sha256:edebc9e4fcfe102114012575eaa9600b9b5fd08c311664f389c36e7bc717740f
   content_hash: sha256:07246bd43eadfb50ac686aee5297d2cb808bf5ad00fb2ed289416b4b79e7850c
+  resolved_tag: v1.3.1
 - repo_url: mattpocock/skills
   name: domain-modeling
   host: github.com
-  resolved_commit: d81f3a183412e71a5b1e84ca21bc1a35eea03a60
-  resolved_ref: d81f3a183412e71a5b1e84ca21bc1a35eea03a60
+  resolved_commit: 24fe0ef7737efae15c87225755e9f6f5965e4888
+  resolved_ref: 24fe0ef7737efae15c87225755e9f6f5965e4888
   version: unknown
   virtual_path: skills/engineering/domain-modeling
   is_virtual: true
@@ -690,11 +694,12 @@ dependencies:
     .agents/skills/domain-modeling/SKILL.md: sha256:7b925d7b1e341a2eeae33ad68a8a8c0ab889a38ddd22a7598e4c240e5a7556a3
     .agents/skills/domain-modeling/agents/openai.yaml: sha256:f6bf2aa996c6e6f53fdd0708e18a0d16a56aed8322cca59fedbe3c0d2c75f06b
   content_hash: sha256:467f5e92529c2a4637440dce99841814b0864a8528714188ec91b78d900df540
+  resolved_tag: v1.3.1
 - repo_url: mattpocock/skills
   name: grill-with-docs
   host: github.com
-  resolved_commit: d81f3a183412e71a5b1e84ca21bc1a35eea03a60
-  resolved_ref: d81f3a183412e71a5b1e84ca21bc1a35eea03a60
+  resolved_commit: 24fe0ef7737efae15c87225755e9f6f5965e4888
+  resolved_ref: 24fe0ef7737efae15c87225755e9f6f5965e4888
   version: unknown
   virtual_path: skills/engineering/grill-with-docs
   is_virtual: true
@@ -707,11 +712,12 @@ dependencies:
     .agents/skills/grill-with-docs/SKILL.md: sha256:7de372c13488f1ee96cc11cd8907b56b6809cc93eef776eeddd37de6b6cbe3fe
     .agents/skills/grill-with-docs/agents/openai.yaml: sha256:94cd0ab161fb468a836349f5ed482ba58ce8e709a05c57ce533d739dbd35cca9
   content_hash: sha256:9e8f732b806727978f1ad8d2fb9ce4467da68f7482d63c4bb5a73f2b1a0c797c
+  resolved_tag: v1.3.1
 - repo_url: mattpocock/skills
   name: setup-matt-pocock-skills
   host: github.com
-  resolved_commit: d81f3a183412e71a5b1e84ca21bc1a35eea03a60
-  resolved_ref: d81f3a183412e71a5b1e84ca21bc1a35eea03a60
+  resolved_commit: 24fe0ef7737efae15c87225755e9f6f5965e4888
+  resolved_ref: 24fe0ef7737efae15c87225755e9f6f5965e4888
   version: unknown
   virtual_path: skills/engineering/setup-matt-pocock-skills
   is_virtual: true
@@ -734,11 +740,12 @@ dependencies:
     .agents/skills/setup-matt-pocock-skills/issue-tracker-local.md: sha256:7dcda20a2eb4bdc89b95d1143423c0691309921cadae3132e6424f371030506e
     .agents/skills/setup-matt-pocock-skills/triage-labels.md: sha256:4f53c9b40ce2651e3611aa090eaedbd6dbc9b71ef8c5f7e65eac0d8263190d0d
   content_hash: sha256:96154d6187a1f00e6d5ef506adbfc52cdf6c1ac9b2ab886becb203c1d5005fed
+  resolved_tag: v1.3.1
 - repo_url: mattpocock/skills
   name: tdd
   host: github.com
-  resolved_commit: d81f3a183412e71a5b1e84ca21bc1a35eea03a60
-  resolved_ref: d81f3a183412e71a5b1e84ca21bc1a35eea03a60
+  resolved_commit: 24fe0ef7737efae15c87225755e9f6f5965e4888
+  resolved_ref: 24fe0ef7737efae15c87225755e9f6f5965e4888
   version: unknown
   virtual_path: skills/engineering/tdd
   is_virtual: true
@@ -755,10 +762,11 @@ dependencies:
     .agents/skills/tdd/mocking.md: sha256:3ceb807fdf4a47d6a93d4d9a891e5ba6d362a6247bd08adc451feebfc17361ef
     .agents/skills/tdd/tests.md: sha256:859f9e592c188fda4fc7277dd180e4ce9c7a2e13f6efe1f6f29eccc9d28c106a
   content_hash: sha256:679e6c08c7d2c4ce2579732c37522ac29fbf66ead506301308fe36d506e87bb5
+  resolved_tag: v1.3.1
 - repo_url: mattpocock/skills
   name: grill-me
   host: github.com
-  resolved_commit: 3cca18b368ae95cdbdebbff572ccafa662551015
+  resolved_commit: 49dd158d1076134a641b33efb035946536778336
   resolved_ref: main
   version: unknown
   virtual_path: skills/productivity/grill-me
@@ -775,7 +783,7 @@ dependencies:
 - repo_url: mattpocock/skills
   name: grilling
   host: github.com
-  resolved_commit: 3cca18b368ae95cdbdebbff572ccafa662551015
+  resolved_commit: 49dd158d1076134a641b33efb035946536778336
   resolved_ref: main
   version: unknown
   virtual_path: skills/productivity/grilling
@@ -786,28 +794,46 @@ dependencies:
   - .agents/skills/grilling/SKILL.md
   - .agents/skills/grilling/agents/openai.yaml
   deployed_file_hashes:
-    .agents/skills/grilling/SKILL.md: sha256:10ff989e7498b23b5acb49d5048f11dcd906757d2f79c5cdf8a00001381296f2
+    .agents/skills/grilling/SKILL.md: sha256:befdff1e27a1dfe2a294d5871169ac1afe16d983911daa4f32627514a48c1e15
     .agents/skills/grilling/agents/openai.yaml: sha256:1411d7df7d99b7e621a1ff8283c8133cc2464be63d064e52d8ce169c6800ee9b
-  content_hash: sha256:e98f109bca3d8889f673d9f32bf84086f85a70ff9e241f8a34a4560a07ab5a39
+  content_hash: sha256:90b54c72a48114f62072de27e1bef0c61d55f0959044725c593ed9fc72197755
 - repo_url: petergyang/no-ai-slop
   name: no-ai-slop
   host: github.com
-  resolved_commit: 000650b156983f5159695b441477f4e63b25dc85
-  resolved_ref: 000650b156983f5159695b441477f4e63b25dc85
+  resolved_commit: f2b25e603800dfc01ba93f1092056724eb93059e
+  resolved_ref: f2b25e603800dfc01ba93f1092056724eb93059e
   version: unknown
-  virtual_path: skills/no-ai-slop
-  is_virtual: true
   package_type: claude_skill
   deployed_files:
   - .agents/skills/no-ai-slop
+  - .agents/skills/no-ai-slop/.codex-plugin/plugin.json
+  - .agents/skills/no-ai-slop/.github/workflows/plugin.yml
+  - .agents/skills/no-ai-slop/.gitignore
+  - .agents/skills/no-ai-slop/LICENSE
+  - .agents/skills/no-ai-slop/PRIVACY.md
+  - .agents/skills/no-ai-slop/README.md
   - .agents/skills/no-ai-slop/SKILL.md
+  - .agents/skills/no-ai-slop/TERMS.md
   - .agents/skills/no-ai-slop/agents/openai.yaml
+  - .agents/skills/no-ai-slop/assets/no-ai-slop.png
   - .agents/skills/no-ai-slop/eval.md
+  - .agents/skills/no-ai-slop/plugin-submission.md
+  - .agents/skills/no-ai-slop/scripts/build_plugin.py
   deployed_file_hashes:
-    .agents/skills/no-ai-slop/SKILL.md: sha256:992b365f51a2f62cf4c1c5ed22049a9ee551dfea677550c1a72b371c0ceadd62
+    .agents/skills/no-ai-slop/.codex-plugin/plugin.json: sha256:010b63e747efb90d86ef1921e61a354643b3a076ca267d5cbb5f135b7212b0d1
+    .agents/skills/no-ai-slop/.github/workflows/plugin.yml: sha256:e90979d5c6d629dbb5846147d92d638d8ab6a907c0a3722fcb48eb0ec5cd6eba
+    .agents/skills/no-ai-slop/.gitignore: sha256:ed19d3c9c8a5e34d0179e0b1a9c2907d2e657738733e4a432a8cf81c76ce56f1
+    .agents/skills/no-ai-slop/LICENSE: sha256:b7a7fe370cc4c9e974528c7cea7841cf8ac886bc9ed947edb11b289441fba4a8
+    .agents/skills/no-ai-slop/PRIVACY.md: sha256:fbde0eed400e8b4866cc438b05aa60af9f37a5ee78f38a1b2f80f138228e5769
+    .agents/skills/no-ai-slop/README.md: sha256:666da0d9390157bc23e08c7270bc2a21c4839c5974d652f8ea878960b04d587d
+    .agents/skills/no-ai-slop/SKILL.md: sha256:73f87f7f79bd3540c4d8494b5c43d37d25584be6886212e1516fdd8d1c539846
+    .agents/skills/no-ai-slop/TERMS.md: sha256:b54589cafe3e61504491976f34cacb704e1831ec3c9c49857ac8dc0fa8e6cc43
     .agents/skills/no-ai-slop/agents/openai.yaml: sha256:51aa33afd4a3287a618c681212a86ce01cc7da4d9c37e54e65166acffa24519a
-    .agents/skills/no-ai-slop/eval.md: sha256:8ad8d83ed1abe7fc054ad74966bfca64fc182bc71f59d701b24b962c39d11ad7
-  content_hash: sha256:4e08df8589aae8fea9747ed2f6a23aaf22bb83b5cfa5c771deaeeba9de1fd393
+    .agents/skills/no-ai-slop/assets/no-ai-slop.png: sha256:910c4a57463447925959e8d322070658eec0db0d8a6ccbe95b14f5081cbb7262
+    .agents/skills/no-ai-slop/eval.md: sha256:b274cdc623e57ff1b4f673aedef929ba2b01419d13097248c3c74a5dbd80ccfd
+    .agents/skills/no-ai-slop/plugin-submission.md: sha256:d1f17f36ec041708104cb04da7e87ad406d46d93089015b3252d039cef695d42
+    .agents/skills/no-ai-slop/scripts/build_plugin.py: sha256:20dd9a2632ce26cd9c2efb9800527e8ba53c7e8f8ab133d9c2f45cb259e8032c
+  content_hash: sha256:0ab08528eb6d8d8e04b0668ddefb232b93547b76aabcd9eb933f9941a1b167a2
 - repo_url: tommy0103/better-readme-skill
   name: better-readme
   host: github.com
@@ -915,7 +941,7 @@ dependencies:
   content_hash: sha256:c3e0e8e2cce4cc0675aaca92457c562adcf6660f0dfdc2756a6d949d68677f54
 deployments:
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/better-readme
   runtime: null
   scope: project
@@ -924,7 +950,7 @@ deployments:
   active_owner: tommy0103/better-readme-skill/skills/better-readme
   content_hash: null
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/better-readme/SKILL.md
   runtime: null
   scope: project
@@ -933,7 +959,7 @@ deployments:
   active_owner: tommy0103/better-readme-skill/skills/better-readme
   content_hash: sha256:cbc24d8526dc6a60b44c79040201d9708352743b1f8bb8bd47a90d289c7c223a
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/better-readme/references/art-of-readme.md
   runtime: null
   scope: project
@@ -942,7 +968,7 @@ deployments:
   active_owner: tommy0103/better-readme-skill/skills/better-readme
   content_hash: sha256:7cf75d36f0cc62bb10a2e36a3718f7fb3d8cf3152264a1267528ee96fa48662b
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/codebase-design
   runtime: null
   scope: project
@@ -951,7 +977,7 @@ deployments:
   active_owner: mattpocock/skills/skills/engineering/codebase-design
   content_hash: null
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/codebase-design/DEEPENING.md
   runtime: null
   scope: project
@@ -960,7 +986,7 @@ deployments:
   active_owner: mattpocock/skills/skills/engineering/codebase-design
   content_hash: sha256:f3dd099ce99289bd213914d8ee3e2429b78309c3957ca4583f7659551b1d53c1
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/codebase-design/DESIGN-IT-TWICE.md
   runtime: null
   scope: project
@@ -969,7 +995,7 @@ deployments:
   active_owner: mattpocock/skills/skills/engineering/codebase-design
   content_hash: sha256:52b52e75655a27aea59c6966b410bac82448968ad46ef1ebb9f07c274e3ae010
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/codebase-design/SKILL.md
   runtime: null
   scope: project
@@ -978,7 +1004,7 @@ deployments:
   active_owner: mattpocock/skills/skills/engineering/codebase-design
   content_hash: sha256:2c20617f87ec8af6a434859f381b2f061a69b530444e74eb39e78bb016a6d1e2
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/codebase-design/agents/openai.yaml
   runtime: null
   scope: project
@@ -987,7 +1013,7 @@ deployments:
   active_owner: mattpocock/skills/skills/engineering/codebase-design
   content_hash: sha256:edebc9e4fcfe102114012575eaa9600b9b5fd08c311664f389c36e7bc717740f
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/cua-driver
   runtime: null
   scope: project
@@ -996,7 +1022,7 @@ deployments:
   active_owner: trycua/cua/libs/cua-driver/rust/Skills/cua-driver
   content_hash: null
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/cua-driver/BROWSER.md
   runtime: null
   scope: project
@@ -1005,7 +1031,7 @@ deployments:
   active_owner: trycua/cua/libs/cua-driver/rust/Skills/cua-driver
   content_hash: sha256:b008c6bfef08beaf030304adee72a297ddc0df436af32ee8fa643c0dff77efbf
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/cua-driver/EMBEDDING.md
   runtime: null
   scope: project
@@ -1014,7 +1040,7 @@ deployments:
   active_owner: trycua/cua/libs/cua-driver/rust/Skills/cua-driver
   content_hash: sha256:e090a7dc065d181da6e28b7bd29807a56086a459adbf9a355a36502702a1f46a
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/cua-driver/LINUX.md
   runtime: null
   scope: project
@@ -1023,7 +1049,7 @@ deployments:
   active_owner: trycua/cua/libs/cua-driver/rust/Skills/cua-driver
   content_hash: sha256:0560bc227d2e1d6f5a6da6ebd3bc9b1149b85580f7d2170f9882ce86e2c3fc6e
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/cua-driver/MACOS.md
   runtime: null
   scope: project
@@ -1032,7 +1058,7 @@ deployments:
   active_owner: trycua/cua/libs/cua-driver/rust/Skills/cua-driver
   content_hash: sha256:765a3e8840650cf752712fa7f7916f2ec6792a4325b0af0186248bf198c8bd3c
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/cua-driver/README.md
   runtime: null
   scope: project
@@ -1041,7 +1067,7 @@ deployments:
   active_owner: trycua/cua/libs/cua-driver/rust/Skills/cua-driver
   content_hash: sha256:3e6e3266a0a8a7249ac57f9be6eaaeeee68336789c7c4556d14889d0e8a0ca65
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/cua-driver/RECORDING.md
   runtime: null
   scope: project
@@ -1050,7 +1076,7 @@ deployments:
   active_owner: trycua/cua/libs/cua-driver/rust/Skills/cua-driver
   content_hash: sha256:6d1d5f8ff192f37bd9c67efcda59154f3242b0fae72e86ba7e2ba5a4899fd248
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/cua-driver/RUNTIME.md
   runtime: null
   scope: project
@@ -1059,7 +1085,7 @@ deployments:
   active_owner: trycua/cua/libs/cua-driver/rust/Skills/cua-driver
   content_hash: sha256:79d8fa37b29ba4008805629afaaf61bb880a2f476ed79e1939bb5dc2362081a2
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/cua-driver/SKILL.md
   runtime: null
   scope: project
@@ -1068,7 +1094,7 @@ deployments:
   active_owner: trycua/cua/libs/cua-driver/rust/Skills/cua-driver
   content_hash: sha256:0f19a22accd7b4bb2d126a2826b4491c9bbf570f28a09131502b6d941213d7f0
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/cua-driver/VISUAL.md
   runtime: null
   scope: project
@@ -1077,7 +1103,7 @@ deployments:
   active_owner: trycua/cua/libs/cua-driver/rust/Skills/cua-driver
   content_hash: sha256:66aa0fadd643ee4cd0deda751af1f3ebc2cec0b77607eec61c9b2a4ee7d4a256
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/cua-driver/WINDOWS.md
   runtime: null
   scope: project
@@ -1086,7 +1112,7 @@ deployments:
   active_owner: trycua/cua/libs/cua-driver/rust/Skills/cua-driver
   content_hash: sha256:21bf71d599c7481a10b3ecb9d02731c72b34b21367e769d554c9341071bf837d
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/cua-driver/WORKFLOW.md
   runtime: null
   scope: project
@@ -1095,7 +1121,7 @@ deployments:
   active_owner: trycua/cua/libs/cua-driver/rust/Skills/cua-driver
   content_hash: sha256:79f24525aa70bb3925aa56831a069a2a40f50eaf37f3522c1902c300330aa135
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/domain-modeling
   runtime: null
   scope: project
@@ -1104,7 +1130,7 @@ deployments:
   active_owner: mattpocock/skills/skills/engineering/domain-modeling
   content_hash: null
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/domain-modeling/ADR-FORMAT.md
   runtime: null
   scope: project
@@ -1113,7 +1139,7 @@ deployments:
   active_owner: mattpocock/skills/skills/engineering/domain-modeling
   content_hash: sha256:944c92aa790e8fbdc9199640b170979abb8a34ba8d0fe18c2a01a63bce140ca0
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/domain-modeling/GLOSSARY-FORMAT.md
   runtime: null
   scope: project
@@ -1122,7 +1148,7 @@ deployments:
   active_owner: mattpocock/skills/skills/engineering/domain-modeling
   content_hash: sha256:21dcc40cdec8e151a829b98ab1517c1867bc444e3665134a98c6983411996801
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/domain-modeling/SKILL.md
   runtime: null
   scope: project
@@ -1131,7 +1157,7 @@ deployments:
   active_owner: mattpocock/skills/skills/engineering/domain-modeling
   content_hash: sha256:7b925d7b1e341a2eeae33ad68a8a8c0ab889a38ddd22a7598e4c240e5a7556a3
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/domain-modeling/agents/openai.yaml
   runtime: null
   scope: project
@@ -1140,7 +1166,7 @@ deployments:
   active_owner: mattpocock/skills/skills/engineering/domain-modeling
   content_hash: sha256:f6bf2aa996c6e6f53fdd0708e18a0d16a56aed8322cca59fedbe3c0d2c75f06b
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/grill-me
   runtime: null
   scope: project
@@ -1149,7 +1175,7 @@ deployments:
   active_owner: mattpocock/skills/skills/productivity/grill-me
   content_hash: null
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/grill-me/SKILL.md
   runtime: null
   scope: project
@@ -1158,7 +1184,7 @@ deployments:
   active_owner: mattpocock/skills/skills/productivity/grill-me
   content_hash: sha256:caaf8b8de1684f96e26b28f3c29189db5c89cce4b73e1c93d86164f66ef88637
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/grill-me/agents/openai.yaml
   runtime: null
   scope: project
@@ -1167,7 +1193,7 @@ deployments:
   active_owner: mattpocock/skills/skills/productivity/grill-me
   content_hash: sha256:c061e39c3e0f9d865fb1b97556d485704af2a8a58f4b8221a8917a5c2074a32b
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/grill-with-docs
   runtime: null
   scope: project
@@ -1176,7 +1202,7 @@ deployments:
   active_owner: mattpocock/skills/skills/engineering/grill-with-docs
   content_hash: null
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/grill-with-docs/SKILL.md
   runtime: null
   scope: project
@@ -1185,7 +1211,7 @@ deployments:
   active_owner: mattpocock/skills/skills/engineering/grill-with-docs
   content_hash: sha256:7de372c13488f1ee96cc11cd8907b56b6809cc93eef776eeddd37de6b6cbe3fe
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/grill-with-docs/agents/openai.yaml
   runtime: null
   scope: project
@@ -1194,7 +1220,7 @@ deployments:
   active_owner: mattpocock/skills/skills/engineering/grill-with-docs
   content_hash: sha256:94cd0ab161fb468a836349f5ed482ba58ce8e709a05c57ce533d739dbd35cca9
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/grilling
   runtime: null
   scope: project
@@ -1203,16 +1229,16 @@ deployments:
   active_owner: mattpocock/skills/skills/productivity/grilling
   content_hash: null
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/grilling/SKILL.md
   runtime: null
   scope: project
   owners:
   - mattpocock/skills/skills/productivity/grilling
   active_owner: mattpocock/skills/skills/productivity/grilling
-  content_hash: sha256:10ff989e7498b23b5acb49d5048f11dcd906757d2f79c5cdf8a00001381296f2
+  content_hash: sha256:befdff1e27a1dfe2a294d5871169ac1afe16d983911daa4f32627514a48c1e15
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/grilling/agents/openai.yaml
   runtime: null
   scope: project
@@ -1221,7 +1247,7 @@ deployments:
   active_owner: mattpocock/skills/skills/productivity/grilling
   content_hash: sha256:1411d7df7d99b7e621a1ff8283c8133cc2464be63d064e52d8ce169c6800ee9b
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-doc
   runtime: null
   scope: project
@@ -1230,16 +1256,16 @@ deployments:
   active_owner: larksuite/cli
   content_hash: null
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-doc/SKILL.md
   runtime: null
   scope: project
   owners:
   - larksuite/cli
   active_owner: larksuite/cli
-  content_hash: sha256:a535ea346a8d1eb9694899e188076b799700a8bd213359e4dc66019ff73f1599
+  content_hash: sha256:1e8d049f6f3103984e8de3b1e3471b5815db1f875e138eeed81467f559f8cc70
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-doc/references/genres/business-analysis.md
   runtime: null
   scope: project
@@ -1248,7 +1274,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:8aaab9e07737ea36dca4427778cc28af0087abb90710c1f2806bb1a51962ef78
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-doc/references/genres/data-report.md
   runtime: null
   scope: project
@@ -1257,7 +1283,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:ea0cb3df6c9b466bfa16eb0090a0a91965ecd242dacdd903d0cffb20f9061cbe
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-doc/references/genres/email.md
   runtime: null
   scope: project
@@ -1266,7 +1292,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:8a83a390d1736991f69f66e7dda5a748da1bda925be300c01e240e0bcf47a82c
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-doc/references/genres/execution-plan.md
   runtime: null
   scope: project
@@ -1275,7 +1301,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:e00d7da0b44bb375880e9fd3bfc9a5e684321aa9e19c3adca407669c4bae84e6
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-doc/references/genres/formal-doc.md
   runtime: null
   scope: project
@@ -1284,7 +1310,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:15812640cd1de50cef24be6d36658ddaaaa623ea214eb2df820d92eccc0efaa6
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-doc/references/genres/meeting-minutes.md
   runtime: null
   scope: project
@@ -1293,7 +1319,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:fb46dc9e97b7b5c8e3261c280bab6ff5366b9ac72fa64d50416365dbde4b868c
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-doc/references/genres/memo-brief.md
   runtime: null
   scope: project
@@ -1302,7 +1328,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:e4958eff02c053002a2664da460cb465d78db097cfe2a1add3969b885d3e57f7
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-doc/references/genres/official-redhead.md
   runtime: null
   scope: project
@@ -1311,7 +1337,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:97dac887c22f55f46b825f25053938d74bc8a1abcfed3b08ec4d3ca04105941c
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-doc/references/genres/prd.md
   runtime: null
   scope: project
@@ -1320,7 +1346,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:0347957894ac879e8a4463d296b0d1f9386bb7274a6600506ca44b86e518aca3
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-doc/references/genres/proposal.md
   runtime: null
   scope: project
@@ -1329,7 +1355,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:ba2e2249a6f56d6e9518253c20654dad1e300d5d009a07da5ec6122db57d4eb8
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-doc/references/genres/research-report.md
   runtime: null
   scope: project
@@ -1338,7 +1364,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:93d14d00076783a140b21424e91272cb8f0cca9dd17526be0bd4477431f7efbe
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-doc/references/genres/retrospective.md
   runtime: null
   scope: project
@@ -1347,7 +1373,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:86bad301a6c207f7243e3690fd0f6794463c9a9d2fd41a3e287fa733cfc0ae8e
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-doc/references/genres/route-consumer.md
   runtime: null
   scope: project
@@ -1356,7 +1382,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:ea4291f7378204a09ebc89b5a480dca3d3389e06ec0bb6e0607ad9614ac0e7af
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-doc/references/genres/route-creative.md
   runtime: null
   scope: project
@@ -1365,7 +1391,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:40dbd02cca3ba40d48de68414a8d450e46d233c98cf0dde1dc9b389ffd45e3ff
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-doc/references/genres/route-knowledge.md
   runtime: null
   scope: project
@@ -1374,7 +1400,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:b052d66f3a3a3cba4900f921cc9eb2346dbbe624b62898e185788cf38b8608d8
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-doc/references/genres/route-marketing.md
   runtime: null
   scope: project
@@ -1383,7 +1409,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:6ea22d7a5eaadde21ea11e484aba71492dca66428824639a20dad20d9243a787
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-doc/references/genres/route-media.md
   runtime: null
   scope: project
@@ -1392,7 +1418,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:82bef9147b59e0a6cfd1321718085210cccc484c07885630ee2ac788eb2ce8e9
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-doc/references/genres/route-opinion.md
   runtime: null
   scope: project
@@ -1401,7 +1427,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:87ff6fedcbd8584cef24407f434935c0fd481f58217d7e5ab8330be86d6c2dad
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-doc/references/genres/route-personal-brand.md
   runtime: null
   scope: project
@@ -1410,7 +1436,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:ba942789e91fe3239cec092a6556b2bb8a1452bb0ca29bf93dc139c2700b71cf
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-doc/references/genres/route-platform.md
   runtime: null
   scope: project
@@ -1419,7 +1445,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:5065bea6370a87183ca7d612f232da61be458b7d35e6c4ce0b08d0a82498a2c7
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-doc/references/genres/route-report.md
   runtime: null
   scope: project
@@ -1428,7 +1454,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:441ac715a3038031962405c581741c1ff3aaa96fd057d3bd8bb7bd09cd1e3b0b
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-doc/references/genres/route-workplace.md
   runtime: null
   scope: project
@@ -1437,7 +1463,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:af06e57228e2a620d8be29b8208b1bb603101468c45d1ca5ee7a3d02491c5bd9
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-doc/references/genres/sop-tutorial.md
   runtime: null
   scope: project
@@ -1446,7 +1472,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:a7f79a8283725d0531675151025960c8cf76930adc3113f388847bc04c94fbe6
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-doc/references/genres/technical-doc.md
   runtime: null
   scope: project
@@ -1455,7 +1481,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:8af772cdc88a2dbaccd7af709de3fa25a4dff3055e6154af480d5c3e44aba67a
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-doc/references/genres/wechat.md
   runtime: null
   scope: project
@@ -1464,7 +1490,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:9ab22f27d0c6207724b8b309f2ed114a93c9a756c8e16da84a78f68c10018efc
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-doc/references/genres/weekly-report.md
   runtime: null
   scope: project
@@ -1473,7 +1499,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:862b8f5eb08fc41d2994e4e1158bba0042d9fbe2274c574ebde892ee5dc74d1b
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-doc/references/genres/white-paper.md
   runtime: null
   scope: project
@@ -1482,7 +1508,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:cda3797a71149cc1f2f4fe7e6c471ce8be6adb05cbb180ba4a6af70392e5c11c
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-doc/references/genres/xiaohongshu.md
   runtime: null
   scope: project
@@ -1491,7 +1517,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:d9121277c04df2196d4c6f2c0e1c4ad3f6fc15af4f09b8a83e689d9144542e92
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-doc/references/lark-doc-create-workflow.md
   runtime: null
   scope: project
@@ -1500,7 +1526,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:f664472c088ac09d8b4b69aa3a49f35c395f1892078b637d7c7812cbc8f9fcaa
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-doc/references/lark-doc-create.md
   runtime: null
   scope: project
@@ -1509,7 +1535,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:4add00b26e81207515ba4e3319e690a6143f604dea72444d97d49931191107bb
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-doc/references/lark-doc-fetch.md
   runtime: null
   scope: project
@@ -1518,7 +1544,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:f12268fa4c0c904f55527649fbfc8dd21ca8885c8e95c34c28ffda854bb78995
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-doc/references/lark-doc-history.md
   runtime: null
   scope: project
@@ -1527,7 +1553,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:a67b4beaacef43626088f92de297fb37021cd1daf829763bbbcb419714854850
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-doc/references/lark-doc-md.md
   runtime: null
   scope: project
@@ -1536,7 +1562,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:74d062a4ac6d436141f4a90f87cbecd45d9f6d8b0d34f3e04077653175dc2e36
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-doc/references/lark-doc-media-download.md
   runtime: null
   scope: project
@@ -1545,7 +1571,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:0b43577b58d7e0aecdc64fa26b47134ec7416561e83981550c47616fd6fd14db
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-doc/references/lark-doc-media-insert.md
   runtime: null
   scope: project
@@ -1554,7 +1580,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:c933691f7f6200f1771522a2df3dce39b0c27c1ea531de0ba1a0cf14a10b8933
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-doc/references/lark-doc-media-preview.md
   runtime: null
   scope: project
@@ -1563,7 +1589,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:9ad3780b83438e888859b5afbc9657c76c1e312a726200108d8d1f1236a44bb0
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-doc/references/lark-doc-mindnote.md
   runtime: null
   scope: project
@@ -1572,7 +1598,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:8b975ecd4587756621cbc0be02b2c095ef7b7f7654a28e66880c1cdbe5037c53
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-doc/references/lark-doc-resource-cover.md
   runtime: null
   scope: project
@@ -1581,7 +1607,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:c7f4628579c30fafdfcb77a13ebd9bc69838e71680f8dd72d5ef522e9606b163
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-doc/references/lark-doc-script.md
   runtime: null
   scope: project
@@ -1590,7 +1616,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:7fb8a1d3031e49ef076b0f3a705b8f6527d2cd31f4797a29f4fb6adc7c29aaeb
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-doc/references/lark-doc-update.md
   runtime: null
   scope: project
@@ -1599,7 +1625,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:1325ceac3355401486cf46a7462cf083b4dada00e7c07e03c1084cea2c7f7c6d
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-doc/references/lark-doc-whiteboard.md
   runtime: null
   scope: project
@@ -1608,7 +1634,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:6d38b3a6baf58237ed62c5d5ea99439f318a33f580eef8e8b4dfecfc3786b858
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-doc/references/lark-doc-xml-extended-blocks.md
   runtime: null
   scope: project
@@ -1617,7 +1643,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:bd919ebf4a387ec7e589b471ef15d94d840e59c8bc5c883e2cfdb9b625d225a8
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-doc/references/lark-doc-xml.md
   runtime: null
   scope: project
@@ -1626,7 +1652,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:111e58ffcd10f0d333bb02c2c9b97c8c3cec4f20b5fbd0cf5c30132880ced4a5
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive
   runtime: null
   scope: project
@@ -1635,7 +1661,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: null
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/SKILL.md
   runtime: null
   scope: project
@@ -1644,7 +1670,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:52a927577ac3af1854f902cebaa366e9192f73724887b328f4bb63085ec307d9
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-add-comment.md
   runtime: null
   scope: project
@@ -1653,7 +1679,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:85e2a9f9cb9ff14741754c6a635970a75ad03c2edb3459a895b477db099efa49
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-add-reply.md
   runtime: null
   scope: project
@@ -1662,7 +1688,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:8006da2ce2b8ca3835932b2097d936689db03629ac4d5c8786dc8e1ecf2a6bad
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-apply-permission.md
   runtime: null
   scope: project
@@ -1671,7 +1697,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:3221bde0ae994e710b0f672899c006cac16e28d76168a20f392052e5f625ac8a
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-batch-query-comments.md
   runtime: null
   scope: project
@@ -1680,7 +1706,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:de980162e03de10ed829de35d571262b08c72070d6118056f7c10f0f5da4ba43
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-comment-content.md
   runtime: null
   scope: project
@@ -1689,7 +1715,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:7abde1590bc6c66e4a81a8303b5d21a081f3b432546a7095621dbb58884a19ce
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-comment-location.md
   runtime: null
   scope: project
@@ -1698,7 +1724,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:6004f3128c1e61794b879de8eb3609641f3dee573c44359d097f0d21affcde1e
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-copy.md
   runtime: null
   scope: project
@@ -1707,7 +1733,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:c2cdd7e8a42b746b91c66d846a3519b1fe322cb9583ee22298554629f9289a73
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-cover.md
   runtime: null
   scope: project
@@ -1716,7 +1742,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:84b262fc8b8ce9eb855e9db834c49ef7983f537abcfab05f552d3a80fa24fb45
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-create-folder.md
   runtime: null
   scope: project
@@ -1725,7 +1751,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:21540db8232cf2ee34d2c869286d6f9ad6e4e2dd569189992b5b148ab4af5726
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-create-shortcut.md
   runtime: null
   scope: project
@@ -1734,7 +1760,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:f1fb77dfdada8dde2e15fa17774f6dcfc5361ad847147790c76ebfbf6ba3ba15
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-delete-reply.md
   runtime: null
   scope: project
@@ -1743,7 +1769,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:3484bc570f34a2d7a6f6a85fcb830c1c4d9a1f104cfad640c2a7be79f66d9711
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-delete.md
   runtime: null
   scope: project
@@ -1752,7 +1778,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:eebcd0fbf861065e74188d12aac38d98d5ae59cf1a016e13ec6d0388c590a90e
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-download.md
   runtime: null
   scope: project
@@ -1761,7 +1787,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:d51c2b27fc0325d98a8f0101db0ef372538ae886c6ef0714039388c7f6a33ac9
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-export-download.md
   runtime: null
   scope: project
@@ -1770,7 +1796,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:22443b876d50c839cb68d3acf971f10919004ddeae8008ea7c601e47b9b326a6
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-export.md
   runtime: null
   scope: project
@@ -1779,7 +1805,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:187bee26d4dc860595d69edd99a7776a3bea4c8e38d347abbe4d8064afec33e9
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-files-list.md
   runtime: null
   scope: project
@@ -1788,7 +1814,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:f19683396d75b1f245b7332010edaaa19b98d90eb143563980abeef125bb441d
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-import.md
   runtime: null
   scope: project
@@ -1797,7 +1823,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:29f3f4bd1b596152c008b678d63fdfcf749431f38c970eab4cde1fcdf02b4d6d
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-inspect.md
   runtime: null
   scope: project
@@ -1806,7 +1832,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:e53b67ef76ec824d03a8ee7122686a563eefdd6e2056cb16767dc5d1c4d96947
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-list-comments.md
   runtime: null
   scope: project
@@ -1815,7 +1841,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:e1db16a25eb25bec9bc4db9adbf64bf79a6ab7ee376cb0be460956fdb0f80ba7
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-list-replies.md
   runtime: null
   scope: project
@@ -1824,7 +1850,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:6422a11092a08146097d7be68aa0ef4cde3f6b7249bae31afa27284ad42e5c51
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-member-add.md
   runtime: null
   scope: project
@@ -1833,7 +1859,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:179b021058cb23a7188264417564eecf89ecf9b092dc2a8769d8d48f8e5fa78b
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-member-list.md
   runtime: null
   scope: project
@@ -1842,7 +1868,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:bed81dedf8af61a976db095642b823eafcb00fe3b5a679893708277b0cf39b29
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-member-remove.md
   runtime: null
   scope: project
@@ -1851,7 +1877,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:b00b7af1ad840df16fc6b11cf89897cbe349fab737eba28876556beb0506663f
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-move.md
   runtime: null
   scope: project
@@ -1860,7 +1886,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:8eee7d8cac0c1ef5ce2c253e7823842978e3668f8fa7a3a1a5a8d6813590ddfe
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-permission-get-setting.md
   runtime: null
   scope: project
@@ -1869,7 +1895,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:2ef00117158fdaafbf7830fbd705077daee48ebba5c958d3159e373ffce090d9
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-permission-guide.md
   runtime: null
   scope: project
@@ -1878,7 +1904,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:11c75e822700c485fbd3f6a4c3f1dfaaba66118f0103dce400028a1982afe99d
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-preview.md
   runtime: null
   scope: project
@@ -1887,7 +1913,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:3661ea91907d0a892ca70c555d9dcf7727c627b3e56c6b141ca4ce90699d8418
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-pull.md
   runtime: null
   scope: project
@@ -1896,7 +1922,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:c7fa8581c6ea7c65ffa16b46ced597d8fa52e15ef2f52b943093ab7bd98dc4bf
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-push.md
   runtime: null
   scope: project
@@ -1905,7 +1931,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:7071af4a8b2c3081bf2d8b7f26af55c3594a50ee72088d34a1579112ef393deb
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-react-reply.md
   runtime: null
   scope: project
@@ -1914,7 +1940,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:af3f32cfeb9368624c3bb6fdf1637a4d8456999f5c709f8690c48465f26578f3
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-reactions.md
   runtime: null
   scope: project
@@ -1923,7 +1949,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:f9705c5390ec64777d71e1322f404a95fd45d7d1fa5ebce46ea6b9f3a448b42a
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-resolve-comment.md
   runtime: null
   scope: project
@@ -1932,7 +1958,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:21b669151647d77ee14d13b472d6ad03b5b77d6945e811a1c0c9a6f4ce518122
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-restore-comment.md
   runtime: null
   scope: project
@@ -1941,7 +1967,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:c0d2cb6af7c8a04e9ef79695c240492a8b6dc317b5a82c8fa8ea7f9a181f32ad
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-search.md
   runtime: null
   scope: project
@@ -1950,7 +1976,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:100147cbfd54bcbc93181eafac8e9f4df3686fd7c638705cfdf2e4178de469ae
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-secure-label.md
   runtime: null
   scope: project
@@ -1959,7 +1985,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:08569ed5612347a0cfae4ae423b28e94fc090cf0d4a5881b577cc05720cb3619
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-status.md
   runtime: null
   scope: project
@@ -1968,7 +1994,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:83c414362ac7ef8b29b149315e8cc0caefaa9627a3f2c6a103046e50adba07d1
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-task-result.md
   runtime: null
   scope: project
@@ -1977,7 +2003,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:b1f61bfa4a59f24296029b51e32414c88809f173b281e50dddb9eefb1f7418ef
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-update-reply.md
   runtime: null
   scope: project
@@ -1986,7 +2012,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:72c3c46c28059fe1121e26acb5a139089bfd0094d6d57ff2d8abd19804e85605
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-update-title.md
   runtime: null
   scope: project
@@ -1995,7 +2021,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:c61b74c1822a211133aa0edb0d152e4cff23e45dcbed2f603b07262bc1ff3305
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-upload.md
   runtime: null
   scope: project
@@ -2004,7 +2030,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:325e4a242e17450e6d49d1cf071b7e205a6031d07d1324a8efe9551ada990491
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-version-delete.md
   runtime: null
   scope: project
@@ -2013,7 +2039,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:cc53cb33ef26d632404f6f10a2cff640cfe0b7dbb2f97430d9a46503b3132a2f
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-version-get.md
   runtime: null
   scope: project
@@ -2022,7 +2048,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:a2aa12d3db1b698c245a95f49796b6fe1c31ef8621b8b09dee4d53d0f563440a
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-version-history.md
   runtime: null
   scope: project
@@ -2031,7 +2057,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:a0c992ff8100f53b5c320766e482228e2ce6ece9a8db8fcca5f6590e49353437
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-version-revert.md
   runtime: null
   scope: project
@@ -2040,7 +2066,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:be59e90dff570df9b6e18ff709b114fa9facbedf00ac0f2c392c05fab9e358ab
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-workflow-knowledge-organize-analysis.md
   runtime: null
   scope: project
@@ -2049,7 +2075,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:a11a81ee514f987456551455152d0ace1ac091bdeb51acf2c39d372684246747
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-workflow-knowledge-organize-discovery.md
   runtime: null
   scope: project
@@ -2058,7 +2084,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:7e45f276975b5c5255277cd2b4826fc13caaf730d31e4420cc9b6e9589dd0ee4
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-workflow-knowledge-organize-execution.md
   runtime: null
   scope: project
@@ -2067,7 +2093,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:dcc6ba654ea1962728dcbba38be2aaa3e88727c77299bdb34e73cc5cc0877f4d
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-workflow-knowledge-organize-planning.md
   runtime: null
   scope: project
@@ -2076,7 +2102,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:8d4e41a33087cc0330a0535877a5e5910c2ca4b2ed7d3e6243ffa78614c1320f
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-workflow-knowledge-organize-rollback.md
   runtime: null
   scope: project
@@ -2085,7 +2111,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:6c413f2dd193e626f1c5e02dbb52bc90500af931ee8b598aa4d10636c9c6180f
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-workflow-knowledge-organize.md
   runtime: null
   scope: project
@@ -2094,7 +2120,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:1248ab7cb594359059f33f54606870c3b1377095916a592ec41bad44299fb7c4
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-workflow-permission-governance-commands.md
   runtime: null
   scope: project
@@ -2103,7 +2129,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:06885f0fce3d8e9f674cb2115ba97161cb67064705dbaec988c6dc2e5b8c7202
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-workflow-permission-governance-outputs.md
   runtime: null
   scope: project
@@ -2112,7 +2138,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:84fd75ff213c56639199f3bf20abb346852f90c7dd9437d48089dbcc5bc1a549
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-workflow-permission-governance.md
   runtime: null
   scope: project
@@ -2121,7 +2147,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:8862dd72bf1801630e1e4b2ae0e0e9a41473b05a6f87132f98d4544ef363dfd0
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-workflow-topic-move-collector-execute.md
   runtime: null
   scope: project
@@ -2130,7 +2156,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:66ac8d6741d9c80bd5d0ec73185ba9ccf9aed09171ddb98829d5050afb2fe697
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-workflow-topic-move-collector-recall.md
   runtime: null
   scope: project
@@ -2139,7 +2165,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:6fae0f1ba99a09bc3a9ccdd04d4f7771e8d56ad118d8b6a98c9cdf66cf8be48a
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-workflow-topic-move-collector-resolve-verify.md
   runtime: null
   scope: project
@@ -2148,7 +2174,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:081d0c5ac642bbdfbc24e9300a323fed018c5716fa35cdc4c32d458db24621ba
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-workflow-topic-move-collector-review-plan.md
   runtime: null
   scope: project
@@ -2157,7 +2183,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:61772e75afaafa0d2dedfccde5199ae0c6581a564796f25984682a870f96715d
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-workflow-topic-move-collector-setup.md
   runtime: null
   scope: project
@@ -2166,7 +2192,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:bc23b4edd4a366a0476c37605d22981fa20822de2dc3d0662f13601b2efc350c
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-workflow-topic-move-collector.md
   runtime: null
   scope: project
@@ -2175,7 +2201,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:a49eb6fd94fbaa70876ecf0897aa34a429acd5e6d3560d7707dd2a406c4e40a2
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-drive/references/lark-drive-workflow.md
   runtime: null
   scope: project
@@ -2184,7 +2210,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:3d897dbd3738d024e5640605add8d0c529b30805e6b2700607d085e7e8feeea9
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im
   runtime: null
   scope: project
@@ -2193,7 +2219,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: null
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/SKILL.md
   runtime: null
   scope: project
@@ -2202,7 +2228,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:99baab4b77c6536883629eaf2c5ca8fe27547eaeb828c092d718dabd707d053e
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/card/card-2.0-schema.md
   runtime: null
   scope: project
@@ -2211,7 +2237,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:e552c0771bccbb0ab25477796b88f0fc478edbd98a151e08d9969e37f1a3aedb
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/card/components/button.md
   runtime: null
   scope: project
@@ -2220,7 +2246,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:ec34429fd8d5ee8c352555448d0d6de7c0a83b690b3e7c378e87cde3141d4e63
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/card/components/chart.md
   runtime: null
   scope: project
@@ -2229,7 +2255,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:7ff81baa364b101180e0aa174c433c66634dbceefc3c053a75e320c071a69f89
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/card/components/checker.md
   runtime: null
   scope: project
@@ -2238,7 +2264,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:48ea8df7f02f185a8a5ce153f37bfa43cf9af90e2266943f1beea84ed24aa03f
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/card/components/collapsible_panel.md
   runtime: null
   scope: project
@@ -2247,7 +2273,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:60f7b08e7886704a27798507cef25517db2abba353b244403645dec487f7987b
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/card/components/column_set.md
   runtime: null
   scope: project
@@ -2256,7 +2282,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:41a4e2c51fcea8b9ebef1d527b151e181e4d17468a0840329024eab074d6b7a5
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/card/components/date_picker.md
   runtime: null
   scope: project
@@ -2265,7 +2291,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:48e7db578409b58f2d353874cbf6dcd29362c3abf8bb707e7fe3e73706a7ab25
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/card/components/div.md
   runtime: null
   scope: project
@@ -2274,7 +2300,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:f5c829ca2fb2bd46b84ac1092318af0868297d288b122ef5f21f74d256c4c081
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/card/components/form.md
   runtime: null
   scope: project
@@ -2283,7 +2309,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:75b0cb13c24d93e5fdcb0612e47e93f4abd055d43075bd7d5e8d93384f5453e3
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/card/components/header.md
   runtime: null
   scope: project
@@ -2292,7 +2318,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:8fb324931353027ce19e113a195b8d5f15f52121ba213c4f97a263a7ccb056df
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/card/components/hr.md
   runtime: null
   scope: project
@@ -2301,7 +2327,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:533d80148ed84dcbd1dab9e34f4176e17478df1ce904049c46c9c06f8e1e0033
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/card/components/img.md
   runtime: null
   scope: project
@@ -2310,7 +2336,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:d3405c0b07a91c1637c52bd3f247eabb0def4e6221acf07d6b366ee6e74d7c91
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/card/components/img_combination.md
   runtime: null
   scope: project
@@ -2319,7 +2345,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:66880e918808f6ae4f5a346844fd5609efe8c607698fda8fa79224c87ce8e474
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/card/components/input.md
   runtime: null
   scope: project
@@ -2328,7 +2354,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:c4b65daed6b6391adf7a722868cd246ecf4a713096709f37922d0be8213f328f
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/card/components/interactive_container.md
   runtime: null
   scope: project
@@ -2337,7 +2363,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:272f1fca62df25356cdcce2344ac9da826fc74ca717376f812f4d233a1de7191
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/card/components/markdown.md
   runtime: null
   scope: project
@@ -2346,7 +2372,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:4615f5286b8a62e64db58728cd5dcb5856872ae7d0f00c36027f87c4a792a2ae
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/card/components/multi_select_person.md
   runtime: null
   scope: project
@@ -2355,7 +2381,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:d261891eb8eda155c113a83d1c33879baba49e6a442a0c97824869e09480cd36
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/card/components/multi_select_static.md
   runtime: null
   scope: project
@@ -2364,7 +2390,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:964f75e14721525c810b5508723d047de93650568abeaf4c3296f6b39c988ee0
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/card/components/overflow.md
   runtime: null
   scope: project
@@ -2373,7 +2399,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:2ad27bb06e35c9d9a3d33fddd8a6e5560bb099b68c100dc2630af349e65e4375
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/card/components/person.md
   runtime: null
   scope: project
@@ -2382,7 +2408,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:17aead4bce1b83e5e0f1ece159c2ff47ebe0fe222a87f061cedafac90d18a4af
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/card/components/person_list.md
   runtime: null
   scope: project
@@ -2391,7 +2417,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:0528626125daed765a535e2a781f3fef60521ec702086acf048f6aad97ad52c2
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/card/components/picker_datetime.md
   runtime: null
   scope: project
@@ -2400,7 +2426,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:5d1e8bfae0d50eafd121edba767857701a3ba2afd5fbb12b7a6bcf97fd22f63b
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/card/components/picker_time.md
   runtime: null
   scope: project
@@ -2409,7 +2435,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:80bc6d5d3393f45bbc76c51bc01177db8149be9f53c90a5c767087403029e5cd
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/card/components/recycling_container.md
   runtime: null
   scope: project
@@ -2418,7 +2444,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:db843da1ce85abc4d0522ef90378e66f009dc155ae0ba9a416b3918b5c1071f5
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/card/components/select_img.md
   runtime: null
   scope: project
@@ -2427,7 +2453,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:282c5dc24b5e9a1d9c3c3459c874836879501c3c5ac2470d48aa2b2f273365c5
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/card/components/select_person.md
   runtime: null
   scope: project
@@ -2436,7 +2462,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:3ab2e169f8b997f7731412cc4637a3eec6c75e4fe38da45a095155870f4d90cf
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/card/components/select_static.md
   runtime: null
   scope: project
@@ -2445,7 +2471,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:48f62d8efaeb05906f290e03cfe415b2b5e03ac4eeeebab592edf1a587d0596c
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/card/components/table.md
   runtime: null
   scope: project
@@ -2454,7 +2480,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:c778e8797704d4ba7ead75df3de65bc84b63d8fc2f95f19c5a51f3eefad2249e
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/card/lark-im-card-create.md
   runtime: null
   scope: project
@@ -2463,7 +2489,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:80685e023f57abf352a4442225de8ff7e1ff86276738b0d5ac35bc7932fbdfed
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/card/lark-im-card-style.md
   runtime: null
   scope: project
@@ -2472,7 +2498,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:b4023a8c75766864766edd030cec5d27af2a452d281e905d75218fdc1637fb34
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/card/resource/colors.md
   runtime: null
   scope: project
@@ -2481,7 +2507,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:fb69e337cf4bb48d95bedf2bb8e64c80955f55b78ef5cd5dc7a0f0abf838f885
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/card/resource/icons.md
   runtime: null
   scope: project
@@ -2490,7 +2516,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:4a33658c22cd57c1e621667082e91ff049456c81acb2fae78d80fd1d5172740e
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/lark-im-card-action-reply.md
   runtime: null
   scope: project
@@ -2499,7 +2525,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:2ec3122c840ceec56f95461afe8e4ee7262792f6f48f67199da44692c4b810c0
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/lark-im-chat-create.md
   runtime: null
   scope: project
@@ -2508,7 +2534,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:691c3c772328f0565b20e660b5eb268d7a7fbeab5d07c8572f8b47c3f22eabe1
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/lark-im-chat-identity.md
   runtime: null
   scope: project
@@ -2517,7 +2543,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:9fe71e6017512e2db6b3ed145c34f7ee8c76454dddbd9504973b7413733601db
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/lark-im-chat-list.md
   runtime: null
   scope: project
@@ -2526,7 +2552,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:2ec67ef02670266ea80f8d595f77307103eee2763dbbe114e3f65120a69ef278
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/lark-im-chat-members-list.md
   runtime: null
   scope: project
@@ -2535,7 +2561,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:3ec4f30afaf51218555a1473d18fbea46ec7444877eec934d2c9733db008f149
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/lark-im-chat-messages-list.md
   runtime: null
   scope: project
@@ -2544,7 +2570,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:057fb68c713bbf0d5a81bca1f695a3ff61d675b20904ea1da07fa11dda68921d
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/lark-im-chat-search.md
   runtime: null
   scope: project
@@ -2553,7 +2579,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:63d1d3ca79990c0a7c1af8cb8eac3459a4551fedb5fba2dd8724b5be0b518205
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/lark-im-chat-update.md
   runtime: null
   scope: project
@@ -2562,7 +2588,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:915e226c7113167e39feb91319f9e875c77c10abe03ab855e572266b3be8505b
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/lark-im-feed-group-list-item.md
   runtime: null
   scope: project
@@ -2571,7 +2597,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:53cd63de8deacb5ffbef26e36de218acc78c60b0ce6e15577647b1869a736e4f
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/lark-im-feed-group-list.md
   runtime: null
   scope: project
@@ -2580,7 +2606,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:733bf414d4915d040178a5392a13ee06adb7f619b7701afe76b0da5fb3a55f46
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/lark-im-feed-group-query-item.md
   runtime: null
   scope: project
@@ -2589,7 +2615,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:a2081a85ecfdbd39910f8fb89f57728fca78fb5d4611952baad49e7252a2bc73
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/lark-im-feed-groups.md
   runtime: null
   scope: project
@@ -2598,7 +2624,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:fad8fcc0e63d1c6b636e14c6b7ebbd11e7de8f43a91a049b98a448ea86927b9c
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/lark-im-feed-shortcut-create.md
   runtime: null
   scope: project
@@ -2607,7 +2633,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:b59a0782fa2d3958c151a6cfd4ef949d6a11f46d6e96d9eb2db9d50480080036
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/lark-im-feed-shortcut-list.md
   runtime: null
   scope: project
@@ -2616,7 +2642,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:58e340d493019f145335d3aabc7b75203b989faa69f7706472c9c63a902489a7
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/lark-im-feed-shortcut-remove.md
   runtime: null
   scope: project
@@ -2625,7 +2651,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:ab8da5ef77501c2e5cacd8a2579fb8618dab2486c2b3ca64c7286e46eb9bd836
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/lark-im-flag-cancel.md
   runtime: null
   scope: project
@@ -2634,7 +2660,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:c858271047088adb5900909d3410154c38730b780937ae4c2aed52e16ee4b0be
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/lark-im-flag-create.md
   runtime: null
   scope: project
@@ -2643,7 +2669,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:35a682f5bd5eb3e8b5ae549d3cf90387df564420830db9c7213cf9eb90e7d247
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/lark-im-flag-list.md
   runtime: null
   scope: project
@@ -2652,7 +2678,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:fd329d1365b75e3c9ee468ff7b2dacb1887c8bf62a5e4a6d977f23f3e54c14db
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/lark-im-message-enrichment.md
   runtime: null
   scope: project
@@ -2661,7 +2687,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:88a34478ced802bb5e9512bcade7eb3c2c348573db337cdc60aa1281789df883
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/lark-im-message-read-status.md
   runtime: null
   scope: project
@@ -2670,7 +2696,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:456f0dc15ce64b173ed2faa07643fa5832328d9bfba224298365401d38f84bf0
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/lark-im-messages-edit.md
   runtime: null
   scope: project
@@ -2679,7 +2705,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:1096b57d5547f23144396f8d589cef386f27b6c281a4f57625b1a8f9194dc88f
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/lark-im-messages-mget.md
   runtime: null
   scope: project
@@ -2688,7 +2714,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:13476a6d3975f6230fb1f1da8b53859b75d0eea73550ce67444f0d9bacf6d4c9
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/lark-im-messages-reply.md
   runtime: null
   scope: project
@@ -2697,7 +2723,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:884791f6f84856a83186ddc2fdc4b213eecde2d15320d3b6ca6ff61a71d50751
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/lark-im-messages-resources-download.md
   runtime: null
   scope: project
@@ -2706,7 +2732,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:a4348f72445c864cf3744516d91ced27baf6e979208145f588a2e8b828a075ee
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/lark-im-messages-search.md
   runtime: null
   scope: project
@@ -2715,7 +2741,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:a011f2bc1f55eef211bbbb90f019ab9aba44e0b7cc27da92170ad13b423ab21c
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/lark-im-messages-send.md
   runtime: null
   scope: project
@@ -2724,7 +2750,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:cc7738ae2b54b37c6007db3f3987b8dd5299a7c3e3068ca9a2b3b8e31553fa20
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/lark-im-reactions.md
   runtime: null
   scope: project
@@ -2733,7 +2759,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:e26a0bd595db3b8c0d98bc145075d6a9333a070addf2f511fd3207ae04f6e320
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-im/references/lark-im-threads-messages-list.md
   runtime: null
   scope: project
@@ -2742,7 +2768,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:f54bbba5697c1a3320ea74ee3cc10f311b289017282a994743acf22ec90d58b7
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-markdown
   runtime: null
   scope: project
@@ -2751,7 +2777,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: null
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-markdown/SKILL.md
   runtime: null
   scope: project
@@ -2760,7 +2786,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:41d0dd2e0a5b4be21cfdb60e1f5eb9303fb290574c760c4842f9e123c4fb03db
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-markdown/references/lark-markdown-create.md
   runtime: null
   scope: project
@@ -2769,7 +2795,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:d3f6f6b13f3c0aaecc731f96554a3333db40c35eb50ce7be8b6a107d6c213ac6
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-markdown/references/lark-markdown-diff.md
   runtime: null
   scope: project
@@ -2778,7 +2804,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:ff2c4f2714bbbff53fbdd0b96a2fe67cc79b6117b656117881ec798395283d10
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-markdown/references/lark-markdown-fetch.md
   runtime: null
   scope: project
@@ -2787,7 +2813,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:3425eb5abec09e62982cbfb8ecf926eb89fd9324d48a9c8a31069dcf677f80d5
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-markdown/references/lark-markdown-overwrite.md
   runtime: null
   scope: project
@@ -2796,7 +2822,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:31952cb0bb044237753b4d3b9d260554a216a08c5eb7018dc83db32d0447dcee
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-markdown/references/lark-markdown-patch.md
   runtime: null
   scope: project
@@ -2805,7 +2831,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:2332c5d74d45c49b28da58ae0c8849cf941ccf2be9ba3a3a48135da59a4b8d23
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-openapi-explorer
   runtime: null
   scope: project
@@ -2814,7 +2840,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: null
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-openapi-explorer/SKILL.md
   runtime: null
   scope: project
@@ -2823,7 +2849,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:1ba2fc480bc82ada5b87202c72b350faaa5dd257b93e7385cbaa3bcc58eaf0aa
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-shared
   runtime: null
   scope: project
@@ -2832,7 +2858,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: null
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-shared/SKILL.md
   runtime: null
   scope: project
@@ -2841,7 +2867,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:9fa68bb1f3ce564602c6df6c303ea4d2759de02442772f332fe5041d65720a1f
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-shared/references/lark-shared-config-init.md
   runtime: null
   scope: project
@@ -2850,7 +2876,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:d995546300e59284e223e9be856ff5674056900b86c9ad022c4e9b2bf0f24563
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-shared/references/lark-shared-high-risk-approval.md
   runtime: null
   scope: project
@@ -2859,7 +2885,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:b8bbff0c71d376564f8d6ea640686b08645d6ff4c905aa03c79882b98bd6bf05
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-shared/references/lark-shared-identity-and-permissions.md
   runtime: null
   scope: project
@@ -2868,7 +2894,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:68c8f409ceeb062b4460a63ea4a8822e4150db475b7ca2f4baaf1e67162907f1
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-shared/references/lark-shared-output-contract.md
   runtime: null
   scope: project
@@ -2877,7 +2903,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:8f47ada21810a83de272d1bef088ece187947c2cb0743ded7590d82d8c175699
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-shared/references/lark-shared-update-notice.md
   runtime: null
   scope: project
@@ -2886,7 +2912,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:6e1d08f7338721053087f8292c98302a947ee97358be71a60a7110a3b91e8d3a
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-shared/references/lark-wiki-token-routing.md
   runtime: null
   scope: project
@@ -2895,7 +2921,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:8109dd583c0ed2193621ff83f341a9c7b0af7cf711aff5e69f4790821b4355db
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-sheets
   runtime: null
   scope: project
@@ -2904,7 +2930,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: null
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-sheets/SKILL.md
   runtime: null
   scope: project
@@ -2913,7 +2939,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:7ecd5e05528085574c4ff63cc2e5acf4fad8045d7f866998754a36f489959d12
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-sheets/references/lark-sheets-batch-update.md
   runtime: null
   scope: project
@@ -2922,7 +2948,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:57357a79dad6941eb987da06e1b010607e51e1f57fbef58d408c8a79cbf7ef8f
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-sheets/references/lark-sheets-changeset.md
   runtime: null
   scope: project
@@ -2931,7 +2957,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:1e075fb42d84f74205e65ee78582b9a1d2d883c5f47d4c750a774928b06709ca
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-sheets/references/lark-sheets-chart.md
   runtime: null
   scope: project
@@ -2940,7 +2966,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:884d6a18ec8362eae8b4466813a4c797a8b50d694e2decc67ed904f141f1d36e
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-sheets/references/lark-sheets-conditional-format.md
   runtime: null
   scope: project
@@ -2949,7 +2975,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:164bf51e70867a5cfb32ee29bf581fda656cd893c76421d5faa45a3edbf35aa7
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-sheets/references/lark-sheets-filter-view.md
   runtime: null
   scope: project
@@ -2958,7 +2984,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:1cc006bdb6043bb359a6d053b6573e298a8e7364c1c44bff9f42b4f43b4db765
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-sheets/references/lark-sheets-filter.md
   runtime: null
   scope: project
@@ -2967,7 +2993,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:9694ffb63d48664b53aa79a9e76463801ac30286c7658baf68f7ecf8a16cfdcf
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-sheets/references/lark-sheets-float-image.md
   runtime: null
   scope: project
@@ -2976,7 +3002,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:ede2dd57b020aa68ff10d821cf6e60daceb9ee00d5bd126fae9d6e3a7e6237b8
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-sheets/references/lark-sheets-formula-translation.md
   runtime: null
   scope: project
@@ -2985,7 +3011,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:27b97badfc47f57129f0a076b24708f0ed9886d139ea7c98f577afc8658515ba
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-sheets/references/lark-sheets-formula-verify.md
   runtime: null
   scope: project
@@ -2994,7 +3020,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:b374fdfb335f4f18c249e2af5fe83f2bffa80f54f3d1efa99ceb4d4f8483f33c
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-sheets/references/lark-sheets-history.md
   runtime: null
   scope: project
@@ -3003,7 +3029,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:4655e2027dadcd4719c0b29a890d425fdc8308e11a7b86afd35cf80e627f09ac
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-sheets/references/lark-sheets-pivot-table.md
   runtime: null
   scope: project
@@ -3012,7 +3038,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:e34dbdecd11683ff09097ef501fb82c6157d373b8a08948a6d9eacdce84ecbca
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-sheets/references/lark-sheets-range-operations.md
   runtime: null
   scope: project
@@ -3021,7 +3047,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:d9bfb32793ceb64845325da144139cd045df9750b7a66ec56e3a7c6416d642d1
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-sheets/references/lark-sheets-read-data.md
   runtime: null
   scope: project
@@ -3030,7 +3056,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:f7cfc0bd5cde703287e7ad41567473e41e49a915a98f115a8a5cb18999ee6139
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-sheets/references/lark-sheets-search-replace.md
   runtime: null
   scope: project
@@ -3039,7 +3065,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:e68718fefe77a72da6c66112b3aba9ac002154ee8761ddda6762beeabbf75979
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-sheets/references/lark-sheets-sheet-structure.md
   runtime: null
   scope: project
@@ -3048,7 +3074,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:60f97a61d555df87f91eaecab074d5a481f97a0ccdcc577fa7a8cf0a18f1ec06
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-sheets/references/lark-sheets-sparkline.md
   runtime: null
   scope: project
@@ -3057,7 +3083,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:256394db083b743218e662cdc2b7b3e4b1a5e3b6d29c4a89503c199f161ef215
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-sheets/references/lark-sheets-styles-put.md
   runtime: null
   scope: project
@@ -3066,7 +3092,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:9d544dd02c42699e0200430f0dba5edd33d7c813235e4940d514224446efa0c0
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-sheets/references/lark-sheets-visual-standards.md
   runtime: null
   scope: project
@@ -3075,7 +3101,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:ad7638c5d425adc83cb65253aff7e6aeb739b6de376dbbdbb61af9d3812a384e
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-sheets/references/lark-sheets-workbook.md
   runtime: null
   scope: project
@@ -3084,7 +3110,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:f55f08ca40d9c030a0c6172690ffb94e6d5843e9ce66d598ef5374a67492e69b
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-sheets/references/lark-sheets-write-cells.md
   runtime: null
   scope: project
@@ -3093,7 +3119,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:6576619938339f3c30860e65428b0e99d178630f55f6191e641ccfa0c9d51fe1
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-sheets/scripts/lark_chart_quality_check.py
   runtime: null
   scope: project
@@ -3102,7 +3128,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:4b9f4f3783dd20fcdc3f4ac88410dc8913f9e4a0bc10f0597179db1c9e241af0
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-sheets/scripts/lark_chart_size_advisor.py
   runtime: null
   scope: project
@@ -3111,7 +3137,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:66009455fa0b7de80ecf3551b7b885ccca14ff28fe634cc318830f145a00a82c
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-sheets/scripts/lark_chart_size_rules.py
   runtime: null
   scope: project
@@ -3120,7 +3146,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:96ac04ce5ae918103f3ebecd5edd57690bd5c9257e6c823f1e2322135460d0c8
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-sheets/scripts/lark_detect_subtables.py
   runtime: null
   scope: project
@@ -3129,7 +3155,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:ac0016c23cc051f1fc2fcf4cf5e8ed272510ee1e7f9e64d548083188383db203
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-sheets/scripts/lark_inspect_workbook.py
   runtime: null
   scope: project
@@ -3138,7 +3164,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:dd8ee6f9c0284a7f7f54ff96f11cc044f5e319e16c7e2b6466e78d9f372fbeee
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-sheets/scripts/lark_profile_table.py
   runtime: null
   scope: project
@@ -3147,7 +3173,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:3fa4f0aae050b143794dbacd7d299986bf21320cbbbe0b24f69f619a06664519
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-sheets/scripts/lark_sheet_range.py
   runtime: null
   scope: project
@@ -3156,7 +3182,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:dc54be144daeb4d3bc8dab7db72b72ddc23e00f9fb6a77bc91acbf5c0644e8ac
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-sheets/scripts/lark_sheet_read_cli.py
   runtime: null
   scope: project
@@ -3165,7 +3191,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:35e81c2978273e6163b4e6b3cedd27c78694fed05ee21ec5adb65d91357481dd
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-sheets/scripts/lark_sheets_df.py
   runtime: null
   scope: project
@@ -3174,7 +3200,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:b53fcf772b702a896d3969ddd35c25c50f299dfb210a9dd058122afe7f605373
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-wiki
   runtime: null
   scope: project
@@ -3183,7 +3209,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: null
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-wiki/SKILL.md
   runtime: null
   scope: project
@@ -3192,7 +3218,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:4442cb99bef8a6b544e490d6cb7f2067117f87e1bcb73af9fd59ba787df3824b
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-wiki/references/lark-wiki-delete-space.md
   runtime: null
   scope: project
@@ -3201,7 +3227,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:929ee2614a0dd6014aa43fbeac8ac715e62b25c203ada77ae86e15c443abf9b6
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-wiki/references/lark-wiki-member-add.md
   runtime: null
   scope: project
@@ -3210,7 +3236,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:8bd78edd8099a33337b2d18745ec9d37f0fb793f6fe3e58ff99751951cb254c6
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-wiki/references/lark-wiki-member-list.md
   runtime: null
   scope: project
@@ -3219,7 +3245,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:3846bd529361983f167e14ba993de89a716263500703db7812624fdd99ecca14
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-wiki/references/lark-wiki-member-remove.md
   runtime: null
   scope: project
@@ -3228,7 +3254,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:03249541afa9eab994f9775e7cccbdfb012643bc1e5b467aabd7395aa1012fc7
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-wiki/references/lark-wiki-move-to-drive.md
   runtime: null
   scope: project
@@ -3237,7 +3263,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:de5fa471fbf6d90b92865d2e895f1c87c862a1a5654a2600497c5faeed9195cd
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-wiki/references/lark-wiki-move.md
   runtime: null
   scope: project
@@ -3246,7 +3272,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:0d96f7e747a5ac7fb4d473b64f34d59ccb65f0ec6d986b987d56724942756fbc
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-wiki/references/lark-wiki-node-copy.md
   runtime: null
   scope: project
@@ -3255,7 +3281,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:d6c5de760b0f400e3ae04dff5b3cc11e2d40b7a5cac769695ee2cacb40f1771f
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-wiki/references/lark-wiki-node-create.md
   runtime: null
   scope: project
@@ -3264,7 +3290,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:8ad4bbeea6338281e076079c2945b2920aa851f954590d641b3f46e5aaccabd5
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-wiki/references/lark-wiki-node-delete.md
   runtime: null
   scope: project
@@ -3273,7 +3299,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:316d3ab994ed3aac99d0f1ddc59dfe818c60638e3f30019f41105f4754dca2ab
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-wiki/references/lark-wiki-node-get.md
   runtime: null
   scope: project
@@ -3282,7 +3308,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:74d3c17417c250bbb9fa5dc2b2d609430d49daecfc071afaaf617b5dedb3fb57
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-wiki/references/lark-wiki-node-list.md
   runtime: null
   scope: project
@@ -3291,7 +3317,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:771cce93c4755916f92136e283d2b85d0e901a505e852c5e8c9d6f70787082d6
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-wiki/references/lark-wiki-space-create.md
   runtime: null
   scope: project
@@ -3300,7 +3326,7 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:b936ab670f525e6e9433ee6b145ed2eafee296df2c3062abdc651000a88c86ad
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/lark-wiki/references/lark-wiki-space-list.md
   runtime: null
   scope: project
@@ -3309,43 +3335,133 @@ deployments:
   active_owner: larksuite/cli
   content_hash: sha256:d4921cfbfaba564217f214b6f87daf7e3ccbfda5b9759f73ab6a999c682913ae
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/no-ai-slop
   runtime: null
   scope: project
   owners:
-  - petergyang/no-ai-slop/skills/no-ai-slop
-  active_owner: petergyang/no-ai-slop/skills/no-ai-slop
+  - petergyang/no-ai-slop
+  active_owner: petergyang/no-ai-slop
   content_hash: null
 - kind: project-relative
-  target: agents
+  target: agent-skills
+  value: .agents/skills/no-ai-slop/.codex-plugin/plugin.json
+  runtime: null
+  scope: project
+  owners:
+  - petergyang/no-ai-slop
+  active_owner: petergyang/no-ai-slop
+  content_hash: sha256:010b63e747efb90d86ef1921e61a354643b3a076ca267d5cbb5f135b7212b0d1
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/no-ai-slop/.github/workflows/plugin.yml
+  runtime: null
+  scope: project
+  owners:
+  - petergyang/no-ai-slop
+  active_owner: petergyang/no-ai-slop
+  content_hash: sha256:e90979d5c6d629dbb5846147d92d638d8ab6a907c0a3722fcb48eb0ec5cd6eba
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/no-ai-slop/.gitignore
+  runtime: null
+  scope: project
+  owners:
+  - petergyang/no-ai-slop
+  active_owner: petergyang/no-ai-slop
+  content_hash: sha256:ed19d3c9c8a5e34d0179e0b1a9c2907d2e657738733e4a432a8cf81c76ce56f1
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/no-ai-slop/LICENSE
+  runtime: null
+  scope: project
+  owners:
+  - petergyang/no-ai-slop
+  active_owner: petergyang/no-ai-slop
+  content_hash: sha256:b7a7fe370cc4c9e974528c7cea7841cf8ac886bc9ed947edb11b289441fba4a8
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/no-ai-slop/PRIVACY.md
+  runtime: null
+  scope: project
+  owners:
+  - petergyang/no-ai-slop
+  active_owner: petergyang/no-ai-slop
+  content_hash: sha256:fbde0eed400e8b4866cc438b05aa60af9f37a5ee78f38a1b2f80f138228e5769
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/no-ai-slop/README.md
+  runtime: null
+  scope: project
+  owners:
+  - petergyang/no-ai-slop
+  active_owner: petergyang/no-ai-slop
+  content_hash: sha256:666da0d9390157bc23e08c7270bc2a21c4839c5974d652f8ea878960b04d587d
+- kind: project-relative
+  target: agent-skills
   value: .agents/skills/no-ai-slop/SKILL.md
   runtime: null
   scope: project
   owners:
-  - petergyang/no-ai-slop/skills/no-ai-slop
-  active_owner: petergyang/no-ai-slop/skills/no-ai-slop
-  content_hash: sha256:992b365f51a2f62cf4c1c5ed22049a9ee551dfea677550c1a72b371c0ceadd62
+  - petergyang/no-ai-slop
+  active_owner: petergyang/no-ai-slop
+  content_hash: sha256:73f87f7f79bd3540c4d8494b5c43d37d25584be6886212e1516fdd8d1c539846
 - kind: project-relative
-  target: agents
+  target: agent-skills
+  value: .agents/skills/no-ai-slop/TERMS.md
+  runtime: null
+  scope: project
+  owners:
+  - petergyang/no-ai-slop
+  active_owner: petergyang/no-ai-slop
+  content_hash: sha256:b54589cafe3e61504491976f34cacb704e1831ec3c9c49857ac8dc0fa8e6cc43
+- kind: project-relative
+  target: agent-skills
   value: .agents/skills/no-ai-slop/agents/openai.yaml
   runtime: null
   scope: project
   owners:
-  - petergyang/no-ai-slop/skills/no-ai-slop
-  active_owner: petergyang/no-ai-slop/skills/no-ai-slop
+  - petergyang/no-ai-slop
+  active_owner: petergyang/no-ai-slop
   content_hash: sha256:51aa33afd4a3287a618c681212a86ce01cc7da4d9c37e54e65166acffa24519a
 - kind: project-relative
-  target: agents
+  target: agent-skills
+  value: .agents/skills/no-ai-slop/assets/no-ai-slop.png
+  runtime: null
+  scope: project
+  owners:
+  - petergyang/no-ai-slop
+  active_owner: petergyang/no-ai-slop
+  content_hash: sha256:910c4a57463447925959e8d322070658eec0db0d8a6ccbe95b14f5081cbb7262
+- kind: project-relative
+  target: agent-skills
   value: .agents/skills/no-ai-slop/eval.md
   runtime: null
   scope: project
   owners:
-  - petergyang/no-ai-slop/skills/no-ai-slop
-  active_owner: petergyang/no-ai-slop/skills/no-ai-slop
-  content_hash: sha256:8ad8d83ed1abe7fc054ad74966bfca64fc182bc71f59d701b24b962c39d11ad7
+  - petergyang/no-ai-slop
+  active_owner: petergyang/no-ai-slop
+  content_hash: sha256:b274cdc623e57ff1b4f673aedef929ba2b01419d13097248c3c74a5dbd80ccfd
 - kind: project-relative
-  target: agents
+  target: agent-skills
+  value: .agents/skills/no-ai-slop/plugin-submission.md
+  runtime: null
+  scope: project
+  owners:
+  - petergyang/no-ai-slop
+  active_owner: petergyang/no-ai-slop
+  content_hash: sha256:d1f17f36ec041708104cb04da7e87ad406d46d93089015b3252d039cef695d42
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/no-ai-slop/scripts/build_plugin.py
+  runtime: null
+  scope: project
+  owners:
+  - petergyang/no-ai-slop
+  active_owner: petergyang/no-ai-slop
+  content_hash: sha256:20dd9a2632ce26cd9c2efb9800527e8ba53c7e8f8ab133d9c2f45cb259e8032c
+- kind: project-relative
+  target: agent-skills
   value: .agents/skills/obelisk
   runtime: null
   scope: project
@@ -3354,7 +3470,7 @@ deployments:
   active_owner: tommy0103/obelisk-skill/skills/obelisk
   content_hash: null
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/obelisk/SKILL.md
   runtime: null
   scope: project
@@ -3363,7 +3479,7 @@ deployments:
   active_owner: tommy0103/obelisk-skill/skills/obelisk
   content_hash: sha256:141c8566403fc37457e1b7af9b8d71df9c1e9da40ca6bd44f8246fa266f922c8
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/obelisk/package.json
   runtime: null
   scope: project
@@ -3372,7 +3488,7 @@ deployments:
   active_owner: tommy0103/obelisk-skill/skills/obelisk
   content_hash: sha256:b27878e50ba615cab83c77822186da1849673348e91b98f2ea4efc39f5d937c3
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/obelisk/references/api-reference.md
   runtime: null
   scope: project
@@ -3381,7 +3497,7 @@ deployments:
   active_owner: tommy0103/obelisk-skill/skills/obelisk
   content_hash: sha256:f49586b7ad2284945f05856ae12c6e6622a38d9d049fa5af023d76065a88c5c9
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/obelisk/references/pitfalls.md
   runtime: null
   scope: project
@@ -3390,7 +3506,7 @@ deployments:
   active_owner: tommy0103/obelisk-skill/skills/obelisk
   content_hash: sha256:fe45273b16a64a68b662c77101041cb289b008c7bb59e7d0cd72647d660d05ef
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/obelisk/references/query-patterns.md
   runtime: null
   scope: project
@@ -3399,7 +3515,7 @@ deployments:
   active_owner: tommy0103/obelisk-skill/skills/obelisk
   content_hash: sha256:87f3413055260fbff009852ace637f2293aa7fd72c8a4b1e8b141b1ef7218c15
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/obelisk/references/recap-patterns.md
   runtime: null
   scope: project
@@ -3408,7 +3524,7 @@ deployments:
   active_owner: tommy0103/obelisk-skill/skills/obelisk
   content_hash: sha256:388ad6b86292f3c134387b1739b23575115d2465b012088d5cb96bd4a7b03d6d
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/obelisk/references/recap-writing.md
   runtime: null
   scope: project
@@ -3417,7 +3533,7 @@ deployments:
   active_owner: tommy0103/obelisk-skill/skills/obelisk
   content_hash: sha256:7fbb36137bf9537cc82917d9710cef04a40722fab251b66138a0189ffe952495
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/obelisk/references/recap/overview.md
   runtime: null
   scope: project
@@ -3426,7 +3542,7 @@ deployments:
   active_owner: tommy0103/obelisk-skill/skills/obelisk
   content_hash: sha256:fcbeb09b6dc667e32d998ff151b67a634ae735f32f2213a867f9634219fd525a
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/obelisk/references/recap/pattern1-cover.md
   runtime: null
   scope: project
@@ -3435,7 +3551,7 @@ deployments:
   active_owner: tommy0103/obelisk-skill/skills/obelisk
   content_hash: sha256:f4acadf865738bccf03ba3f329ad674a8eeece8006cd615fb661c4d5fcd2f108
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/obelisk/references/recap/pattern2-thinking.md
   runtime: null
   scope: project
@@ -3444,7 +3560,7 @@ deployments:
   active_owner: tommy0103/obelisk-skill/skills/obelisk
   content_hash: sha256:022c6f64f8f938b3551e4fef0401219cc64f910ff23fec17f75d3e7a7031c49d
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/obelisk/references/recap/pattern3-vibe.md
   runtime: null
   scope: project
@@ -3453,7 +3569,7 @@ deployments:
   active_owner: tommy0103/obelisk-skill/skills/obelisk
   content_hash: sha256:cb88f24b904fdcbf3a498f4b6c56a25c158f47ab1f039d454d108a061eabb3ef
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/obelisk/references/recap/pattern4-workflow.md
   runtime: null
   scope: project
@@ -3462,7 +3578,7 @@ deployments:
   active_owner: tommy0103/obelisk-skill/skills/obelisk
   content_hash: sha256:ebcb33efdbff3fcf9b299b7c4f527016d0a67f017be5e0d46f044deb5e667764
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/obelisk/references/recap/pattern5-closing.md
   runtime: null
   scope: project
@@ -3471,7 +3587,7 @@ deployments:
   active_owner: tommy0103/obelisk-skill/skills/obelisk
   content_hash: sha256:606dc5c8bda5c3a4c20316d0c94fa199792c1fb372c451d3c159a896658dab5b
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/obelisk/references/recap/writing1-cover.md
   runtime: null
   scope: project
@@ -3480,7 +3596,7 @@ deployments:
   active_owner: tommy0103/obelisk-skill/skills/obelisk
   content_hash: sha256:b77a3a15322d654fd650b2276c2c09828b5c22a6f17e08d7ce3e38958682e063
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/obelisk/references/recap/writing2-thinking.md
   runtime: null
   scope: project
@@ -3489,7 +3605,7 @@ deployments:
   active_owner: tommy0103/obelisk-skill/skills/obelisk
   content_hash: sha256:d89bb79844c48fd62c65f3ff7cb0ba55bdf5b062a5825afebd3c4c36edfc2354
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/obelisk/references/recap/writing3-vibe.md
   runtime: null
   scope: project
@@ -3498,7 +3614,7 @@ deployments:
   active_owner: tommy0103/obelisk-skill/skills/obelisk
   content_hash: sha256:64f562de0f36092f495f97d094383803666d561c5d5bc480e0be0a4fbf592849
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/obelisk/references/recap/writing4-workflow.md
   runtime: null
   scope: project
@@ -3507,7 +3623,7 @@ deployments:
   active_owner: tommy0103/obelisk-skill/skills/obelisk
   content_hash: sha256:14dd13a842aee0016f6101019687c573289f5672330ead547a61bdc200ae8d58
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/obelisk/references/recap/writing5-closing.md
   runtime: null
   scope: project
@@ -3516,7 +3632,7 @@ deployments:
   active_owner: tommy0103/obelisk-skill/skills/obelisk
   content_hash: sha256:a02edff715831122e61182c2b991ed7126e1de6e17e5cc362a00625a81bfd069
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/obelisk/references/retrieval-semantics.md
   runtime: null
   scope: project
@@ -3525,7 +3641,7 @@ deployments:
   active_owner: tommy0103/obelisk-skill/skills/obelisk
   content_hash: sha256:9210deef0f80e10f6f0232ff13dc7e9650c0826b5ada49482e5390f5d8ccc30b
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/obelisk/references/schema.md
   runtime: null
   scope: project
@@ -3534,7 +3650,7 @@ deployments:
   active_owner: tommy0103/obelisk-skill/skills/obelisk
   content_hash: sha256:b7713536fbdb8a4882f88b3fe9a8737dd03245d253ba26ad211c774f56f8d12c
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/opencli-browser
   runtime: null
   scope: project
@@ -3543,7 +3659,7 @@ deployments:
   active_owner: jackwener/opencli
   content_hash: null
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/opencli-browser/SKILL.md
   runtime: null
   scope: project
@@ -3552,7 +3668,7 @@ deployments:
   active_owner: jackwener/opencli
   content_hash: sha256:ca08a2371a2ef0a89b5c366acfb64822c048dd06c81cb84134d735e93e75e69c
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/opencli-usage
   runtime: null
   scope: project
@@ -3561,7 +3677,7 @@ deployments:
   active_owner: jackwener/opencli
   content_hash: null
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/opencli-usage/SKILL.md
   runtime: null
   scope: project
@@ -3570,7 +3686,7 @@ deployments:
   active_owner: jackwener/opencli
   content_hash: sha256:c15f0840b208f89b703ae9d9084137ccbd45d42740781bb45ff884ab71f75430
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/setup-matt-pocock-skills
   runtime: null
   scope: project
@@ -3579,7 +3695,7 @@ deployments:
   active_owner: mattpocock/skills/skills/engineering/setup-matt-pocock-skills
   content_hash: null
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/setup-matt-pocock-skills/SKILL.md
   runtime: null
   scope: project
@@ -3588,7 +3704,7 @@ deployments:
   active_owner: mattpocock/skills/skills/engineering/setup-matt-pocock-skills
   content_hash: sha256:9a0c21694be19fa3eefc39343355d3af7414716ba364882c7432c2f821eac3e9
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/setup-matt-pocock-skills/agents/openai.yaml
   runtime: null
   scope: project
@@ -3597,7 +3713,7 @@ deployments:
   active_owner: mattpocock/skills/skills/engineering/setup-matt-pocock-skills
   content_hash: sha256:9527de0110541c45712319025155aeab8dc7d77c6ed6e5e83271bab1851ab939
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/setup-matt-pocock-skills/domain.md
   runtime: null
   scope: project
@@ -3606,7 +3722,7 @@ deployments:
   active_owner: mattpocock/skills/skills/engineering/setup-matt-pocock-skills
   content_hash: sha256:593a7042218689f1d24df89df14eaf0a20e19e0d0a7d479a01947ac78f0784b9
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/setup-matt-pocock-skills/issue-tracker-github.md
   runtime: null
   scope: project
@@ -3615,7 +3731,7 @@ deployments:
   active_owner: mattpocock/skills/skills/engineering/setup-matt-pocock-skills
   content_hash: sha256:afd6852a80185217bd28aa5cbe456bef1e85be25be7bd1fba382d5b8ee428325
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/setup-matt-pocock-skills/issue-tracker-gitlab.md
   runtime: null
   scope: project
@@ -3624,7 +3740,7 @@ deployments:
   active_owner: mattpocock/skills/skills/engineering/setup-matt-pocock-skills
   content_hash: sha256:ea175f73d193b3f55819c0ed9bbccf6ee0e70ad8f928e3d7607596c53380acd6
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/setup-matt-pocock-skills/issue-tracker-local.md
   runtime: null
   scope: project
@@ -3633,7 +3749,7 @@ deployments:
   active_owner: mattpocock/skills/skills/engineering/setup-matt-pocock-skills
   content_hash: sha256:7dcda20a2eb4bdc89b95d1143423c0691309921cadae3132e6424f371030506e
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/setup-matt-pocock-skills/triage-labels.md
   runtime: null
   scope: project
@@ -3642,7 +3758,7 @@ deployments:
   active_owner: mattpocock/skills/skills/engineering/setup-matt-pocock-skills
   content_hash: sha256:4f53c9b40ce2651e3611aa090eaedbd6dbc9b71ef8c5f7e65eac0d8263190d0d
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/show-me
   runtime: null
   scope: project
@@ -3651,16 +3767,25 @@ deployments:
   active_owner: humanlayer/skills/plugins/show-me/skills/show-me
   content_hash: null
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/show-me/SKILL.md
   runtime: null
   scope: project
   owners:
   - humanlayer/skills/plugins/show-me/skills/show-me
   active_owner: humanlayer/skills/plugins/show-me/skills/show-me
-  content_hash: sha256:bea6da70a58096730b9aeb0bae293ddf4726103a98efc9ce13c481619942a810
+  content_hash: sha256:434a2346cc95e313b0d367d477dda2e23ba642dd2181757415a09500664af100
 - kind: project-relative
-  target: agents
+  target: agent-skills
+  value: .agents/skills/show-me/agents/openai.yaml
+  runtime: null
+  scope: project
+  owners:
+  - humanlayer/skills/plugins/show-me/skills/show-me
+  active_owner: humanlayer/skills/plugins/show-me/skills/show-me
+  content_hash: sha256:a1499d95abd8447558c535fe5554adcc3c9b988a0a39264a6283d430effe1e94
+- kind: project-relative
+  target: agent-skills
   value: .agents/skills/smart-search
   runtime: null
   scope: project
@@ -3669,7 +3794,7 @@ deployments:
   active_owner: jackwener/opencli
   content_hash: null
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/smart-search/SKILL.md
   runtime: null
   scope: project
@@ -3678,7 +3803,7 @@ deployments:
   active_owner: jackwener/opencli
   content_hash: sha256:0aa29dfe8c17816f00022047eab3121e646f60f31a671b0765fd01f8c26c0f01
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/smart-search/references/sources-ai.md
   runtime: null
   scope: project
@@ -3687,7 +3812,7 @@ deployments:
   active_owner: jackwener/opencli
   content_hash: sha256:5344850a64d59fe2321cf5874c0025552ec0e19a22f16c5aefb9b73d58ea978c
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/smart-search/references/sources-info.md
   runtime: null
   scope: project
@@ -3696,7 +3821,7 @@ deployments:
   active_owner: jackwener/opencli
   content_hash: sha256:ca547f784c68254cf650ee335ae036f5b4a60bf5ce85b03ad3bc40aab09a4376
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/smart-search/references/sources-media.md
   runtime: null
   scope: project
@@ -3705,7 +3830,7 @@ deployments:
   active_owner: jackwener/opencli
   content_hash: sha256:09edcc8183de16a73d55569f08634c970f54470455378d8047e16d2e926f15f5
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/smart-search/references/sources-other.md
   runtime: null
   scope: project
@@ -3714,7 +3839,7 @@ deployments:
   active_owner: jackwener/opencli
   content_hash: sha256:f77710ec37d07cbe63283741502f4449b9df256486e5235ff27380895129aa9c
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/smart-search/references/sources-shopping.md
   runtime: null
   scope: project
@@ -3723,7 +3848,7 @@ deployments:
   active_owner: jackwener/opencli
   content_hash: sha256:e597974beb33e3149a6abf8b2143bdc3fa3e5ab7e800f56f2583c6185ff810aa
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/smart-search/references/sources-social.md
   runtime: null
   scope: project
@@ -3732,7 +3857,7 @@ deployments:
   active_owner: jackwener/opencli
   content_hash: sha256:195a41e3eb4fb72358de2c2b5106c3333ca95264cee1f42419b89188febbe45d
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/smart-search/references/sources-tech.md
   runtime: null
   scope: project
@@ -3741,7 +3866,7 @@ deployments:
   active_owner: jackwener/opencli
   content_hash: sha256:543c5d1d5b43289fd292d832ce0e13914ece587643ce94c5ea9b667665385650
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/smart-search/references/sources-travel.md
   runtime: null
   scope: project
@@ -3750,7 +3875,7 @@ deployments:
   active_owner: jackwener/opencli
   content_hash: sha256:ba3b28ed9d75e7d4dffeff977a6e66ca51c704bec3fb75b1ff1493b4d35ed840
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/tdd
   runtime: null
   scope: project
@@ -3759,7 +3884,7 @@ deployments:
   active_owner: mattpocock/skills/skills/engineering/tdd
   content_hash: null
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/tdd/SKILL.md
   runtime: null
   scope: project
@@ -3768,7 +3893,7 @@ deployments:
   active_owner: mattpocock/skills/skills/engineering/tdd
   content_hash: sha256:93ea419b76e9caaf26153b828e984f7c3fb136f4caa67b14af95f32ea965a1cc
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/tdd/agents/openai.yaml
   runtime: null
   scope: project
@@ -3777,7 +3902,7 @@ deployments:
   active_owner: mattpocock/skills/skills/engineering/tdd
   content_hash: sha256:ea6f01cf1b8c06a4b0f5b649d74b1b8ce8685e72af1b38d70d877693e092af0b
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/tdd/mocking.md
   runtime: null
   scope: project
@@ -3786,7 +3911,7 @@ deployments:
   active_owner: mattpocock/skills/skills/engineering/tdd
   content_hash: sha256:3ceb807fdf4a47d6a93d4d9a891e5ba6d362a6247bd08adc451feebfc17361ef
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/tdd/tests.md
   runtime: null
   scope: project
@@ -3795,7 +3920,7 @@ deployments:
   active_owner: mattpocock/skills/skills/engineering/tdd
   content_hash: sha256:859f9e592c188fda4fc7277dd180e4ce9c7a2e13f6efe1f6f29eccc9d28c106a
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/twitter-cli
   runtime: null
   scope: project
@@ -3804,7 +3929,7 @@ deployments:
   active_owner: jackwener/twitter-cli
   content_hash: null
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/twitter-cli/.github/ISSUE_TEMPLATE/bug_report.yml
   runtime: null
   scope: project
@@ -3813,7 +3938,7 @@ deployments:
   active_owner: jackwener/twitter-cli
   content_hash: sha256:df3a070d3cff197979b4367bd85bef177b6ca496189d248d6f54a0f68e2eff32
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/twitter-cli/.github/ISSUE_TEMPLATE/feature_request.yml
   runtime: null
   scope: project
@@ -3822,7 +3947,7 @@ deployments:
   active_owner: jackwener/twitter-cli
   content_hash: sha256:3b454047d41336187da2f42e2eb969aa9890a230289f5280af97bffa93f8b57d
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/twitter-cli/.github/workflows/ci.yml
   runtime: null
   scope: project
@@ -3831,7 +3956,7 @@ deployments:
   active_owner: jackwener/twitter-cli
   content_hash: sha256:8ffe3f5640f8f4050cf593643f7df2b969c6707af43276866b6cd5c106e4b1c3
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/twitter-cli/.github/workflows/publish.yml
   runtime: null
   scope: project
@@ -3840,7 +3965,7 @@ deployments:
   active_owner: jackwener/twitter-cli
   content_hash: sha256:4baa8dbc2a9e6bbacb9b4545552ac43323f16e24805458b42159b19c4ab3bc3a
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/twitter-cli/.gitignore
   runtime: null
   scope: project
@@ -3849,7 +3974,7 @@ deployments:
   active_owner: jackwener/twitter-cli
   content_hash: sha256:cd5162804e99e5e18c5c757ff6028b58335a70488e4ea1b88f96aa4409a22f69
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/twitter-cli/AGENTS.md
   runtime: null
   scope: project
@@ -3858,7 +3983,7 @@ deployments:
   active_owner: jackwener/twitter-cli
   content_hash: sha256:86d3d60e7ba880a147428852d2e5daa07833df7e9a67097fd068005b4e8a1c39
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/twitter-cli/LICENSE
   runtime: null
   scope: project
@@ -3867,7 +3992,7 @@ deployments:
   active_owner: jackwener/twitter-cli
   content_hash: sha256:1240875be39351daffec63b07927ac25f58f374d23cfe89ffee7da613c2eb6d9
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/twitter-cli/README.md
   runtime: null
   scope: project
@@ -3876,7 +4001,7 @@ deployments:
   active_owner: jackwener/twitter-cli
   content_hash: sha256:e8537f336d9a4cd8ff2f0021bb93ad0324f0d27076e601ae3ded55e76da4bebd
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/twitter-cli/SCHEMA.md
   runtime: null
   scope: project
@@ -3885,7 +4010,7 @@ deployments:
   active_owner: jackwener/twitter-cli
   content_hash: sha256:1a7c829ff99135670a1bc205685e254a0a8bf61802cfcfe1703e12808d2c7d11
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/twitter-cli/SKILL.md
   runtime: null
   scope: project
@@ -3894,7 +4019,7 @@ deployments:
   active_owner: jackwener/twitter-cli
   content_hash: sha256:f271ff4cfe2a63812759664470517450a4e0450f46a5982b2b355b58348b6f2a
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/twitter-cli/config.yaml
   runtime: null
   scope: project
@@ -3903,7 +4028,7 @@ deployments:
   active_owner: jackwener/twitter-cli
   content_hash: sha256:8ee4f62ef3fe3737a1dfc75bf197de3c8881f6ea9ab7899c5b029538642cef81
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/twitter-cli/pyproject.toml
   runtime: null
   scope: project
@@ -3912,7 +4037,7 @@ deployments:
   active_owner: jackwener/twitter-cli
   content_hash: sha256:2b9c0411baf42fe03079f1eb864d2eb530979e401a61ace21ca90cb0a7fef02d
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/twitter-cli/tests/conftest.py
   runtime: null
   scope: project
@@ -3921,7 +4046,7 @@ deployments:
   active_owner: jackwener/twitter-cli
   content_hash: sha256:57fbdf88fb26646dc313716efe1930b5358562e186a60c9ed1feb3686f2dcd0f
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/twitter-cli/tests/fixtures/followers_page.json
   runtime: null
   scope: project
@@ -3930,7 +4055,7 @@ deployments:
   active_owner: jackwener/twitter-cli
   content_hash: sha256:4436a46c4cb61ef9e72f3d879eb67fccf2968baa1093610027e1d7f5eb5cafe5
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/twitter-cli/tests/fixtures/home_timeline.json
   runtime: null
   scope: project
@@ -3939,7 +4064,7 @@ deployments:
   active_owner: jackwener/twitter-cli
   content_hash: sha256:3facc450fa6a9f87d216fd1eaa0ff2b8135474b8795799c68f6206a162ccde83
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/twitter-cli/tests/fixtures/list_timeline.json
   runtime: null
   scope: project
@@ -3948,7 +4073,7 @@ deployments:
   active_owner: jackwener/twitter-cli
   content_hash: sha256:73cf71544f9049c7f2cb2a3228bcb1f7e27ef987e872ab6f31f5095cdc99d85e
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/twitter-cli/tests/fixtures/search_timeline.json
   runtime: null
   scope: project
@@ -3957,7 +4082,7 @@ deployments:
   active_owner: jackwener/twitter-cli
   content_hash: sha256:80df6fe9e31a4ad4457a3d5ad218659985699561787b6ed169879e042e5617e5
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/twitter-cli/tests/fixtures/tweet_detail.json
   runtime: null
   scope: project
@@ -3966,7 +4091,7 @@ deployments:
   active_owner: jackwener/twitter-cli
   content_hash: sha256:ae9b410a88cb7ea871bbe9880fbb4b9e271806db241dbe0a3ef76af75b6de8d3
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/twitter-cli/tests/test_auth.py
   runtime: null
   scope: project
@@ -3975,7 +4100,7 @@ deployments:
   active_owner: jackwener/twitter-cli
   content_hash: sha256:c8b6dc6a5ce665c9b0baa1f17876ae66bb7a9450c306eacf1944057b72907ebd
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/twitter-cli/tests/test_cache.py
   runtime: null
   scope: project
@@ -3984,7 +4109,7 @@ deployments:
   active_owner: jackwener/twitter-cli
   content_hash: sha256:a7163d2c95a88c111e46bac3e1478b208ec19e794b858d8de98ddc80f5660fbe
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/twitter-cli/tests/test_cli.py
   runtime: null
   scope: project
@@ -3993,7 +4118,7 @@ deployments:
   active_owner: jackwener/twitter-cli
   content_hash: sha256:aef923a5d02d3befc99556125928ecda4ac942ec10e007a2dd9c24dd12e3bc82
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/twitter-cli/tests/test_client.py
   runtime: null
   scope: project
@@ -4002,7 +4127,7 @@ deployments:
   active_owner: jackwener/twitter-cli
   content_hash: sha256:d72e873774a3881591d912f27387de61718c92c0810419ada4f1527629fa7247
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/twitter-cli/tests/test_config.py
   runtime: null
   scope: project
@@ -4011,7 +4136,7 @@ deployments:
   active_owner: jackwener/twitter-cli
   content_hash: sha256:5763e1b432375bd2fcfc5258c24a7cb229948b41d6eefde92ab12fac8cc37157
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/twitter-cli/tests/test_config_normalization.py
   runtime: null
   scope: project
@@ -4020,7 +4145,7 @@ deployments:
   active_owner: jackwener/twitter-cli
   content_hash: sha256:a83725faddfc58f0be3b269594a5b6f5962ebbb9b8e4625be6ba91cd1cd9f815
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/twitter-cli/tests/test_filter.py
   runtime: null
   scope: project
@@ -4029,7 +4154,7 @@ deployments:
   active_owner: jackwener/twitter-cli
   content_hash: sha256:1be842856c005a85b0298d2249bbf82d5bd9c89486e2951b2a511a923c6ecd3f
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/twitter-cli/tests/test_output.py
   runtime: null
   scope: project
@@ -4038,7 +4163,7 @@ deployments:
   active_owner: jackwener/twitter-cli
   content_hash: sha256:049b3afd763b5482ac8b9b74ecf9e720397250444fefb31a6927805b518a95f6
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/twitter-cli/tests/test_parser_fixtures.py
   runtime: null
   scope: project
@@ -4047,7 +4172,7 @@ deployments:
   active_owner: jackwener/twitter-cli
   content_hash: sha256:b6f8a0271fa37431c92e8cc0001674551d22401efc3ba243d2e65b4f11b2dfd8
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/twitter-cli/tests/test_search.py
   runtime: null
   scope: project
@@ -4056,7 +4181,7 @@ deployments:
   active_owner: jackwener/twitter-cli
   content_hash: sha256:6c7c9a1183109f0ba9fd883a86069f1b6da2d85188659db83a6c766fabd3afdf
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/twitter-cli/tests/test_serialization.py
   runtime: null
   scope: project
@@ -4065,7 +4190,7 @@ deployments:
   active_owner: jackwener/twitter-cli
   content_hash: sha256:f61d74ca4f7b2d947addb2166e800985729d62f990ee3ca8868fa0b2faddc967
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/twitter-cli/tests/test_smoke.py
   runtime: null
   scope: project
@@ -4074,7 +4199,7 @@ deployments:
   active_owner: jackwener/twitter-cli
   content_hash: sha256:320b58c36c69e4ac5f9abf92e04bf96c253a7d97ac84d4d35083231b95a00cd4
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/twitter-cli/tests/test_timeutil.py
   runtime: null
   scope: project
@@ -4083,7 +4208,7 @@ deployments:
   active_owner: jackwener/twitter-cli
   content_hash: sha256:866ad49925cbc7a083efc525703e6fb578c64c0caf946634f0824666a967998e
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/twitter-cli/twitter_cli/__init__.py
   runtime: null
   scope: project
@@ -4092,7 +4217,7 @@ deployments:
   active_owner: jackwener/twitter-cli
   content_hash: sha256:c28091276a68e8845de5328c8f5077bf4e3d383f000a380caec4197416784dd9
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/twitter-cli/twitter_cli/auth.py
   runtime: null
   scope: project
@@ -4101,7 +4226,7 @@ deployments:
   active_owner: jackwener/twitter-cli
   content_hash: sha256:98d08b0cb76ad308c974e62cac483e5c5bcc71662b32a54e3a081d571ea4f7b9
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/twitter-cli/twitter_cli/cache.py
   runtime: null
   scope: project
@@ -4110,7 +4235,7 @@ deployments:
   active_owner: jackwener/twitter-cli
   content_hash: sha256:3baa7a5bd5c1316ee7e7853739facbaacae9556e0cde7feacc325cdf13115ab8
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/twitter-cli/twitter_cli/cli.py
   runtime: null
   scope: project
@@ -4119,7 +4244,7 @@ deployments:
   active_owner: jackwener/twitter-cli
   content_hash: sha256:0ad48dc728a855243e2269d525ebeea163b1f68a73538370f984ad3352f07716
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/twitter-cli/twitter_cli/client.py
   runtime: null
   scope: project
@@ -4128,7 +4253,7 @@ deployments:
   active_owner: jackwener/twitter-cli
   content_hash: sha256:0b6f609a627305399744051d3f17f4a5b03286ada65424696e176bfef05824f4
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/twitter-cli/twitter_cli/commands/__init__.py
   runtime: null
   scope: project
@@ -4137,7 +4262,7 @@ deployments:
   active_owner: jackwener/twitter-cli
   content_hash: sha256:32cd1fc7d34ad252c546a422ddd40d1878469b8d892e552dd8246b969e004375
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/twitter-cli/twitter_cli/config.py
   runtime: null
   scope: project
@@ -4146,7 +4271,7 @@ deployments:
   active_owner: jackwener/twitter-cli
   content_hash: sha256:2c4a2a91a363c13468a015d2a7356fac778ee3b30657bfe2b02f784160bd42e9
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/twitter-cli/twitter_cli/constants.py
   runtime: null
   scope: project
@@ -4155,7 +4280,7 @@ deployments:
   active_owner: jackwener/twitter-cli
   content_hash: sha256:88c944e8f17a35f77630ebee96b7c4d962a06545559b9f831290d03208d53640
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/twitter-cli/twitter_cli/exceptions.py
   runtime: null
   scope: project
@@ -4164,7 +4289,7 @@ deployments:
   active_owner: jackwener/twitter-cli
   content_hash: sha256:67f840274b3830419bd71816e1d53767dc81ba359102c20e047bd096126503bd
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/twitter-cli/twitter_cli/filter.py
   runtime: null
   scope: project
@@ -4173,7 +4298,7 @@ deployments:
   active_owner: jackwener/twitter-cli
   content_hash: sha256:cc5edb6e6a2d93844cdfe7e0710f9e60dcdeaada4ea1f62c512ee7775a8f01f2
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/twitter-cli/twitter_cli/formatter.py
   runtime: null
   scope: project
@@ -4182,7 +4307,7 @@ deployments:
   active_owner: jackwener/twitter-cli
   content_hash: sha256:aff8d0201843f524cb5875926286d0ba934ac5ac36f7278cd2fc8f622f16270b
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/twitter-cli/twitter_cli/graphql.py
   runtime: null
   scope: project
@@ -4191,7 +4316,7 @@ deployments:
   active_owner: jackwener/twitter-cli
   content_hash: sha256:86db4d065f544b50fc120984c5a4282485de3a273f8ac8b8089d587d52af7326
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/twitter-cli/twitter_cli/models.py
   runtime: null
   scope: project
@@ -4200,7 +4325,7 @@ deployments:
   active_owner: jackwener/twitter-cli
   content_hash: sha256:e5569cb2f9b7dd4ada08557590067f7a874e9c9a158721b64ebbea6549bf144b
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/twitter-cli/twitter_cli/output.py
   runtime: null
   scope: project
@@ -4209,7 +4334,7 @@ deployments:
   active_owner: jackwener/twitter-cli
   content_hash: sha256:0be63300fcb90978adcd1d00092b5b4b223c1193b9c8ca6207665d1f2547f7c5
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/twitter-cli/twitter_cli/parser.py
   runtime: null
   scope: project
@@ -4218,7 +4343,7 @@ deployments:
   active_owner: jackwener/twitter-cli
   content_hash: sha256:002151a9a1a79c3e73f1b67ad042540689a1a645d13c7c16a9da12eeae349fdc
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/twitter-cli/twitter_cli/search.py
   runtime: null
   scope: project
@@ -4227,7 +4352,7 @@ deployments:
   active_owner: jackwener/twitter-cli
   content_hash: sha256:c7eff76dc79e442013e0dfb776439ae3b402c4fefd5f198a217301e4440afe64
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/twitter-cli/twitter_cli/serialization.py
   runtime: null
   scope: project
@@ -4236,7 +4361,7 @@ deployments:
   active_owner: jackwener/twitter-cli
   content_hash: sha256:cd63ff6637edaa02531b09b4f6ccf37ee40de73b8be69b8ecd1b064d40c09e2a
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/twitter-cli/twitter_cli/timeutil.py
   runtime: null
   scope: project
@@ -4245,7 +4370,7 @@ deployments:
   active_owner: jackwener/twitter-cli
   content_hash: sha256:66c7dfc7e4c7e9351b77fb6acb81da8aacd5e64a95e8bc2c66ce6d9d9664a696
 - kind: project-relative
-  target: agents
+  target: agent-skills
   value: .agents/skills/twitter-cli/uv.lock
   runtime: null
   scope: project

@@ -1,7 +1,7 @@
 {
   "host": "github.com",
   "repo": "larksuite/cli",
-  "commit": "72579c80027c863ca51d5f9affda72a70ab0d8a6",
+  "commit": "ac81f5056ab88f37d581d25916f3dab85abfca76",
   "path": "skills/lark-drive",
   "files": [
     "SKILL.md",

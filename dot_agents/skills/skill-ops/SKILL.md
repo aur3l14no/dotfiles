@@ -26,6 +26,7 @@ Before changing an existing deployment, run the patch helper's `status` and inve
 - Add: `apm install -g <package-with-explicit-ref>`.
 - Update: inspect `apm outdated -g`, then `apm update -g`.
 - Fresh setup: restore chezmoi targets, establish APM and its uv/Python runtime, then `apm install -g --frozen`. Executable prerequisites still need separate setup.
+- Other hosts: before installing from a lock written elsewhere, bring the host's APM to the version that wrote it; older APM scans and rewrites the lock differently.
 - Remove: `apm uninstall -g <package>`. Clean up its orphaned patches and obsolete skill-specific wrappers, rules, and registrations. Remove executable dependencies only when authorized and no longer used elsewhere; preserve credentials and user output.
 
 APM can redeploy files and erase adaptations. After installation or update, follow the adaptation workflow below. Sync manifest/lockfile changes with `chezmoi re-add ~/.apm/apm.yml ~/.apm/apm.lock.yaml`.

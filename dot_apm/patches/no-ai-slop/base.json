@@ -1,11 +1,21 @@
 {
   "host": "github.com",
   "repo": "petergyang/no-ai-slop",
-  "commit": "000650b156983f5159695b441477f4e63b25dc85",
-  "path": "skills/no-ai-slop",
+  "commit": "f2b25e603800dfc01ba93f1092056724eb93059e",
+  "path": "",
   "files": [
+    ".codex-plugin/plugin.json",
+    ".github/workflows/plugin.yml",
+    ".gitignore",
+    "LICENSE",
+    "PRIVACY.md",
+    "README.md",
     "SKILL.md",
+    "TERMS.md",
     "agents/openai.yaml",
-    "eval.md"
+    "assets/no-ai-slop.png",
+    "eval.md",
+    "plugin-submission.md",
+    "scripts/build_plugin.py"
   ]
 }
