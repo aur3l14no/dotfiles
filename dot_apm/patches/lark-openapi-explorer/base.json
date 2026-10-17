@@ -1,9 +1,0 @@
-{
-  "host": "github.com",
-  "repo": "larksuite/cli",
-  "commit": "ac81f5056ab88f37d581d25916f3dab85abfca76",
-  "path": "skills/lark-openapi-explorer",
-  "files": [
-    "SKILL.md"
-  ]
-}

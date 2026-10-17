@@ -1,0 +1,74 @@
+# Third-party skills vendored in this directory as exact_<name>/, with local adaptations.
+# Edit repo, ref and skills by hand; `commit` is written by skill-ops/scripts/skill_upstream.py
+# and is the upstream the vendored copies are based on.
+
+[[source]]
+repo = "larksuite/cli"
+ref = "^1.0.0"  # keep the lark-cli wrapper in dot_local/bin compatible
+commit = "ac81f5056ab88f37d581d25916f3dab85abfca76" # v1.0.98
+skills = [
+  "skills/lark-doc",
+  "skills/lark-drive",
+  "skills/lark-im",
+  "skills/lark-markdown",
+  "skills/lark-openapi-explorer",
+  "skills/lark-shared",
+  "skills/lark-sheets",
+  "skills/lark-wiki",
+]
+
+[[source]]
+repo = "jackwener/OpenCLI"
+ref = "v1.8.8"  # same version as the opencli wrapper in dot_local/bin
+commit = "8271afc67e8504bda94c147f446ee29775d08274" # v1.8.8
+skills = ["skills/opencli-usage", "skills/opencli-browser", "skills/smart-search"]
+
+[[source]]
+repo = "jackwener/twitter-cli"
+ref = "^0.8.0"
+commit = "8cb5824ed4b0a789fd1b17cd3a7b165e536646ae" # v0.8.5
+skills = ["."]
+
+[[source]]
+repo = "trycua/cua"
+ref = "cua-driver-rs-v0.36.0"  # same version as the installed cua-driver
+commit = "6d6c734c127025fb39ad5d585a10382808b39dc1"
+skills = ["libs/cua-driver/rust/Skills/cua-driver"]
+
+[[source]]
+repo = "mattpocock/skills"
+ref = "main"
+commit = "49dd158d1076134a641b33efb035946536778336"
+skills = [
+  "skills/engineering/tdd",
+  "skills/engineering/codebase-design",
+  "skills/engineering/grill-with-docs",
+  "skills/engineering/domain-modeling",
+  "skills/engineering/setup-matt-pocock-skills",
+  "skills/productivity/grill-me",
+  "skills/productivity/grilling",
+]
+
+[[source]]
+repo = "humanlayer/skills"
+ref = "main"
+commit = "653b6411c1f70c275a18e37673b042ff99f67ceb"
+skills = ["plugins/show-me/skills/show-me"]
+
+[[source]]
+repo = "tommy0103/obelisk-skill"
+ref = "main"
+commit = "c1dceb30652ba847249aec90fe1ffa00b148d7d6"
+skills = ["skills/obelisk"]
+
+[[source]]
+repo = "tommy0103/better-readme-skill"
+ref = "fa3dce198b4b6f798ffc61c6483e7e7aa15b8cde"
+commit = "fa3dce198b4b6f798ffc61c6483e7e7aa15b8cde"
+skills = ["skills/better-readme"]
+
+[[source]]
+repo = "petergyang/no-ai-slop"
+ref = "main"
+commit = "000650b156983f5159695b441477f4e63b25dc85"
+skills = ["skills/no-ai-slop"]

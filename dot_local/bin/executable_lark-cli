@@ -17,7 +17,7 @@ if [[ "${1:-}" == "update" ]]; then
     if [[ "$check_only" != true ]]; then
         printf '%s\n' \
             "lark-cli update is disabled: the executable version is pinned in this wrapper," \
-            "and Lark skills are managed by APM." >&2
+            "and Lark skills are vendored through skill-ops." >&2
         exit 2
     fi
 fi

@@ -6,7 +6,7 @@ if ! command -v npm >/dev/null 2>&1 || ! command -v node >/dev/null 2>&1; then
     exit 127
 fi
 
-# The version is pinned here and OpenCLI skills are managed by APM; this only
+# The version is pinned here and OpenCLI skills are vendored through skill-ops; this only
 # silences opencli's "npm install -g" upgrade notice.
 export CONTINUOUS_INTEGRATION=1
 export NPM_CONFIG_UPDATE_NOTIFIER=false

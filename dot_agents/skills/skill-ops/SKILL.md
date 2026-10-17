@@ -7,7 +7,7 @@ description: Initialize, install, update, remove, or repair skills and their exe
 
 These local maintenance conventions override upstream maintenance instructions. Persistent changes need user authorization; existing authorization covering the work is sufficient. Settled commands using temporary environments or standard caches need no additional installation approval.
 
-Self-owned skills live in `~/.nix-config/chezmoi/dot_agents/skills/`: edit the source and apply the specific chezmoi target. Use APM for third-party skill text and bundled files; executable dependencies are managed separately.
+All skills live in `~/.nix-config/chezmoi/dot_agents/skills/`: edit the source and apply the specific chezmoi target. Third-party skills are vendored there as `exact_<name>/`, already adapted; `.upstream.toml` beside them records their upstream. Executable dependencies are managed separately.
 
 Keep shared skills in `~/.agents/skills` and both clients’ private skill directories independent. Codex reads shared skills directly; `uv run ~/.agents/skills/skill-ops/scripts/sync_skill_links.py` links them individually into `~/.claude/skills`. Run it after adding or removing skills; a full chezmoi apply also runs it.
 
@@ -19,24 +19,22 @@ Use a thin chezmoi-owned wrapper when direct invocation becomes unwieldy. Wrappe
 
 Agree on managed installations when ephemeral execution is impractical. Runtimes, extensions, native hosts, services, and OS permissions remain explicit prerequisites even when the CLI is cached. Bring unresolved setup choices to the user.
 
-## APM
+## Third-party skills
 
-Before changing an existing deployment, run the patch helper's `status` and investigate `uncaptured` edits. Preview installs, updates, and removals with `--dry-run`; review audit findings.
+Use `uv run ~/.agents/skills/skill-ops/scripts/skill_upstream.py <command>`. `status` compares each vendored skill with its upstream at the recorded commit; `diff <skill>` shows the local adaptation. Preview updates with `update --dry-run`.
 
-- Add: `apm install -g <package-with-explicit-ref>`.
-- Update: inspect `apm outdated -g`, then `apm update -g`.
-- Fresh setup: restore chezmoi targets, establish APM and its uv/Python runtime, then `apm install -g --frozen`. Executable prerequisites still need separate setup.
-- Other hosts: before installing from a lock written elsewhere, bring the host's APM to the version that wrote it; older APM scans and rewrites the lock differently.
-- Remove: `apm uninstall -g <package>`. Clean up its orphaned patches and obsolete skill-specific wrappers, rules, and registrations. Remove executable dependencies only when authorized and no longer used elsewhere; preserve credentials and user output.
+- Add: put the repo, an explicit ref and the skill path in `.upstream.toml`, then `update`. The skill arrives as clean upstream.
+- Update: `update` moves range and branch refs to the newest upstream; a pinned ref moves only when edited, and the dry run says when upstream has passed it. Naming a skill updates its whole source.
+- Remove: drop it from the manifest and delete its vendored directory; chezmoi leaves `~/.agents/skills/<name>` on each host, so remove that too. Clean up obsolete skill-specific wrappers, rules, and registrations. Remove executable dependencies only when authorized and no longer used elsewhere; preserve credentials and user output.
+- Fresh setup and other hosts: `chezmoi apply` deploys every skill. Executable prerequisites still need separate setup.
 
-APM can redeploy files and erase adaptations. After installation or update, follow the adaptation workflow below. Sync manifest/lockfile changes with `chezmoi re-add ~/.apm/apm.yml ~/.apm/apm.lock.yaml`.
+Review invisible characters the script reports in incoming upstream text. `links to missing` names skills a vendored skill refers to but that are not installed.
 
 ## Adaptation
 
-Use `uv run ~/.agents/skills/skill-ops/scripts/skill_patches.py <command>`. Patches live in `~/.nix-config/chezmoi/dot_apm/patches/<skill>/` and are not deployed.
+`update` merges local adaptations onto new upstream three-way and, like git, leaves conflicts as markers in the vendored source. Nothing deploys until applied.
 
-1. `apply` replays patches or merges them onto changed upstream. It refuses unexpected deployment edits; conflicts leave the deployment untouched and produce a marked work directory.
-2. Delegate unreviewed skills, merged upstream deltas, and conflicts to a sub-agent using `~/.agents/skills/skill-patcher/SKILL.md`. Supply affected directories, clean locked upstream, settled invocation choices, local constraints, and any full-pass request; include old patches for conflicts. Recorded skills with unchanged upstream need no delegation. Merged upstream still needs review even if `status` says `captured`.
-3. Read the handoff, resolve dependency or wrapper decisions, and `capture <skill>...` only completed adaptations, including those needing no changes. Delegate unfinished work again when ready, then confirm with `status`.
+1. Delegate new skills, merged upstream deltas, and conflicts to a sub-agent with `~/.agents/skills/skill-ops/ADAPTATION.md` as its brief. Supply the vendored directories, the `update` output, settled invocation choices, local constraints, and any full-pass request. Unchanged upstream needs no delegation; a clean merge still needs its upstream delta reviewed.
+2. Read the handoff and resolve dependency or wrapper decisions. Commit and apply only completed adaptations; `status` should show no conflicts and nothing unapplied. Delegate unfinished work again when ready.
 
-For an explicit patch audit, derive the requested scope from the lockfile. Report unresolved prerequisites or decisions rather than treating a successful APM command as completion.
+For an explicit patch audit, derive the requested scope from the manifest. Report unresolved prerequisites or decisions rather than treating a successful command as completion.
