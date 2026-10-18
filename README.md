@@ -1,136 +1,80 @@
 # Dotfiles
 
-This is a subtree of nix-config repo (`chezmoi/`).
+My shell, Git, editor, and agent configuration for macOS and Linux, managed with
+[chezmoi](https://www.chezmoi.io/). Usable without Nix.
 
-I use it on non-nix systems.
+## Use
 
-## Use with homebrew
+With chezmoi and uv installed, initialize the source, review the changes, and apply:
 
-1. Install homebrew
-2. `brew install chezmoi`
-3. `chezmoi init https://github.com/aur3l14no/dotfiles`
-4. brew install ...
-
-## Use with mise
-
-Why mise? Single-user, works everywhere, relatively good repo.
-
-``` sh
-# install mise
-curl https://mise.run | sh
-
-~/.local/bin/mise use --global chezmoi@latest
-~/.local/share/mise/shims/chezmoi init https://github.com/aur3l14no/dotfiles
+```sh
+chezmoi init https://github.com/aur3l14no/dotfiles
+chezmoi diff
+chezmoi apply
 ```
 
-## Chezmoi data
+Run `chezmoi diff` and `chezmoi apply` again after changing the source. On my
+Nix-managed hosts, Home Manager applies it during activation.
 
-Create `~/.config/chezmoi/chezmoi.toml` to set git identity:
+## Install
 
-``` toml
+With Homebrew:
+
+```sh
+brew install chezmoi uv
+```
+
+Or use [mise](https://mise.jdx.dev/installing-mise.html) on macOS or Linux.
+Run these commands in bash or zsh, then follow the usage above:
+
+```sh
+curl https://mise.run | sh
+~/.local/bin/mise use --global chezmoi@latest uv@latest
+export PATH="$HOME/.local/bin:$HOME/.local/share/mise/shims:$PATH"
+```
+
+`uv` is required to deploy the shared agent skills. Applications configured by
+these dotfiles are installed separately.
+
+## Customize
+
+Set Git identity in `~/.config/chezmoi/chezmoi.toml` before applying:
+
+```toml
 [data.git]
 name = "Your Name"
 email = "you@example.com"
 signingKey = "ssh-ed25519 AAAA..."
 ```
 
-If `data.git` is omitted, `~/.config/git/config` is still generated but without name/email/signing key.
+All three fields are optional; setting `signingKey` enables SSH commit signing.
+Local Git overrides belong in `~/.config/git/config.local`.
 
-Entries stored as `*.age` are ignored unless your local `chezmoi` config sets
-`encryption = "age"`. This keeps `chezmoi init --apply` working on machines
-without an age identity while still enabling the encrypted files once age is
-configured. New encrypted files should follow the same `*.age` convention.
+Encrypted files are skipped unless chezmoi uses `encryption = "age"`. Configure
+a usable age identity before enabling it.
 
-## SSH
+For shell PATH behavior, temporary tool overrides, and machine-local settings,
+see [Shell environment](docs/shell.md).
 
-The SSH client configuration is managed on `groves`, `john-macbook`, and
-`fusco-thinkbook`. Shared aliases live in `private_dot_ssh/private_config.d/`;
-templates retain the few device-specific settings and service identities.
+## Optional tools
 
-`~/.ssh/config.local` is an optional, unmanaged file for local overrides and
-additional aliases. Only `config.d/*.conf` is included automatically, so editor
-backups and old extensionless files do not affect connections.
+Install the command-line tools in [mise-packages.txt](mise-packages.txt):
 
-Custom key filenames use kebab-case, for example `keys/fishnet-vps`,
-`keys/sjn-lab`, and `keys/hzhs-admin`. Standard OpenSSH
-filenames such as `id_ed25519`, `id_rsa`, and `ssh_host_*` retain their standard
-spelling. Private keys and `known_hosts` are not stored in this subtree.
-
-All `sjn-*` aliases use only `keys/sjn-lab`. `pty-screen` uses `pty-wrt-ts`
-as its jump host on all three workstations; `pty-screen-b` jumps through
-`pty-screen`. The default server-alive policy is six unanswered probes at
-20-second intervals. Legacy `ssh-rsa` signatures are enabled only for `pty-hsf`.
-
-Apply just the SSH configuration with:
-
-``` sh
-chezmoi apply ~/.ssh/config ~/.ssh/config.d
+```sh
+xargs mise use --global < "$(chezmoi source-path)/mise-packages.txt"
 ```
 
-## Rime
+On macOS, the Rime configuration uses [Squirrel](https://formulae.brew.sh/cask/squirrel-app):
 
-`Library/Rime` is the macOS Squirrel Rime overlay. Chezmoi pulls upstream
-rime-ice with `.chezmoiexternal.toml.tmpl`, then applies personal patches and
-the encrypted double-pinyin custom phrase table on top.
-
-Runtime state and vendored upstream data are intentionally not tracked:
-`build/`, `sync/`, `*.userdb/`, `installation.yaml`, `user.yaml`, schema
-snapshots, dictionaries, Lua helpers, OpenCC tables, and the unused full-pinyin
-`custom_phrase.txt`.
-
-### New macOS Setup
-
-Install Squirrel first. The current Homebrew cask is:
-
-``` sh
+```sh
 brew install --cask squirrel-app
+chezmoi apply
 ```
 
-Then run `chezmoi apply`; on Nix-managed macOS hosts, `darwin-rebuild switch`
-already does that. Chezmoi caches the rime-ice archive and refreshes it weekly;
-force a refresh with `chezmoi apply --refresh-externals=always`.
+After applying, redeploy Rime from Squirrel's menu.
 
-After Rime files change, use Squirrel's menu to redeploy Rime.
+## Maintenance
 
-## Recommended Packages
-
-List lives in `mise-packages.txt` and is ignored by chezmoi (so it does not land in `$HOME`).
-
-``` sh
-cat "$(chezmoi source-path)/mise-packages.txt" | xargs ~/.local/bin/mise use --global
-```
-
-## Agent Skills
-
-All agent skills live under `dot_agents/skills/` and deploy to the shared
-`~/.agents/skills/` directory used by the agent clients. Third-party skills are
-vendored there as `exact_<name>/` with their local adaptations;
-`dot_agents/skills/.upstream.toml` records each one's upstream and the commit
-it is based on. Other hosts need only `chezmoi apply`.
-
-Maintain skills through `~/.agents/skills/skill-ops/SKILL.md`. Its
-`skill_upstream.py` merges upstream updates into the vendored copies, and it
-delegates documentation adaptation to a sub-agent. Do not install skills with
-APM, `npx skills`, or a CLI's own skill installer: they bypass the vendored
-copies.
-
-Check vendored skills and preview upstream updates without changing anything:
-
-``` sh
-uv run ~/.agents/skills/skill-ops/scripts/skill_upstream.py status
-uv run ~/.agents/skills/skill-ops/scripts/skill_upstream.py update --dry-run
-```
-
-`lark-cli` is separate from its skills. Its chezmoi-owned wrapper pins the npm
-package version and runs it through npm's cache; Node.js and npm must already
-be available. First use fetches the package into the cache. Update its pin
-through Skill Ops after checking compatibility with the skill text.
-
-Do not run `lark-cli update`: that command also invokes `npx skills` and would
-bypass Skill Ops. The wrapper permits `update --check`, blocks the mutating update
-command, and suppresses update notifications.
-
-After an update, Skill Ops waits for the patch sub-agent's handoff,
-resolves executable prerequisites and user decisions, and completes any
-remaining adaptation. No lifecycle hook, dedicated runner, or report file is
-required.
+The source lives in `chezmoi/` in nix-config and is mirrored to the dotfiles repo.
+See [maintenance notes](CONTRIBUTING.md) for shared changes and
+[Skill Ops](dot_agents/skills/skill-ops/SKILL.md) for agent skills and their tools.

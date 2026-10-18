@@ -15,4 +15,4 @@ export NPM_CONFIG_UPDATE_NOTIFIER=false
 cache="${NPM_USER_CACHE:-$HOME/.cache/npm}"
 mkdir -p "$cache/skill-tools/opencli"
 exec npm --cache "$cache" --prefix "$cache/skill-tools/opencli" exec \
-    --yes --package=@jackwener/opencli@1.8.8 -- opencli "$@"
+    --yes --package=@jackwener/opencli@2.0.0 -- opencli "$@"

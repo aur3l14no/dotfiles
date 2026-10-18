@@ -1,0 +1,2 @@
+# GUI discovery and non-interactive zsh need the same base environment.
+. "$HOME/.config/shell/env.sh"

@@ -31,7 +31,7 @@ Use the managed `~/.local/bin/obelisk` wrapper. It resolves the pinned CLI in
 npm's standard cache with:
 
 ```bash
-npm exec --yes --package=@obelisk-apps/cli@0.2.6 -- obelisk "$@"
+npm exec --yes --package=@obelisk-apps/cli@0.3.0 -- obelisk "$@"
 ```
 
 All `obelisk` examples below refer to this wrapper; if PATH does not include
@@ -41,16 +41,6 @@ Node 22.13 or newer on PATH. `obelisk --version` is the version check; this
 release's `--help` prints usage and exits 1, which alone does not indicate a
 broken installation. Runtime/package resolution uses normal npm caches and
 retrieval writes `~/.obelisk/obelisk.sqlite`.
-
-The pinned 0.2.6 predates the `messages()` helper (CLI 0.3.0+) that the
-workflow and references below teach; calling it fails. With this pin, use the
-compatibility helpers whose contracts are in the
-[API reference](references/api-reference.md): `context(uuid)` for one message
-plus its `parentChain` (slice the last few ancestors) or `trace(uuid)` for the
-full parent path, the `context` neighbors on `search()` hits for a temporal
-window, and `thread(sessionId)` for a session interval, filtered, sliced, and
-projected inside the query because it returns the complete session. Do not
-upgrade the CLI to obtain `messages()`; moving the pin goes through `skill-ops`.
 
 For persistent installation, updates, removal, or repair, follow
 `~/.agents/skills/skill-ops/SKILL.md`; do not improvise global installs or
@@ -145,7 +135,7 @@ helpers for supported, indexed records.
   `~/.dsh/instances/stock/home/sessions`; the default `~/.dsh/sessions` is absent.
   `providerRoots` supports only one root per provider, so one configured
   DeepSeek root does not cover all instances.
-- The verified CLI 0.2.6 DeepSeek adapter supports format versions through 3;
+- The CLI 0.3.0 DeepSeek adapter supports format versions through 3;
   local sessions include version 4. Do not claim all DeepSeek sessions are
   indexed or change their source format to force ingestion. Report the gap and
   use scoped original-record evidence when needed.

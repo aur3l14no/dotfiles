@@ -19,13 +19,13 @@ Persistent installation, updates, removal, and repair of this skill or its tools
 
 每次使用前，必须先做下面两步：
 
-- 运行 `opencli list -f yaml`（若 `opencli` 不在 PATH 上，停下告知用户；它由用户通过 chezmoi wrapper 管理，不要自行 `npm install -g` / `npx` 安装或升级）
-- 用 live registry 确认候选站点是否存在，并检查 `strategy`、`browser`、`domain`
+- 运行 `opencli list --site <候选站点>`，站点名不确定时用 `opencli list <关键词>`（若 `opencli` 不在 PATH 上，停下告知用户；它由用户通过 chezmoi wrapper 管理，不要自行 `npm install -g` / `npx` 安装或升级）
+- 用 live registry 确认候选站点是否存在（`total` 为 0 即不存在；结果分页，用 `--offset <nextOffset>` 继续），并检查命令的 `access`
 
 选定站点后，必须再做下面两步：
 
 - 运行 `opencli <site> -h` 查看该站点有哪些子命令
-- 若已锁定某个子命令，再运行 `opencli <site> <command> -h` 查看参数、输出列、策略
+- 若已锁定某个子命令，再运行 `opencli <site> <command> -h` 查看参数、输出列，以及 `Access`、`Browser`、`Domain`
 
 不要在 skill 文档里硬编码参数或假设命令签名；以 `opencli ... -h` 的实时输出为准。
 
@@ -50,7 +50,7 @@ Persistent installation, updates, removal, and repair of this skill or its tools
 
 计数规则：
 
-- `opencli list -f yaml`、`opencli <site> -h`、`opencli <site> <command> -h` 属于预检与帮助，不计入搜索次数
+- `opencli list ...`、`opencli <site> -h`、`opencli <site> <command> -h` 属于预检与帮助，不计入搜索次数
 - 一次真正的 `opencli <site> ...` 搜索/查询执行，计为该站点 1 次调用
 - 同站点因为报错、超时、验证码、反爬、登录态异常而失败，也算 1 次调用，不要无限重试
 
@@ -144,7 +144,7 @@ Persistent installation, updates, removal, and repair of this skill or its tools
 - 不要因为单个源失败而中止整个搜索
 - 记录：「已跳过：<site> 不可用」
 - 回退到同类其他站点，或回退到一个 AI 源
-- 始终以 `opencli list -f yaml` 与 `opencli <site> -h` 的实际结果为准
+- 始终以 `opencli list --site <site>` 与 `opencli <site> -h` 的实际结果为准
 
 不要假设任何站点“绝对可用”。即使是公开站点，也以当前环境中的 live help 和执行结果为准。
 

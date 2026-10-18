@@ -1,4 +1,6 @@
 README.md
+CONTRIBUTING.md
+docs
 mise-packages.txt
 .config/karabiner/automatic_backups
 .config/rustic/*.env

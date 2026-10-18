@@ -1,0 +1,5 @@
+# Register OrbStack completions before the system zshrc runs compinit.
+# Its CLI directory is part of the shared PATH data.
+if [ -d "$HOME/.orbstack/shell/completions/zsh" ]; then
+    fpath+=("$HOME/.orbstack/shell/completions/zsh")
+fi

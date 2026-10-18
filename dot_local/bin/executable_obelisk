@@ -2,4 +2,4 @@
 set -euo pipefail
 
 # Pinned Obelisk CLI; npm manages the standard execution cache.
-exec npm exec --yes --package=@obelisk-apps/cli@0.2.6 -- obelisk "$@"
+exec npm exec --yes --package=@obelisk-apps/cli@0.3.0 -- obelisk "$@"

@@ -1,0 +1,8 @@
+# Runs after Home Manager's hm-session-vars.fish; uses the same data as env.sh.
+# Append only missing directories. Do not move inherited paths or write universal state.
+for dir in{{ range (includeTemplate "shell-paths.yaml" . | fromYaml).shellPaths }} \
+    {{ . | shellQuote }}{{ end }}
+    if test -d "$dir"; and not contains -- "$dir" $PATH
+        set -gx PATH $PATH "$dir"
+    end
+end

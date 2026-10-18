@@ -1,17 +1,6 @@
 # Quiet startup
 set -g fish_greeting
 
-# Path setup
-set -l __paths
-# User
-set -a __paths "$HOME/.local/bin" "$HOME/.local/opt/npm-global/bin"
-# Language
-set -a __paths "$HOME/.cargo/bin" "$HOME/go/bin"
-# Nix
-set -a __paths "/etc/profiles/per-user/$USER/bin" /run/wrappers/bin /run/current-system/sw/bin
-
-fish_add_path --move --prepend --global $__paths
-
 # Editor/pager
 set -gx EDITOR nvim
 set -gx VISUAL nvim

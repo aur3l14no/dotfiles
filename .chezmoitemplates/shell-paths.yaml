@@ -1,0 +1,17 @@
+# Kept here for includeTemplate: .chezmoidata files are not Go templates.
+# Fallback directories, in append order. Existing PATH entries keep priority.
+shellPaths:
+  - {{ joinPath .chezmoi.homeDir ".local/bin" | quote }}
+  - {{ joinPath .chezmoi.homeDir ".local/share/mise/shims" | quote }}
+  - {{ joinPath .chezmoi.homeDir ".local/opt/npm-global/bin" | quote }}
+  - {{ joinPath .chezmoi.homeDir ".cargo/bin" | quote }}
+  - {{ joinPath .chezmoi.homeDir "go/bin" | quote }}
+  - {{ joinPath "/etc/profiles/per-user" .chezmoi.username "bin" | quote }}
+  - /run/wrappers/bin
+  - /run/current-system/sw/bin
+{{ if eq .chezmoi.os "darwin" }}
+  - /opt/homebrew/bin
+  - /opt/homebrew/sbin
+  - {{ joinPath .chezmoi.homeDir ".orbstack/bin" | quote }}
+  - /Library/TeX/Distributions/Programs/texbin
+{{ end }}

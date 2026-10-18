@@ -19,8 +19,8 @@ skills = [
 
 [[source]]
 repo = "jackwener/OpenCLI"
-ref = "v1.8.8"  # same version as the opencli wrapper in dot_local/bin
-commit = "8271afc67e8504bda94c147f446ee29775d08274" # v1.8.8
+ref = "v2.0.0"  # same version as the opencli wrapper in dot_local/bin
+commit = "74fe1dc11c26d44b2a01102fd341aa55ae407774" # v2.0.0
 skills = ["skills/opencli-usage", "skills/opencli-browser", "skills/smart-search"]
 
 [[source]]

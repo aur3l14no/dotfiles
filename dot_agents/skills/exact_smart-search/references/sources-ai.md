@@ -4,8 +4,8 @@
 
 ## 使用规则
 
-1. 先运行 `opencli list -f yaml`
-2. 确认 `grok`、`doubao`、`gemini` 哪些在当前 registry 中可用
+1. 先对候选站点运行 `opencli list --site <site>`
+2. 确认 `grok`、`doubao`、`gemini` 哪些在当前 registry 中可用（`total` 大于 0）
 3. 运行 `opencli <site> -h`
 4. 锁定具体子命令后，再运行 `opencli <site> <command> -h`
 
