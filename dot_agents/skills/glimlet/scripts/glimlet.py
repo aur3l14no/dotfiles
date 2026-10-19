@@ -11,11 +11,12 @@ an install step.
 from __future__ import annotations
 
 import argparse
-import html
 import json
 import mimetypes
 import os
+import re
 import secrets
+import subprocess
 import sys
 import tomllib
 import urllib.error
@@ -31,20 +32,11 @@ MAX_UPLOAD_BYTES = 5 * 1024 * 1024
 # Content going public must not carry these (#3); private uploads are not checked.
 LOCAL_PATHS = ["/Users/", "/home/", "~/", "file://"]
 DATA_TYPES = {".json": "application/json", ".md": "text/markdown", ".txt": "text/plain"}
-TEMPLATES = {"status": "v1"}
-TEMPLATE_STUB = """<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'">
-<title>{title}</title>
-<link rel="stylesheet" href="/_t/{name}/{version}/style.css">
-<script type="module" src="/_t/{name}/{version}/app.js"></script>
-</head>
-<body><noscript>This page needs JavaScript.</noscript></body>
-</html>
-"""
+ALIAS_NAME = re.compile(r"[a-z0-9][a-z0-9-]{0,62}")
+# A private block is a top-level Obsidian callout, `> [!private]`, through its last `>` line (#10).
+PRIVATE_BLOCK = re.compile(r" {0,3}>[ \t]*\[!private\]", re.IGNORECASE)
+PRIVATE_MARKER = re.compile(r">[ \t]*\[!private\]", re.IGNORECASE)
+QUOTE_LINE = re.compile(r" {0,3}>")
 
 
 class CliError(Exception):
@@ -55,7 +47,8 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
     try:
-        config = {} if getattr(args, "dry_run", False) and args.command in {"share", "publish", "update"} else load_config()
+        local = args.command == "strip" or (getattr(args, "dry_run", False) and args.command in {"share", "publish", "update"})
+        config = {} if local else load_config()
         result = args.func(args, config)
         print_result(result, args)
         return 0
@@ -108,9 +101,30 @@ def build_parser() -> argparse.ArgumentParser:
     data.add_argument("page_id")
     data.add_argument("file")
     data.add_argument("--ttl", help="Keep the page live at least this long, such as 7d.")
+    data.add_argument("--strip", action="store_true", help="Upload a .md file without its > [!private] blocks.")
     add_check_flags(data)
     data.add_argument("--json", action="store_true")
     data.set_defaults(func=cmd_data)
+
+    strip = sub.add_parser("strip", help="Print a Markdown file without its > [!private] blocks.")
+    strip.add_argument("file")
+    strip.add_argument("--json", action="store_true")
+    strip.set_defaults(func=lambda a, c: {"text": strip_markdown(markdown_text(artifact_path(a.file)), a.file)})
+
+    alias = sub.add_parser("alias", help="Point a stable name at a page: /a/NAME/.")
+    alias_sub = alias.add_subparsers(dest="alias_command", required=True)
+    alias_set = alias_sub.add_parser("set", help="Point NAME at PAGE_ID. The name resolves on the public host only with --public.")
+    alias_set.add_argument("name")
+    alias_set.add_argument("page_id")
+    scope = alias_set.add_mutually_exclusive_group()
+    scope.add_argument("--public", action="store_true", help="Also resolve the name on the public host.")
+    scope.add_argument("--private", action="store_true", help="Resolve the name only behind Access again.")
+    alias_rm = alias_sub.add_parser("rm", help="Remove a name; the page stays.")
+    alias_rm.add_argument("name")
+    alias_list = alias_sub.add_parser("list", help="List names and their pages.")
+    for command in (alias_set, alias_rm, alias_list):
+        command.add_argument("--json", action="store_true")
+    alias.set_defaults(func=cmd_alias)
 
     info = sub.add_parser("info", help="Show page metadata.")
     info.add_argument("page_id")
@@ -152,7 +166,9 @@ def add_upload_flags(
     visibility.add_argument("--public", action="store_true", help="Publish a private page; runs the checks.")
     parser.add_argument("--expect-every", help="How often the page is written, such as 1h; enables freshness alerts.")
     parser.add_argument("--grace", help="Extra time before a late page counts as lost (default 15m).")
-    parser.add_argument("--template", choices=sorted(TEMPLATES), help="PATH is a data file shown by a built-in template.")
+    parser.add_argument("--alias", metavar="NAME", help="Point this permalink at the page after uploading.")
+    parser.add_argument("--session-url", help="Record the agent session or thread that made the page.")
+    parser.add_argument("--strip", action="store_true", help="Drop > [!private] blocks from the directory's .md files; keeps its own marker.")
     add_check_flags(parser)
     parser.add_argument("--json", action="store_true")
     parser.set_defaults(include_default_ttl=include_default_ttl, require_title=require_title)
@@ -197,38 +213,42 @@ def read_toml(path: Path) -> Dict[str, Any]:
 
 def cmd_share(args: argparse.Namespace, config: Dict[str, Any]) -> Dict[str, Any]:
     path = artifact_path(args.path)
-    if not args.new and (id_file(path).exists() or id_file(path).is_symlink()):
+    marker = id_file(path, args.strip)
+    if not args.new and (marker.exists() or marker.is_symlink()):
         args.args = [str(path)]
         return cmd_update(args, config)
     args.require_title = True
     return cmd_publish(args, config)
 
 
-def save_marker(path: Path, response: Dict[str, Any]) -> Dict[str, Any]:
+def save_marker(path: Path, response: Dict[str, Any], strip: bool = False) -> Dict[str, Any]:
+    marker = id_file(path, strip)
     try:
-        marker = id_file(path)
         if marker.is_symlink():
             raise OSError("marker is a symbolic link")
         marker.write_text(f"{response['id']}\n", encoding="utf-8")
     except OSError as error:
-        response["warning"] = (
-            f"Upload succeeded, but could not save marker {id_file(path)}: {error}. "
+        add_warning(response,
+            f"Upload succeeded, but could not save marker {marker}: {error}. "
             f"Keep URL {response['url']} and ID {response['id']}; "
-            "use update PAGE_ID PATH to restore the association."
-        )
+            "use update PAGE_ID PATH to restore the association.")
     return response
+
+
+def add_warning(response: Dict[str, Any], warning: str) -> None:
+    response["warning"] = f"{response['warning']} {warning}" if response.get("warning") else warning
 
 
 def cmd_publish(args: argparse.Namespace, config: Dict[str, Any]) -> Dict[str, Any]:
     path = artifact_path(args.path)
     response = upload(config, "POST", "/api/pages", path, args)
-    return response if args.dry_run else save_marker(path, response)
+    return response if args.dry_run else save_marker(path, response, args.strip)
 
 
 def cmd_update(args: argparse.Namespace, config: Dict[str, Any]) -> Dict[str, Any]:
     if len(args.args) == 1:
         path = artifact_path(args.args[0])
-        page_id = read_page_id(path)
+        page_id = read_page_id(path, args.strip)
     elif len(args.args) == 2:
         page_id = args.args[0]
         path = artifact_path(args.args[1])
@@ -236,7 +256,7 @@ def cmd_update(args: argparse.Namespace, config: Dict[str, Any]) -> Dict[str, An
         raise CliError("update expects PATH or PAGE_ID PATH.")
 
     response = upload(config, "PUT", f"/api/pages/{page_id}", path, args)
-    return response if args.dry_run else save_marker(path, response)
+    return response if args.dry_run else save_marker(path, response, args.strip)
 
 
 def cmd_set(args: argparse.Namespace, config: Dict[str, Any]) -> Dict[str, Any]:
@@ -263,7 +283,9 @@ def cmd_data(args: argparse.Namespace, config: Dict[str, Any]) -> Dict[str, Any]
     kind = DATA_TYPES.get(path.suffix.lower())
     if not path.is_file() or not kind:
         raise CliError("Data must be a .json, .md or .txt file.")
-    data = path.read_bytes()
+    if args.strip and kind != "text/markdown":
+        raise CliError("Only Markdown has private blocks; write the public version of other data yourself.")
+    data = strip_markdown(markdown_text(path), path.name).encode("utf-8") if args.strip else path.read_bytes()
     check_size(len(data))
     if kind == "application/json":
         parse_json(data, str(path))
@@ -271,6 +293,18 @@ def cmd_data(args: argparse.Namespace, config: Dict[str, Any]) -> Dict[str, Any]
         run_checks([(path.name, data)], args)
     ttl = duration(args.ttl) if args.ttl else config["default_ttl_seconds"]
     return api(config, "PUT", f"/api/pages/{args.page_id}/data", query={"ttl_seconds": str(ttl)}, data=data, content_type=kind)
+
+
+def cmd_alias(args: argparse.Namespace, config: Dict[str, Any]) -> Dict[str, Any]:
+    if args.alias_command == "list":
+        return api(config, "GET", "/api/aliases")
+    name = urllib.parse.quote(args.name, safe="")
+    if args.alias_command == "rm":
+        return api(config, "DELETE", f"/api/aliases/{name}")
+    body: Dict[str, Any] = {"page_id": args.page_id}
+    if args.public or args.private:
+        body["public"] = args.public
+    return api(config, "PUT", f"/api/aliases/{name}", body=body)
 
 
 def cmd_list(args: argparse.Namespace, config: Dict[str, Any]) -> Dict[str, Any]:
@@ -303,9 +337,11 @@ def cmd_prune(args: argparse.Namespace, config: Dict[str, Any]) -> Dict[str, Any
 
 def upload(config: Dict[str, Any], method: str, path: str, artifact: Path, args: argparse.Namespace) -> Dict[str, Any]:
     title = args.title.strip() if args.title else None
-    fields, files = artifact_payload(artifact, args.template, title)
+    fields, files = artifact_payload(artifact, args.strip)
     if args.require_title and not title:
         raise CliError("--title is required.")
+    if args.alias and not ALIAS_NAME.fullmatch(args.alias):
+        raise CliError("--alias takes lowercase letters, digits and hyphens, starting with a letter or digit (at most 63).")
     if title:
         fields.append(("title", title))
     if args.private or args.public:
@@ -316,10 +352,10 @@ def upload(config: Dict[str, Any], method: str, path: str, artifact: Path, args:
         raise CliError("--grace needs --expect-every.")
     if args.metadata_json:
         try:
-            json.loads(args.metadata_json)
+            metadata = json.loads(args.metadata_json)
         except json.JSONDecodeError as error:
             raise CliError(f"Invalid --metadata-json: {error.msg}")
-        fields.append(("metadata_json", args.metadata_json))
+    source = source_pointer(artifact, args.session_url)
     if args.ttl:
         fields.append(("ttl_seconds", str(duration(args.ttl))))
     elif args.include_default_ttl and not args.dry_run:
@@ -333,8 +369,16 @@ def upload(config: Dict[str, Any], method: str, path: str, artifact: Path, args:
             "files": [{"path": name, "size_bytes": len(data)} for _, name, _, data in files],
             "size_bytes": sum(len(data) for _, _, _, data in files),
             "check_findings": find_problems([(name, data) for _, name, _, data in files], args.deny),
+            "source": source or None,
         }
-    going_public = args.public or (not args.private and (method == "POST" or is_public(config, path.rsplit("/", 1)[-1])))
+    needs_page = method == "PUT" and (not (args.public or args.private) or (source and not args.metadata_json))
+    page = api(config, "GET", path) if needs_page else {}
+    if args.metadata_json:
+        fields.append(("metadata_json", json.dumps({"source": source, **metadata}) if source and isinstance(metadata, dict) else args.metadata_json))
+    elif source and isinstance(page.get("metadata") or {}, dict):
+        # Merge, so recording the source never drops the page's other metadata.
+        fields.append(("metadata_json", json.dumps({**(page.get("metadata") or {}), "source": source})))
+    going_public = args.public or (not args.private and (method == "POST" or page.get("visibility") != "private"))
     if going_public:
         run_checks([(name, data) for _, name, _, data in files], args)
     content_type, data = multipart(fields, files)
@@ -353,6 +397,12 @@ def upload(config: Dict[str, Any], method: str, path: str, artifact: Path, args:
     if args.private and response.get("visibility") != "private":
         raise CliError(f"The server did not confirm --private, so {url} may be public. Expire it with: expire {page_id} --yes")
     response["action"] = "created" if method == "POST" else "updated"
+    if args.alias:
+        try:
+            response["alias"] = api(config, "PUT", f"/api/aliases/{args.alias}", body={"page_id": page_id})
+        except CliError as error:
+            add_warning(response, f"Upload succeeded, but alias {args.alias} was not moved: {error}. "
+                                  f"Run: alias set {args.alias} {page_id}")
     return response
 
 
@@ -365,14 +415,12 @@ def artifact_path(raw_path: str) -> Path:
     return path
 
 
-def artifact_payload(
-    path: Path, template: Optional[str] = None, title: Optional[str] = None,
-) -> Tuple[List[Tuple[str, str]], List[Tuple[str, str, str, bytes]]]:
-    if template:
-        return template_payload(path, template, title)
+def artifact_payload(path: Path, strip: bool = False) -> Tuple[List[Tuple[str, str]], List[Tuple[str, str, str, bytes]]]:
     if path.is_file():
         if path.suffix.lower() not in {".html", ".htm"}:
             raise CliError("A single-file artifact must be .html or .htm.")
+        if strip:
+            raise CliError("HTML has no private blocks; write its public version separately.")
         data = path.read_bytes()
         check_size(len(data))
         return [], [("artifact", path.name, content_type(path), data)]
@@ -383,8 +431,13 @@ def artifact_payload(
     files: List[Tuple[str, str, str, bytes]] = []
     manifest: List[Dict[str, str]] = []
     total_size = 0
+    stripped = 0
     for index, file_path in enumerate(iter_files(path)):
-        data = file_path.read_bytes()
+        if strip and file_path.suffix.lower() == ".md":
+            data = strip_markdown(markdown_text(file_path), file_path.relative_to(path).as_posix()).encode("utf-8")
+            stripped += 1
+        else:
+            data = file_path.read_bytes()
         total_size += len(data)
         check_size(total_size)
         field = f"file_{index}"
@@ -393,21 +446,85 @@ def artifact_payload(
         files.append((field, relative_path, mime, data))
         manifest.append({"field": field, "path": relative_path, "content_type": mime})
 
+    if strip and not stripped:
+        raise CliError(f"--strip found no .md files in {path}; only Markdown has private blocks.")
     return [("manifest_json", json.dumps(manifest, separators=(",", ":")))], files
 
 
-def template_payload(path: Path, template: str, title: Optional[str]) -> Tuple[List[Tuple[str, str]], List[Tuple[str, str, str, bytes]]]:
-    """A template page (#5): a stub that loads the built-in viewer, plus the data document."""
-    if not path.is_file() or path.suffix.lower() != ".json":
-        raise CliError(f"--template {template} takes a .json data file.")
-    data = path.read_bytes()
-    document = parse_json(data, str(path))
-    name = title or (document.get("title") if isinstance(document, dict) else None) or "Glimlet"
-    stub = TEMPLATE_STUB.format(title=html.escape(str(name)), name=template, version=TEMPLATES[template]).encode("utf-8")
-    check_size(len(stub) + len(data))
-    files = [("file_0", "index.html", "text/html; charset=utf-8", stub), ("file_1", "data", DATA_TYPES[".json"], data)]
-    manifest = [{"field": field, "path": name, "content_type": mime} for field, name, mime, _ in files]
-    return [("manifest_json", json.dumps(manifest, separators=(",", ":")))], files
+def markdown_text(path: Path) -> str:
+    if path.suffix.lower() != ".md" or not path.is_file():
+        raise CliError(f"Only .md files have private blocks: {path}")
+    return path.read_text(encoding="utf-8")
+
+
+def strip_markdown(text: str, name: str) -> str:
+    """Drop every top-level `> [!private]` block, or refuse when one cannot be dropped exactly.
+
+    Markdown carries a quote on to a following line that lacks `>`, so a block must end at a blank
+    line. Markers count inside code blocks too: guessing wrong about code would publish a block.
+    """
+    lines = text.splitlines(keepends=True)
+    kept: List[str] = []
+    index = 0
+    while index < len(lines):
+        line, index = lines[index], index + 1
+        if PRIVATE_BLOCK.match(line):
+            if kept and QUOTE_LINE.match(kept[-1]):
+                raise CliError(f"{name}:{index}: a private block must start its own quote; add a blank line before it.")
+            while index < len(lines) and QUOTE_LINE.match(lines[index]):
+                index += 1
+            if index < len(lines) and lines[index].strip():
+                raise CliError(f"{name}:{index + 1}: add a blank line before this line; Markdown would keep it in the private block above.")
+        elif PRIVATE_MARKER.search(re.sub(r"(`+).*?\1", "", line)):
+            raise CliError(f"{name}:{index}: a nested or indented [!private] block cannot be stripped; move it to the top level.")
+        else:
+            kept.append(line)
+    return "".join(kept)
+
+
+def source_pointer(path: Path, session_url: Optional[str]) -> Dict[str, Any]:
+    """Where an upload came from (#11): git facts when PATH is in a work tree, never a local path."""
+    source: Dict[str, Any] = {"session_url": session_url} if session_url else {}
+    root = git(path if path.is_dir() else path.parent, "rev-parse", "--show-toplevel")
+    if root is None:
+        return source
+    relative = Path(os.path.relpath(path.resolve(), Path(root).resolve())).as_posix()
+    source["repo"] = normalize_remote(git(Path(root), "remote", "get-url", "origin") or "") or Path(root).name
+    source["path"] = relative
+    commit = git(Path(root), "rev-parse", "--verify", "--quiet", "HEAD")
+    if commit:
+        source["commit"] = commit
+    # Markers change after every first upload, so they never count as changes.
+    changes = git(Path(root), "status", "--porcelain", "--", relative, ":!*.glimlet_id")
+    tracked = git(Path(root), "ls-files", "--", relative)
+    if changes is not None and tracked is not None:
+        source["dirty"] = bool(changes) or not tracked
+    return source
+
+
+def normalize_remote(url: str) -> Optional[str]:
+    """The https form of a git remote, without credentials or .git; None for a local remote."""
+    scp = re.fullmatch(r"(?:[^@/]+@)?([^:/]+):(?!/)(.+)", url)
+    if scp and "://" not in url:
+        host, path = scp.groups()
+    else:
+        try:
+            parts = urllib.parse.urlsplit(url)
+            host, path = parts.hostname, parts.path
+        except ValueError:
+            return None
+        if parts.scheme not in {"https", "http", "ssh", "git", "git+ssh"} or not host:
+            return None
+    path = path.strip("/").removesuffix(".git")
+    return f"https://{host}/{path}" if path else None
+
+
+def git(cwd: Path, *args: str) -> Optional[str]:
+    try:
+        result = subprocess.run(["git", *args], cwd=cwd, capture_output=True, text=True, timeout=10)
+    except (OSError, subprocess.SubprocessError):
+        return None
+    return result.stdout.strip() if result.returncode == 0 else None
 
 
 def find_problems(files: List[Tuple[str, bytes]], deny: List[str]) -> List[str]:
@@ -472,12 +589,13 @@ def check_size(size: int) -> None:
         raise CliError(f"Artifact exceeds 5 MiB limit ({size} bytes).")
 
 
-def id_file(path: Path) -> Path:
-    return path / ".glimlet_id" if path.is_dir() else path.with_name(f"{path.name}.glimlet_id")
+def id_file(path: Path, strip: bool = False) -> Path:
+    name = ".strip.glimlet_id" if strip else ".glimlet_id"
+    return path / name if path.is_dir() else path.with_name(f"{path.name}{name}")
 
 
-def read_page_id(path: Path) -> str:
-    marker = id_file(path)
+def read_page_id(path: Path, strip: bool = False) -> str:
+    marker = id_file(path, strip)
     if marker.is_symlink():
         raise CliError(f"Symbolic links are not supported: {marker}")
     if not marker.exists():
@@ -596,7 +714,9 @@ def size_bytes(value: str) -> int:
 
 
 def print_result(result: Dict[str, Any], args: argparse.Namespace) -> None:
-    if args.json or result.get("dry_run") or args.command not in {"share", "publish", "update", "list"}:
+    if args.command == "strip" and not args.json:
+        sys.stdout.write(result["text"])
+    elif args.json or result.get("dry_run") or args.command not in {"share", "publish", "update", "list"}:
         print(json.dumps(result, indent=2, ensure_ascii=False))
     elif args.command == "list":
         for page in result.get("pages", []):
@@ -620,6 +740,8 @@ def print_result(result: Dict[str, Any], args: argparse.Namespace) -> None:
             print(f"title: {result.get('title')}")
         if result.get("expires_at"):
             print(f"expires_at: {result.get('expires_at')}")
+        if result.get("alias"):
+            print(f"alias: {result['alias'].get('url') or result['alias'].get('name')}")
 
 
 def single_line(value: Any) -> str:
