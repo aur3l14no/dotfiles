@@ -11,6 +11,7 @@ an install step.
 from __future__ import annotations
 
 import argparse
+import html
 import json
 import mimetypes
 import os
@@ -27,6 +28,23 @@ from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
 CONFIG_PATH = Path.home() / ".config" / "glimlet" / "config.toml"
 DEFAULT_TTL_SECONDS = 7 * 24 * 60 * 60
 MAX_UPLOAD_BYTES = 5 * 1024 * 1024
+# Content going public must not carry these (#3); private uploads are not checked.
+LOCAL_PATHS = ["/Users/", "/home/", "~/", "file://"]
+DATA_TYPES = {".json": "application/json", ".md": "text/markdown", ".txt": "text/plain"}
+TEMPLATES = {"status": "v1"}
+TEMPLATE_STUB = """<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'">
+<title>{title}</title>
+<link rel="stylesheet" href="/_t/{name}/{version}/style.css">
+<script type="module" src="/_t/{name}/{version}/app.js"></script>
+</head>
+<body><noscript>This page needs JavaScript.</noscript></body>
+</html>
+"""
 
 
 class CliError(Exception):
@@ -75,6 +93,25 @@ def build_parser() -> argparse.ArgumentParser:
     list_cmd.add_argument("--json", action="store_true")
     list_cmd.set_defaults(func=cmd_list)
 
+    set_cmd = sub.add_parser("set", help="Change a page's title, metadata or settings without uploading.")
+    set_cmd.add_argument("page_id")
+    set_cmd.add_argument("--title")
+    set_cmd.add_argument("--metadata-json", help="Replaces all metadata; null clears it.")
+    set_cmd.add_argument("--private", action="store_true", help="Make the page private. To publish it, upload it again with --public.")
+    set_cmd.add_argument("--expect-every", help="How often the page is written, such as 1h; enables freshness alerts.")
+    set_cmd.add_argument("--grace", help="Extra time before a late page counts as lost (default 15m).")
+    set_cmd.add_argument("--no-expect", action="store_true", help="Turn freshness alerts off.")
+    set_cmd.add_argument("--json", action="store_true")
+    set_cmd.set_defaults(func=cmd_set)
+
+    data = sub.add_parser("data", help="Replace a directory page's data document (.json, .md or .txt).")
+    data.add_argument("page_id")
+    data.add_argument("file")
+    data.add_argument("--ttl", help="Keep the page live at least this long, such as 7d.")
+    add_check_flags(data)
+    data.add_argument("--json", action="store_true")
+    data.set_defaults(func=cmd_data)
+
     info = sub.add_parser("info", help="Show page metadata.")
     info.add_argument("page_id")
     info.add_argument("--json", action="store_true")
@@ -110,8 +147,20 @@ def add_upload_flags(
     parser.add_argument("--ttl", help="TTL such as 7d, 12h, or seconds.")
     parser.add_argument("--dry-run", action="store_true", help="Inspect local upload files without configuration or network access.")
     parser.add_argument("--metadata-json")
+    visibility = parser.add_mutually_exclusive_group()
+    visibility.add_argument("--private", action="store_true", help="Only readers who pass Access can open it.")
+    visibility.add_argument("--public", action="store_true", help="Publish a private page; runs the checks.")
+    parser.add_argument("--expect-every", help="How often the page is written, such as 1h; enables freshness alerts.")
+    parser.add_argument("--grace", help="Extra time before a late page counts as lost (default 15m).")
+    parser.add_argument("--template", choices=sorted(TEMPLATES), help="PATH is a data file shown by a built-in template.")
+    add_check_flags(parser)
     parser.add_argument("--json", action="store_true")
     parser.set_defaults(include_default_ttl=include_default_ttl, require_title=require_title)
+
+
+def add_check_flags(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument("--deny", action="append", default=[], metavar="WORD", help="Refuse to publish content containing WORD.")
+    parser.add_argument("--skip-checks", action="store_true", help="Publish despite matches. Only for a person who has looked at them.")
 
 
 def load_config() -> Dict[str, Any]:
@@ -190,6 +239,40 @@ def cmd_update(args: argparse.Namespace, config: Dict[str, Any]) -> Dict[str, An
     return response if args.dry_run else save_marker(path, response)
 
 
+def cmd_set(args: argparse.Namespace, config: Dict[str, Any]) -> Dict[str, Any]:
+    body: Dict[str, Any] = {}
+    if args.title is not None:
+        body["title"] = args.title
+    if args.metadata_json is not None:
+        body["metadata"] = parse_json(args.metadata_json, "--metadata-json")
+    if args.private:
+        body["visibility"] = "private"
+    if args.no_expect:
+        body["freshness"] = None
+    elif args.expect_every:
+        body["freshness"] = freshness_settings(args)
+    elif args.grace:
+        raise CliError("--grace needs --expect-every.")
+    if not body:
+        raise CliError("Nothing to change.")
+    return api(config, "PATCH", f"/api/pages/{args.page_id}", body=body)
+
+
+def cmd_data(args: argparse.Namespace, config: Dict[str, Any]) -> Dict[str, Any]:
+    path = artifact_path(args.file)
+    kind = DATA_TYPES.get(path.suffix.lower())
+    if not path.is_file() or not kind:
+        raise CliError("Data must be a .json, .md or .txt file.")
+    data = path.read_bytes()
+    check_size(len(data))
+    if kind == "application/json":
+        parse_json(data, str(path))
+    if is_public(config, args.page_id):
+        run_checks([(path.name, data)], args)
+    ttl = duration(args.ttl) if args.ttl else config["default_ttl_seconds"]
+    return api(config, "PUT", f"/api/pages/{args.page_id}/data", query={"ttl_seconds": str(ttl)}, data=data, content_type=kind)
+
+
 def cmd_list(args: argparse.Namespace, config: Dict[str, Any]) -> Dict[str, Any]:
     query = {"limit": str(args.limit)}
     if args.cursor:
@@ -219,12 +302,18 @@ def cmd_prune(args: argparse.Namespace, config: Dict[str, Any]) -> Dict[str, Any
 
 
 def upload(config: Dict[str, Any], method: str, path: str, artifact: Path, args: argparse.Namespace) -> Dict[str, Any]:
-    fields, files = artifact_payload(artifact)
     title = args.title.strip() if args.title else None
+    fields, files = artifact_payload(artifact, args.template, title)
     if args.require_title and not title:
         raise CliError("--title is required.")
     if title:
         fields.append(("title", title))
+    if args.private or args.public:
+        fields.append(("visibility", "private" if args.private else "public"))
+    if args.expect_every:
+        fields += [(key, str(value)) for key, value in freshness_settings(args).items()]
+    elif args.grace:
+        raise CliError("--grace needs --expect-every.")
     if args.metadata_json:
         try:
             json.loads(args.metadata_json)
@@ -243,7 +332,11 @@ def upload(config: Dict[str, Any], method: str, path: str, artifact: Path, args:
             "page_id": path.rsplit("/", 1)[-1] if method == "PUT" else None,
             "files": [{"path": name, "size_bytes": len(data)} for _, name, _, data in files],
             "size_bytes": sum(len(data) for _, _, _, data in files),
+            "check_findings": find_problems([(name, data) for _, name, _, data in files], args.deny),
         }
+    going_public = args.public or (not args.private and (method == "POST" or is_public(config, path.rsplit("/", 1)[-1])))
+    if going_public:
+        run_checks([(name, data) for _, name, _, data in files], args)
     content_type, data = multipart(fields, files)
     response = api(config, method, path, data=data, content_type=content_type)
     page_id = response.get("id")
@@ -257,6 +350,8 @@ def upload(config: Dict[str, Any], method: str, path: str, artifact: Path, args:
         raise CliError("Upload response lacks a valid page ID or URL; the server may have saved the page. Check list before retrying.")
     if method == "PUT" and page_id != path.rsplit("/", 1)[-1]:
         raise CliError("Upload response page ID does not match the update target. Check list before retrying.")
+    if args.private and response.get("visibility") != "private":
+        raise CliError(f"The server did not confirm --private, so {url} may be public. Expire it with: expire {page_id} --yes")
     response["action"] = "created" if method == "POST" else "updated"
     return response
 
@@ -270,7 +365,11 @@ def artifact_path(raw_path: str) -> Path:
     return path
 
 
-def artifact_payload(path: Path) -> Tuple[List[Tuple[str, str]], List[Tuple[str, str, str, bytes]]]:
+def artifact_payload(
+    path: Path, template: Optional[str] = None, title: Optional[str] = None,
+) -> Tuple[List[Tuple[str, str]], List[Tuple[str, str, str, bytes]]]:
+    if template:
+        return template_payload(path, template, title)
     if path.is_file():
         if path.suffix.lower() not in {".html", ".htm"}:
             raise CliError("A single-file artifact must be .html or .htm.")
@@ -295,6 +394,54 @@ def artifact_payload(path: Path) -> Tuple[List[Tuple[str, str]], List[Tuple[str,
         manifest.append({"field": field, "path": relative_path, "content_type": mime})
 
     return [("manifest_json", json.dumps(manifest, separators=(",", ":")))], files
+
+
+def template_payload(path: Path, template: str, title: Optional[str]) -> Tuple[List[Tuple[str, str]], List[Tuple[str, str, str, bytes]]]:
+    """A template page (#5): a stub that loads the built-in viewer, plus the data document."""
+    if not path.is_file() or path.suffix.lower() != ".json":
+        raise CliError(f"--template {template} takes a .json data file.")
+    data = path.read_bytes()
+    document = parse_json(data, str(path))
+    name = title or (document.get("title") if isinstance(document, dict) else None) or "Glimlet"
+    stub = TEMPLATE_STUB.format(title=html.escape(str(name)), name=template, version=TEMPLATES[template]).encode("utf-8")
+    check_size(len(stub) + len(data))
+    files = [("file_0", "index.html", "text/html; charset=utf-8", stub), ("file_1", "data", DATA_TYPES[".json"], data)]
+    manifest = [{"field": field, "path": name, "content_type": mime} for field, name, mime, _ in files]
+    return [("manifest_json", json.dumps(manifest, separators=(",", ":")))], files
+
+
+def find_problems(files: List[Tuple[str, bytes]], deny: List[str]) -> List[str]:
+    problems = []
+    for name, data in files:
+        text = data.decode("utf-8", errors="ignore")
+        problems += [f"{name}: contains {term!r}" for term in LOCAL_PATHS if term in text]
+        problems += [f"{name}: contains denied {word!r}" for word in deny if word and word.lower() in text.lower()]
+    return problems
+
+
+def run_checks(files: List[Tuple[str, bytes]], args: argparse.Namespace) -> None:
+    problems = find_problems(files, args.deny)
+    if problems and not args.skip_checks:
+        raise CliError("Checks failed, nothing uploaded. Fix the content; never work around a check:\n"
+                       + "\n".join(f"  - {problem}" for problem in problems))
+
+
+def is_public(config: Dict[str, Any], page_id: str) -> bool:
+    return api(config, "GET", f"/api/pages/{page_id}").get("visibility") != "private"
+
+
+def freshness_settings(args: argparse.Namespace) -> Dict[str, int]:
+    settings = {"interval_seconds": duration(args.expect_every)}
+    if args.grace:
+        settings["grace_seconds"] = duration(args.grace)
+    return settings
+
+
+def parse_json(value: Any, label: str) -> Any:
+    try:
+        return json.loads(value)
+    except (json.JSONDecodeError, UnicodeDecodeError) as error:
+        raise CliError(f"Invalid JSON in {label}: {error}")
 
 
 def iter_files(root: Path) -> Iterable[Path]:

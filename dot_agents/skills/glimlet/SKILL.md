@@ -1,17 +1,17 @@
 ---
 name: glimlet
-description: Share local HTML artifacts on Glimlet, or keep a page synced from local source files.
+description: Share local HTML artifacts on Glimlet.
 ---
 
 # Glimlet Skill
 
 Use this skill when the user wants to publish a local artifact to Glimlet.
 
-To publish local source files as a page that follows later edits to them, or to run a sync round, read [sync.md](sync.md) instead.
-
 ## Rules
 
-- Only upload local artifact paths; a path may be a single HTML file or a directory.
+- Only upload local artifact paths; a path may be a single HTML file or a directory, or a JSON file with `--template`.
+- Pages are public by default: anyone with the link can read them. Use `--private` for anything meant only for the user, such as dashboards, briefs or notes with private details.
+- Content going public is checked for local paths and for words passed with `--deny`. If a check fails, fix the content. Never pass `--skip-checks` unless the user explicitly asks.
 - If the artifact exists only as HTML text, write it to a local `.html` file first.
 - For a directory artifact, the root must contain `index.html`.
 - Every new publish must include a human-readable `--title`.
@@ -94,6 +94,35 @@ List pages:
 
 ```bash
 uv run scripts/glimlet.py list --json
+```
+
+Private pages, and publishing one later (the upload runs the checks):
+
+```bash
+uv run scripts/glimlet.py share /path/to/brief.html --title "Brief" --private --json
+uv run scripts/glimlet.py update PAGE_ID /path/to/brief.html --public --deny "internal-name" --json
+```
+
+A status board: a JSON file shown by the built-in `status` template. Later runs replace only the data. `--expect-every` makes Glimlet alert when the board stops being written; use it only for pages an unattended loop writes.
+
+```bash
+uv run scripts/glimlet.py share state.json --template status --title "Infra" --private --expect-every 1h --json
+uv run scripts/glimlet.py data PAGE_ID state.json --json
+```
+
+```json
+{"title": "Infra", "summary": "1 item needs attention", "sections": [
+  {"title": "Hosts", "items": [{"name": "host-a", "state": "crit", "detail": "offline since 09:12",
+    "since": "2026-10-19T09:12:00Z", "link": "https://example.com/runbook"}]}]}
+```
+
+`state` is `ok`, `warn`, `crit` or `unknown`; `detail`, `since` and `link` are optional.
+
+Change the title, metadata or settings without uploading:
+
+```bash
+uv run scripts/glimlet.py set PAGE_ID --title "Infra" --private --expect-every 30m --grace 10m --json
+uv run scripts/glimlet.py set PAGE_ID --no-expect --json
 ```
 
 Expire a page:
