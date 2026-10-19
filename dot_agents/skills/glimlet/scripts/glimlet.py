@@ -2,7 +2,7 @@
 # /// script
 # requires-python = ">=3.11"
 # ///
-"""Publish local HTML artifacts to Glimlet.
+"""Publish local HTML artifacts and Markdown documents to Glimlet.
 
 The CLI stays standard-library only so the skill can be copied around without
 an install step.
@@ -11,6 +11,7 @@ an install step.
 from __future__ import annotations
 
 import argparse
+import html
 import json
 import mimetypes
 import os
@@ -37,6 +38,21 @@ ALIAS_NAME = re.compile(r"[a-z0-9][a-z0-9-]{0,62}")
 PRIVATE_BLOCK = re.compile(r" {0,3}>[ \t]*\[!private\]", re.IGNORECASE)
 PRIVATE_MARKER = re.compile(r">[ \t]*\[!private\]", re.IGNORECASE)
 QUOTE_LINE = re.compile(r" {0,3}>")
+FRONTMATTER = re.compile(r"---\r?\n(.*?)\r?\n(?:---|\.\.\.)[ \t]*(?:\r?\n|$)", re.S)
+# A Markdown page (#8) is this stub plus the document as ./data, rendered by the built-in viewer.
+VIEWER_STUB = """<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' https: data:; connect-src 'self'; base-uri 'none'; form-action 'none'">
+<title>{title}</title>
+<link rel="stylesheet" href="/_v/markdown/v1/viewer.css">
+<script type="module" src="/_v/markdown/v1/viewer.js"></script>
+</head>
+<body><main id="doc"><noscript>This page needs JavaScript.</noscript></main></body>
+</html>
+"""
 
 
 class CliError(Exception):
@@ -153,11 +169,7 @@ def add_upload_flags(
     include_default_ttl: bool = True,
     require_title: bool = False,
 ) -> None:
-    parser.add_argument(
-        "--title",
-        required=require_title,
-        help="Human-readable title shown in list/history views.",
-    )
+    parser.add_argument("--title", help="Human-readable title shown in list/history views. A Markdown document can supply its own.")
     parser.add_argument("--ttl", help="TTL such as 7d, 12h, or seconds.")
     parser.add_argument("--dry-run", action="store_true", help="Inspect local upload files without configuration or network access.")
     parser.add_argument("--metadata-json")
@@ -168,7 +180,7 @@ def add_upload_flags(
     parser.add_argument("--grace", help="Extra time before a late page counts as lost (default 15m).")
     parser.add_argument("--alias", metavar="NAME", help="Point this permalink at the page after uploading.")
     parser.add_argument("--session-url", help="Record the agent session or thread that made the page.")
-    parser.add_argument("--strip", action="store_true", help="Drop > [!private] blocks from the directory's .md files; keeps its own marker.")
+    parser.add_argument("--strip", action="store_true", help="Drop > [!private] blocks from the Markdown being uploaded; keeps its own marker.")
     add_check_flags(parser)
     parser.add_argument("--json", action="store_true")
     parser.set_defaults(include_default_ttl=include_default_ttl, require_title=require_title)
@@ -337,9 +349,12 @@ def cmd_prune(args: argparse.Namespace, config: Dict[str, Any]) -> Dict[str, Any
 
 def upload(config: Dict[str, Any], method: str, path: str, artifact: Path, args: argparse.Namespace) -> Dict[str, Any]:
     title = args.title.strip() if args.title else None
-    fields, files = artifact_payload(artifact, args.strip)
+    markdown = artifact.is_file() and artifact.suffix.lower() == ".md"
+    if markdown and not title and method == "POST":
+        title = markdown_title(markdown_text(artifact))
+    fields, files = artifact_payload(artifact, args.strip, title)
     if args.require_title and not title:
-        raise CliError("--title is required.")
+        raise CliError("--title is required" + (", or a frontmatter title or # heading in the document." if markdown else "."))
     if args.alias and not ALIAS_NAME.fullmatch(args.alias):
         raise CliError("--alias takes lowercase letters, digits and hyphens, starting with a letter or digit (at most 63).")
     if title:
@@ -366,6 +381,7 @@ def upload(config: Dict[str, Any], method: str, path: str, artifact: Path, args:
             "dry_run": True,
             "action": "created" if method == "POST" else "updated",
             "page_id": path.rsplit("/", 1)[-1] if method == "PUT" else None,
+            "title": title,
             "files": [{"path": name, "size_bytes": len(data)} for _, name, _, data in files],
             "size_bytes": sum(len(data) for _, _, _, data in files),
             "check_findings": find_problems([(name, data) for _, name, _, data in files], args.deny),
@@ -415,10 +431,14 @@ def artifact_path(raw_path: str) -> Path:
     return path
 
 
-def artifact_payload(path: Path, strip: bool = False) -> Tuple[List[Tuple[str, str]], List[Tuple[str, str, str, bytes]]]:
+def artifact_payload(
+    path: Path, strip: bool = False, title: Optional[str] = None,
+) -> Tuple[List[Tuple[str, str]], List[Tuple[str, str, str, bytes]]]:
+    if path.is_file() and path.suffix.lower() == ".md":
+        return markdown_payload(path, strip, title)
     if path.is_file():
         if path.suffix.lower() not in {".html", ".htm"}:
-            raise CliError("A single-file artifact must be .html or .htm.")
+            raise CliError("A single-file artifact must be .html, .htm or .md.")
         if strip:
             raise CliError("HTML has no private blocks; write its public version separately.")
         data = path.read_bytes()
@@ -449,6 +469,26 @@ def artifact_payload(path: Path, strip: bool = False) -> Tuple[List[Tuple[str, s
     if strip and not stripped:
         raise CliError(f"--strip found no .md files in {path}; only Markdown has private blocks.")
     return [("manifest_json", json.dumps(manifest, separators=(",", ":")))], files
+
+
+def markdown_payload(path: Path, strip: bool, title: Optional[str]) -> Tuple[List[Tuple[str, str]], List[Tuple[str, str, str, bytes]]]:
+    text = markdown_text(path)
+    data = (strip_markdown(text, path.name) if strip else text).encode("utf-8")
+    stub = VIEWER_STUB.format(title=html.escape(title or markdown_title(text) or path.stem)).encode("utf-8")
+    check_size(len(stub) + len(data))
+    files = [("file_0", "index.html", "text/html; charset=utf-8", stub), ("file_1", "data", "text/markdown; charset=utf-8", data)]
+    manifest = [{"field": field, "path": name, "content_type": mime} for field, name, mime, _ in files]
+    return [("manifest_json", json.dumps(manifest, separators=(",", ":")))], files
+
+
+def markdown_title(text: str) -> Optional[str]:
+    """A frontmatter `title`, else the first `# ` heading."""
+    front = FRONTMATTER.match(text)
+    found = front and re.search(r"^title:[ \t]*(.+?)[ \t]*$", front.group(1), re.M)
+    if found and found.group(1).strip("\"'"):
+        return found.group(1).strip("\"'")
+    heading = re.search(r"^#[ \t]+(.+?)(?:[ \t]+#+)?[ \t]*$", text[front.end() if front else 0:], re.M)
+    return heading.group(1) if heading else None
 
 
 def markdown_text(path: Path) -> str:

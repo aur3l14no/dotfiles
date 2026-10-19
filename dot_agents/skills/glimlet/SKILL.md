@@ -1,6 +1,6 @@
 ---
 name: glimlet
-description: Share local HTML artifacts on Glimlet.
+description: Share local HTML artifacts and Markdown documents on Glimlet.
 ---
 
 # Glimlet Skill
@@ -9,12 +9,12 @@ Use this skill when the user wants to publish a local artifact to Glimlet.
 
 ## Rules
 
-- Only upload local artifact paths; a path may be a single HTML file or a directory.
+- Only upload local artifact paths; a path may be a single HTML file, a Markdown file or a directory.
 - Pages are public by default: anyone with the link can read them. Use `--private` for anything meant only for the user, such as dashboards, briefs or notes with private details.
 - Content going public is checked for local paths and for words passed with `--deny`. If a check fails, fix the content. Never pass `--skip-checks` unless the user explicitly asks.
-- If the artifact exists only as HTML text, write it to a local `.html` file first.
+- If the artifact exists only as text, write it to a local file first: `.md` for a document, `.html` for a page with its own layout.
 - For a directory artifact, the root must contain `index.html`.
-- Every new publish must include a human-readable `--title`.
+- Every new publish must include a human-readable `--title`; a Markdown document can supply its own through a frontmatter `title` or its first `#` heading.
 - Do not call the Glimlet HTTP API directly unless the CLI is unavailable.
 - Do not print or expose `GLIMLET_ADMIN_TOKEN`.
 - Prefer CLI `--json` output when another agent will consume the result.
@@ -72,7 +72,7 @@ Preview the exact upload inventory without credentials or network access:
 uv run scripts/glimlet.py share /path/to/artifact --title "Demo" --dry-run --json
 ```
 
-All uploads refresh the TTL from the current time (default 7 days, configurable). Use a dedicated artifact directory: all non-excluded files are uploaded, up to 5 MiB total. Symbolic links are rejected; single files must use `.html` or `.htm`.
+All uploads refresh the TTL from the current time (default 7 days, configurable). Use a dedicated artifact directory: all non-excluded files are uploaded, up to 5 MiB total. Symbolic links are rejected; single files must use `.html`, `.htm` or `.md`.
 
 Create a new page:
 
@@ -105,6 +105,13 @@ uv run scripts/glimlet.py share /path/to/brief.html --title "Brief" --private --
 uv run scripts/glimlet.py update PAGE_ID /path/to/brief.html --public --deny "internal-name" --json
 ```
 
+A Markdown document becomes a page shown by Glimlet's built-in viewer (GFM, math, code highlighting, Mermaid diagrams, Obsidian callouts). Raw HTML in it is shown as text. Later runs can replace only the text:
+
+```bash
+uv run scripts/glimlet.py share notes.md --json
+uv run scripts/glimlet.py data PAGE_ID notes.md --json
+```
+
 A page kept current by a loop: a directory whose own `index.html` reads `./data` (JSON, Markdown or plain text), then later runs replace only the data. An upload replaces every file, the data included, so write the data again after re-uploading the page. Pages must render data with DOM APIs, never as HTML. `--expect-every` makes Glimlet alert when the page stops being written; use it only for pages an unattended loop writes.
 
 ```bash
@@ -126,7 +133,7 @@ A public version of a Markdown source without its private parts. Private blocks 
 ```bash
 uv run scripts/glimlet.py strip notes.md
 uv run scripts/glimlet.py data PAGE_ID notes.md --strip --json
-uv run scripts/glimlet.py share ./trip --title "Trip" --strip --json
+uv run scripts/glimlet.py share notes.md --strip --json
 ```
 
 Change the title, metadata or settings without uploading:
@@ -153,6 +160,6 @@ uv run scripts/glimlet.py prune --expired-older-than 90d --yes --json
 
 - Directory artifact: `ARTIFACT_DIR/.glimlet_id`
 - Single file artifact: `artifact.html.glimlet_id`
-- `--strip` uploads: `ARTIFACT_DIR/.strip.glimlet_id`, separate from the full page's marker
+- `--strip` uploads: `notes.md.strip.glimlet_id` or `ARTIFACT_DIR/.strip.glimlet_id`, separate from the full page's marker
 
 The marker contains only the page id.
