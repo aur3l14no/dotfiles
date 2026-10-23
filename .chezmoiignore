@@ -5,8 +5,8 @@ mise-packages.txt
 .config/karabiner/automatic_backups
 .config/rustic/*.env
 
-# SSH client configuration belongs to the three administrative workstations.
-{{- if not (has .chezmoi.hostname (list "groves" "john-macbook" "fusco-thinkbook")) }}
+# SSH client configuration belongs to the administrative workstations and gus-nix.
+{{- if not (has .chezmoi.hostname (list "groves" "john-macbook" "fusco-thinkbook" "gus-nix")) }}
 .ssh
 {{- end }}
 

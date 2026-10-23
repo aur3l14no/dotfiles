@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Pinned Obelisk CLI; npm manages the standard execution cache.
-exec npm exec --yes --package=@obelisk-apps/cli@0.3.0 -- obelisk "$@"
+# Pinned Obelisk CLI. An empty cache-owned prefix avoids resolving a package from the
+# caller's project: inside an Obelisk checkout the unlinked workspace package matches
+# the pin, and `obelisk` would resolve back to this wrapper.
+cache="${NPM_USER_CACHE:-$HOME/.cache/npm}"
+mkdir -p "$cache/skill-tools/obelisk"
+exec npm --cache "$cache" --prefix "$cache/skill-tools/obelisk" exec \
+    --yes --package=@obelisk-apps/cli@0.3.0 -- obelisk "$@"
