@@ -7,4 +7,4 @@ set -euo pipefail
 cache="${NPM_USER_CACHE:-$HOME/.cache/npm}"
 mkdir -p "$cache/skill-tools/obelisk"
 exec npm --cache "$cache" --prefix "$cache/skill-tools/obelisk" exec \
-    --yes --package=@obelisk-apps/cli@0.3.0 -- obelisk "$@"
+    --yes --package=@obelisk-apps/cli@0.3.1 -- obelisk "$@"

@@ -38,7 +38,7 @@ skills = ["libs/cua-driver/rust/Skills/cua-driver"]
 [[source]]
 repo = "mattpocock/skills"
 ref = "main"
-commit = "49dd158d1076134a641b33efb035946536778336"
+commit = "5beb35b040e3de97e54fa9e386d7e42d15c295c2"
 skills = [
   "skills/engineering/tdd",
   "skills/engineering/codebase-design",
@@ -58,7 +58,7 @@ skills = ["plugins/show-me/skills/show-me"]
 [[source]]
 repo = "tommy0103/obelisk-skill"
 ref = "main"
-commit = "c1dceb30652ba847249aec90fe1ffa00b148d7d6"
+commit = "e883398c3d61ff6715e43ed8092d033df6ef8880"
 skills = ["skills/obelisk"]
 
 [[source]]
