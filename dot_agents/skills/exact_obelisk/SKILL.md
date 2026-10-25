@@ -31,7 +31,7 @@ Use the managed `~/.local/bin/obelisk` wrapper. It resolves the pinned CLI in
 npm's standard cache with:
 
 ```bash
-npm exec --yes --package=@obelisk-apps/cli@0.3.0 -- obelisk "$@"
+npm exec --yes --package=@obelisk-apps/cli@0.3.1 -- obelisk "$@"
 ```
 
 All `obelisk` examples below refer to this wrapper; if PATH does not include
@@ -134,11 +134,14 @@ helpers for supported, indexed records.
   `~/.dsh/instances/goldfish/home/sessions` and
   `~/.dsh/instances/stock/home/sessions`; the default `~/.dsh/sessions` is absent.
   `providerRoots` supports only one root per provider, so one configured
-  DeepSeek root does not cover all instances.
-- The CLI 0.3.0 DeepSeek adapter supports format versions through 3;
-  local sessions include version 4. Do not claim all DeepSeek sessions are
-  indexed or change their source format to force ingestion. Report the gap and
-  use scoped original-record evidence when needed.
+  DeepSeek root does not cover all instances; with none configured, no
+  DeepSeek sessions are indexed. The CLI 0.3.1 adapter reads the local format
+  versions, including 4. Do not claim DeepSeek sessions are indexed beyond the
+  configured root; report the gap and use scoped original-record evidence when
+  needed.
+- CLI 0.3.1 supports Hermes state schemas through 30; Hermes on john-macbook
+  is at 32 and refresh warns "Unsupported Hermes schema version". Treat Hermes
+  results there as possibly stale.
 - Codex session/archive and Claude project roots exist locally. Verify actual
   discovery and refresh diagnostics for each retrieval; existence alone does
   not establish complete indexing.
