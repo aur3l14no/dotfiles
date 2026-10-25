@@ -130,15 +130,13 @@ helpers for supported, indexed records.
 
 ### Known local coverage limits
 
-- DeepSeek Harness sessions live in multiple instance roots, including
-  `~/.dsh/instances/goldfish/home/sessions` and
-  `~/.dsh/instances/stock/home/sessions`; the default `~/.dsh/sessions` is absent.
-  `providerRoots` supports only one root per provider, so one configured
-  DeepSeek root does not cover all instances; with none configured, no
-  DeepSeek sessions are indexed. The CLI 0.3.1 adapter reads the local format
-  versions, including 4. Do not claim DeepSeek sessions are indexed beyond the
-  configured root; report the gap and use scoped original-record evidence when
-  needed.
+- On john-macbook, DeepSeek Harness sessions live in instance roots
+  (`~/.dsh/instances/{goldfish,stock}/home/sessions`), not the default
+  `~/.dsh/sessions`. `providerRoots` takes one root per provider; the host's
+  settings point it at goldfish, the instance in use, so stock sessions are
+  not indexed. The CLI 0.3.1 adapter reads the local format versions,
+  including 4. Do not claim stock sessions are indexed; report the gap and use
+  scoped original-record evidence when needed.
 - CLI 0.3.1 supports Hermes state schemas through 30; Hermes on john-macbook
   is at 32 and refresh warns "Unsupported Hermes schema version". Treat Hermes
   results there as possibly stale.
