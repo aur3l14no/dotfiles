@@ -1,0 +1,27 @@
+{
+  "pstack": {
+    "repository": "https://github.com/cursor/plugins",
+    "path": "pstack",
+    "version": "0.15.30",
+    "commit": "eb4db2b55b2b7dec3d9282754cddf0a56bf4ff10",
+    "license": "MIT, Copyright (c) 2026 Lauren Tan",
+    "files": {
+      "skills/create-verification-skill/": "skills/create-verification-skill/",
+      "skills/maintain-verification-skill/SKILL.md": "skills/maintain-verification-skill/SKILL.md",
+      "skills/principle-prove-it-works/SKILL.md": "skills/principle-prove-it-works/SKILL.md",
+      "skills/principle-attack-the-premise/SKILL.md": "skills/principle-attack-the-premise/SKILL.md",
+      "skills/z-mode/playbooks/unit.md#the-brief": "skills/poteto-mode/playbooks/orchestrate.md#the-brief",
+      "skills/correct/SKILL.md": "skills/correct/SKILL.md",
+      "skills/blast-radius/SKILL.md": "skills/blast-radius/SKILL.md",
+      "skills/z-mode/playbooks/architect.md": "skills/architect/SKILL.md (Phase A grounding, caller's usage first, sketches before code)",
+      "skills/z-mode/playbooks/intent.md": "skills/poteto-mode/playbooks/prototype.md and skills/principle-exhaust-the-design-space/SKILL.md (ideas only)"
+    },
+    "changes": [
+      ".cursor/skills/ became .agents/skills/",
+      "/name invocations became 'the **name** skill'",
+      "links to pstack skills zstack lacks were removed; their sentences stay",
+      "the brief template keeps zstack's FACTS, loose VERIFY, PROJECT and fix-round paragraph",
+      "blast-radius: references to how, why, arena and unslop removed; step 6 (arena for wide changes) dropped, since zstack uses it only for diffs below the adversarial-review bar"
+    ]
+  }
+}

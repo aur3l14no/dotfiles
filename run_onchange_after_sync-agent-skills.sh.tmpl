@@ -1,0 +1,6 @@
+#!/bin/sh
+# Reruns when the set of shared skills or the link script changes.
+# skills: {{ glob (joinPath .chezmoi.sourceDir "dot_agents/skills/*") | join " " | sha256sum }}
+# script: {{ include "dot_agents/skills/skill-ops/exact_scripts/sync_skill_links.py" | sha256sum }}
+set -eu
+uv run "{{ .chezmoi.homeDir }}/.agents/skills/skill-ops/scripts/sync_skill_links.py"

@@ -3,21 +3,6 @@
 # and is the upstream the vendored copies are based on.
 
 [[source]]
-repo = "larksuite/cli"
-ref = "^1.0.0"  # keep the lark-cli wrapper in dot_local/bin compatible
-commit = "ac81f5056ab88f37d581d25916f3dab85abfca76" # v1.0.98
-skills = [
-  "skills/lark-doc",
-  "skills/lark-drive",
-  "skills/lark-im",
-  "skills/lark-markdown",
-  "skills/lark-openapi-explorer",
-  "skills/lark-shared",
-  "skills/lark-sheets",
-  "skills/lark-wiki",
-]
-
-[[source]]
 repo = "jackwener/OpenCLI"
 ref = "v2.0.0"  # same version as the opencli wrapper in dot_local/bin
 commit = "74fe1dc11c26d44b2a01102fd341aa55ae407774" # v2.0.0

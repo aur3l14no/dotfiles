@@ -9,7 +9,7 @@ These local maintenance conventions override upstream maintenance instructions. 
 
 All skills live in `~/.nix-config/chezmoi/dot_agents/skills/`: edit the source and apply the specific chezmoi target. Third-party skills are vendored there as `exact_<name>/`, already adapted; `.upstream.toml` beside them records their upstream. Executable dependencies are managed separately.
 
-Keep shared skills in `~/.agents/skills` and both clients’ private skill directories independent. Codex reads shared skills directly; `uv run ~/.agents/skills/skill-ops/scripts/sync_skill_links.py` links them individually into `~/.claude/skills`. Run it after adding or removing skills; a full chezmoi apply also runs it.
+Keep shared skills in `~/.agents/skills` and both clients’ private skill directories independent. Codex reads shared skills directly; `uv run ~/.agents/skills/skill-ops/scripts/sync_skill_links.py` links them individually into `~/.claude/skills`, including skills-directory plugins (a `.claude-plugin/plugin.json` in place of a `SKILL.md`). Run it after adding or removing skills; a full chezmoi apply also runs it.
 
 ## Executables
 

@@ -28,4 +28,4 @@ description: 仅在用户显式调用时使用。根据现有能力、交付目�
 - 正文、汇总表和估算保持一致。读者应能看清保留、补做、新做、不做及待定的范围。
 - 最终评估说明使用 `no-ai-slop` 做文字验收。
 
-在飞书上呈现评估时，读 [飞书 Tips](references/feishu.md)，具体操作使用 `lark-doc` / `lark-drive`。需要取舍示例时，读 [案例](references/cases.md)。
+在飞书上呈现评估时，读 [飞书 Tips](references/feishu.md)，具体操作使用 `lark-cli` skill。需要取舍示例时，读 [案例](references/cases.md)。

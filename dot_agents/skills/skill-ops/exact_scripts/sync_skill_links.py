@@ -30,12 +30,13 @@ def sync_skills(home: Path, dry_run: bool = False) -> None:
     if not shared.is_dir():
         raise SystemExit(f"Shared skills directory is missing: {shared}")
 
+    # A skills-directory plugin has no SKILL.md of its own; Claude loads it from its manifest.
     skills = {
         path.name: path
         for path in shared.iterdir()
         if not path.name.startswith(".")
         and path.name.lower() != "synced"
-        and (path / "SKILL.md").is_file()
+        and ((path / "SKILL.md").is_file() or (path / ".claude-plugin/plugin.json").is_file())
     }
     missing = []
     for name, source in sorted(skills.items()):
