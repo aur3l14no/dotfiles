@@ -10,6 +10,11 @@ mise-packages.txt
 .ssh
 {{- end }}
 
+# Only the core hosts have warden identities.
+{{- if not (has .chezmoi.hostname (list "groves" "john-macbook" "fusco-thinkbook")) }}
+.agents/skills/warden
+{{- end }}
+
 # Skip encrypted entries until age is configured.
 {{- if ne .chezmoi.config.encryption "age" }}
 **/*.age

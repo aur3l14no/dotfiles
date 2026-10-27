@@ -57,3 +57,9 @@ repo = "petergyang/no-ai-slop"
 ref = "main"
 commit = "000650b156983f5159695b441477f4e63b25dc85"
 skills = ["skills/no-ai-slop"]
+
+[[source]]
+repo = "aur3l14no/warden"  # private; kept out of the public dotfiles mirror
+ref = "238abb8a22461f711bf3212ae8d699bc4c77f5b7"  # client for the broker image in hosts/hcloud-fsn0/warden.nix; commits after that image change only the client
+skills = ["skills/warden"]
+commit = "238abb8a22461f711bf3212ae8d699bc4c77f5b7"
