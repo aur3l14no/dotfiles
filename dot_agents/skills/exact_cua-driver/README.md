@@ -17,7 +17,7 @@ failure before a caller escalates to foreground input.
 Skill text is vendored through skill-ops; installation, updates, removal, source builds,
 and repair must use [skill-ops](../skill-ops/SKILL.md). Do not use upstream skill
 installers or overwrite the adapted bundle with the driver's skill commands.
-The macOS dependency is official CuaDriver.app release 0.36.0 at
+The macOS dependency is official CuaDriver.app release 0.37.0 at
 `/Applications/CuaDriver.app`, exposed by `~/.local/bin/cua-driver`.
 The maintenance source is the official Cua Driver release distribution; the
 app and skill revisions must be checked for compatibility during updates.
@@ -28,16 +28,18 @@ stable app identity that owns macOS TCC grants.
 Start the service through LaunchServices and verify the current host:
 
 ```bash
-open -n -g -a CuaDriver --args serve
+open -n -g -a /Applications/CuaDriver.app --args serve
 cua-driver status
 cua-driver permissions status --json
 cua-driver doctor
 ```
 
-On macOS, Accessibility and Screen Recording belong to `com.trycua.driver`.
-On Windows, use an interactive user desktop rather than Session 0. On Linux,
-the daemon must share the graphical session and AT-SPI session bus. Missing
-runtime dependencies must be surfaced through skill-ops before affected use.
+On macOS, Accessibility and Screen Recording belong to `com.trycua.driver`;
+`MACOS.md` explains how they are granted, including through an MDM profile or,
+when the owner authorizes it, an agent. On Windows, use an interactive user
+desktop rather than Session 0. On Linux, the daemon must share the graphical
+session and AT-SPI session bus. Missing runtime dependencies must be surfaced
+through skill-ops before affected use.
 
 ## Reading order
 

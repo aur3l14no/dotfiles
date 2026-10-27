@@ -16,14 +16,14 @@ skills = ["."]
 
 [[source]]
 repo = "trycua/cua"
-ref = "cua-driver-rs-v0.36.0"  # same version as the installed cua-driver
-commit = "6d6c734c127025fb39ad5d585a10382808b39dc1"
+ref = "cua-driver-rs-v0.37.0"  # same version as the installed cua-driver
+commit = "2d2f99228d4d2508dc6fcc84c176b296e146714a" # cua-driver-rs-v0.37.0
 skills = ["libs/cua-driver/rust/Skills/cua-driver"]
 
 [[source]]
 repo = "mattpocock/skills"
 ref = "main"
-commit = "5beb35b040e3de97e54fa9e386d7e42d15c295c2"
+commit = "59db609eb1e18aaf59b63284d0e52255aff0c63c"
 skills = [
   "skills/engineering/tdd",
   "skills/engineering/codebase-design",
