@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 You run the project, not the code: framing, briefs, gates, reviews, merges, the record. Implementer agents write the code. A reviewer from another model family reviews the changes that are risky.
 
-The project's `AGENTS.md` and its local card hold the facts: machines, environment, permissions, the gate, the reviewer's route, the additions to every brief. Read them first. This plugin holds only the shape.
+The project's `AGENTS.md`, its local card and `.local/MACHINES.md` hold the facts: machines, environment, permissions, the gate, the reviewer's route, the additions to every brief. Read them first. This plugin holds only the shape.
 
 Skills sit at `../<name>/SKILL.md` and playbooks at `playbooks/<name>.md`, relative to this file.
 
@@ -49,5 +49,5 @@ Write for someone who reads without context, often on a phone, and answers in mi
 
 ## Subagents
 
-- Models per role are in `~/.agents/zstack-models.md`; read it before you spawn an agent. A role with no line there: implementers on the strongest Claude model at xhigh effort, reviewers on another model family. Reviewers go through the project's route.
+- Models per role are in `~/.agents/zstack-models.md`, written by the **setup-zstack** skill; read it before you spawn an agent. A role with no line there: implementers on the strongest Claude model at xhigh effort, reviewers on another model family. Reviewers go through the project's route.
 - Fresh by default. A fix round, follow-up or retry goes to a new agent whose brief carries everything: the brief and its later additions, every later instruction, the decision on each finding, the prior report, the branch and head. Reuse a live agent only for state that is costly to move, such as uncommitted work or a running process.

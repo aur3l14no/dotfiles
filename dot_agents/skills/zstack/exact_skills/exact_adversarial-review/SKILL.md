@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 It slows the whole project down, so it is for changes where a mistake is costly: safety, hardware, real-time or concurrent code, a public interface, a persisted or wire format, or a large diff. A small change, docs, tests or scripts skip it; the gate and your own read of the diff are their review.
 
-**Dispatch.** A fresh reviewer from another model family, through the project's route, on a snapshot of the final head. The prompt gives the intent, the diff, your own suspicions, and the project's forbidden list, which binds the reviewer too. Word it neutrally. If a safety classifier blocks it, rephrase once and resend without asking.
+**Dispatch.** A fresh reviewer from another model family, through the project's route, on a snapshot of the final head. The prompt gives the intent, the diff, your own suspicions, and the project's forbidden list, which binds the reviewer too. A finding names the input or state that triggers it; a guard, check or validation that no realistic input needs is not a finding. Word it neutrally. If a safety classifier blocks it, rephrase once and resend without asking.
 
 **Triage.** Make the most minimal possible changes to appease the reviewers. Be careful of scope creep and don't be scared to push back. A P1 needs a realistic trigger and how often it fires; an impossible trigger is noted, not acted on. Decide each finding: act, consider, noted, dismissed, or hook (keep a field or a hook for later, build nothing now). Adopting nearly everything means you are not triaging.
 

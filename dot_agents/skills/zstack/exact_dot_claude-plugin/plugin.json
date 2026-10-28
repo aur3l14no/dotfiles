@@ -1,8 +1,8 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "zstack",
-  "version": "0.2.0",
-  "description": "Lead development through implementer and reviewer agents: the z-mode router, its playbooks, situational skills and principles.",
+  "version": "0.3.0",
+  "description": "Lead development and research through implementer, executor, reviewer and auditor agents: the z-mode and r-mode routers, their playbooks, situational skills and principles.",
   "author": {
     "name": "aur3l14no"
   }
