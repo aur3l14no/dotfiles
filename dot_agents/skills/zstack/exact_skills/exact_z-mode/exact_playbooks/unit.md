@@ -5,10 +5,10 @@ One issue, one branch, one worktree, one implementer.
 1. Write the brief below. GOAL is the settled intent; CONTEXT carries the architecture sketch and what depends on it; ACCEPTANCE and VERIFY are the spec, the tests that pin what the code does. Check its facts about the environment before sending, and mark what you could not check.
 2. Launch the implementer. It runs only the tests its change touches.
 3. On the implementer's report, push and open the PR: what the prototype kept and dropped, one or two sentences on what the change touches and why that is safe, `Closes #N`.
-4. Run the project's full gate yourself, once, on the final head.
-5. If the change is risky by the **adversarial-review** skill's measure, review it with that skill. A smaller diff you don't fully trust gets the **blast-radius** skill instead. Otherwise the gate and your read of the diff are the review. While a review runs, brief the next unit and start it off main unless it touches the same files. Builds still take turns under the project's load rule.
-6. Send the fix round to a fresh agent, with a fix-round brief. A fix round changes no behavior the user relies on. If a fix would, ask the user first and say in plain terms what they would lose.
-7. A fix that must cross a freeze or contradict the brief comes back to you. Re-decide the ruling per attack-the-premise instead of letting the fix copy around it.
+4. If the change is risky by the **adversarial-review** skill's measure, review it with that skill. A smaller diff you don't fully trust gets the **blast-radius** skill instead. Otherwise the gate and your read of the diff are the review. While a review runs, brief the next unit and start it off main unless it touches the same files. Builds still take turns under the project's load rule.
+5. Send the fix round to a fresh agent, with a fix-round brief. A fix round changes no behavior the user relies on. If a fix would, ask the user first and say in plain terms what they would lose.
+6. A fix that must cross a freeze or contradict the brief comes back to you. Re-decide the ruling per attack-the-premise instead of letting the fix copy around it.
+7. Run the project's full gate yourself, once, on the final head: the head the review approved, or the implementer's last for an unreviewed unit. A head the next review round can still change is not final, so don't gate it; the gate holds the build that implementers wait on. A red gate goes back as a fix round.
 8. Merge as soon as the project's merge rule allows. Don't stack new units on an unapproved base.
 9. Close: delete the unit's brief and review scratch, fast-forward local main, remove the worktree, and replace one line of the status doc.
 
@@ -27,7 +27,9 @@ VERIFY       exact commands for only the tests its change touches, plus known go
              no new hard timing gates. The full gate is yours
 TIMEBOX      a rough cap on runtime; when it runs out, return partial findings and stop
 FORBIDDEN    push, rebase, merge, open a PR; fixes outside scope; staging anything but named paths; asking the
-             user (it states the assumption and keeps going); comments that cite review rounds, PRs or phases
+             user (it states the assumption and keeps going); comments that cite review rounds, PRs or phases;
+             ending its turn while a job it started still runs, since the end of its turn reads as its report
+             (it waits in that turn, with `t3_background_wait` if it has that tool)
 REPORT       in its reply: status, branch, head and commits, what it actually ran, deviations, what the prototype
              kept and dropped, numbers, what it did not run or verify, open questions
 PROJECT      the project card's additions, verbatim

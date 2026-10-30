@@ -17,7 +17,7 @@ failure before a caller escalates to foreground input.
 Skill text is vendored through skill-ops; installation, updates, removal, source builds,
 and repair must use [skill-ops](../skill-ops/SKILL.md). Do not use upstream skill
 installers or overwrite the adapted bundle with the driver's skill commands.
-The macOS dependency is official CuaDriver.app release 0.37.0 at
+The macOS dependency is official CuaDriver.app release 0.38.0 at
 `/Applications/CuaDriver.app`, exposed by `~/.local/bin/cua-driver`.
 The maintenance source is the official Cua Driver release distribution; the
 app and skill revisions must be checked for compatibility during updates.

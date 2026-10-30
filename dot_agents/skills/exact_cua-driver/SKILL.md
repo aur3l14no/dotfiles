@@ -1,7 +1,7 @@
 ---
 name: cua-driver
 description: Drive a native GUI app (macOS, Windows, Linux) via the cua-driver CLI (default) or MCP server; snapshot its accessibility tree, act through snapshot-bound element tokens, native menu paths, exact window geometry, or pixel coordinates, and verify from fresh state. Use when the user asks you to operate, drive, automate, or perform a GUI task in a real application on the host, or to continue, resume, or recall recent Cua activity.
-version: 0.37.0 # x-release-please-version
+version: 0.38.0 # x-release-please-version
 metadata:
   openclaw:
     requires:
@@ -43,7 +43,7 @@ Persistent installation, updates, removal, and repair of this skill or its tools
 
 Use the managed native `cua-driver` CLI at `~/.local/bin/cua-driver`, linked to
 `/Applications/CuaDriver.app/Contents/MacOS/cua-driver` (official CuaDriver.app
-release 0.37.0, bundle id `com.trycua.driver`). Release 0.37.0 refuses to run
+release 0.38.0, bundle id `com.trycua.driver`). Release 0.38.0 refuses to run
 as a bare binary outside the app bundle; the link resolves into the bundle and
 works. No Python/npm wrapper or MCP registration is required. Prefer the CLI; use an
 existing persistent MCP connection only when the workflow requires shared state.

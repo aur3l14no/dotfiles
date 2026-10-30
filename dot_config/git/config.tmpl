@@ -69,6 +69,14 @@
   smudge = git-lfs smudge -- %f
   process = git-lfs filter-process
   required = true
+{{- with lookPath "gh" }}
+
+# Private repos over HTTPS (vendored skills) use gh's token: the macOS keychain
+# helper hangs without a GUI session, and Linux has no helper.
+[credential "https://github.com"]
+  helper =
+  helper = !{{ . }} auth git-credential
+{{- end }}
 
 [include]
   path = ~/.config/git/config.local
