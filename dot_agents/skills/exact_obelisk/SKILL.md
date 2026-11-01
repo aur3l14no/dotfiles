@@ -153,7 +153,7 @@ The default retrieval surface is:
 | Helper | Purpose |
 |---|---|
 | `overview` | Orient to projects and recent entry points. |
-| `sessions` | Locate sessions under structural filters. |
+| `sessions` | Locate sessions under structural filters; CLI 0.3.1 requires exact canonical IDs. |
 | `search` | Find message evidence by topic. |
 | `messages` | Read one message, a bounded window, or a session interval (CLI 0.3.0+). |
 | `memories` | Recall previously saved conclusions. |

@@ -113,7 +113,7 @@ Full-text search across all indexed message text using FTS5.
 | `opts.after` | `string` | ISO lower bound on message timestamp |
 | `opts.before` | `string` | ISO upper bound on message timestamp |
 | `opts.cwd` | `string` | SQL `LIKE` filter over `messages.cwd` |
-| `opts.source` | `string` | Provider ID such as `"claude"`, `"codex"`, `"deepseek"`, `"kimi"`, `"kiro"`, `"omp"`, `"pi"`, `"opencode"`, or `"zcode"` |
+| `opts.source` | `string` | Provider ID such as `"claude"`, `"codex"`, `"copilot"`, `"deepseek"`, `"hermes"`, `"kimi"`, `"kiro"`, `"omp"`, `"opencode"`, `"pi"`, or `"zcode"` |
 | `opts.includeMeta` | `boolean` | Include `is_meta=1` rows, default false |
 | `opts.includeInactive` | `boolean` | Include provider-attested superseded rows, default false |
 | `opts.fallback` | `'or'` | On zero hits only, retry safe tokens joined by OR |
@@ -336,11 +336,23 @@ Session rows ordered by `ended_at` descending. Passing a number is treated as
 | `opts.before` | `string` | ISO upper bound on `started_at` |
 | `opts.limit` | `number` | Max rows, default 50 |
 | `opts.branch` | `string` | Exact git branch |
-| `opts.source` | `string` | Provider ID such as `"claude"`, `"codex"`, `"deepseek"`, `"kimi"`, `"kiro"`, `"omp"`, `"pi"`, `"opencode"`, or `"zcode"`; omit for all |
-| `opts.sessionId` | `string` | Exact session ID |
-| `opts.sessions` | `string[]` | Restrict to session IDs |
+| `opts.source` | `string` | Provider ID such as `"claude"`, `"codex"`, `"copilot"`, `"deepseek"`, `"hermes"`, `"kimi"`, `"kiro"`, `"omp"`, `"opencode"`, `"pi"`, or `"zcode"`; omit for all |
+| `opts.sessionId` | `string` | Exact canonical session ID in the managed CLI 0.3.1 |
+| `opts.sessions` | `string[]` | Restrict to exact canonical session IDs in CLI 0.3.1 |
 
 Returns `Array<session_row>`.
+In CLI 0.3.1, `sessionId` and `sessions` intersect when both are given. A raw
+native-ID fragment does not resolve automatically: locate canonical IDs with
+scoped `sql()` and a literal `instr(id, ?) > 0` condition, then pass those IDs
+to the helpers.
+
+Newer upstream documentation describes a contract not present in CLI 0.3.1:
+only `sessions()` resolves non-exact references as literal fragments (`%` and
+`_` are not SQL wildcards), capped at the 10 newest matches within the requested
+project/source/time/branch filters, and the two ID options union their matches.
+For a later CLI implementing that contract, a raw native ID normally resolves
+to one session; several matches require narrower project or source filters.
+
 `message_count` describes the visible canonical transcript; inactive and hidden
 records do not increase it. The invoking session row carries
 `is_invoking: true` (see Invocation Identity); other rows omit the field.

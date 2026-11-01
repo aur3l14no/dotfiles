@@ -31,6 +31,13 @@ multiple steps, but the first locator should be the narrowest semantic fit. If a
 scope locator finds the relevant project/session/file, do not also run broad FTS
 unless scoped evidence is insufficient and `query_plan` says why.
 
+The managed CLI 0.3.1 requires exact canonical session IDs in every helper,
+including `sessions()`. A raw provider UUID may be only a fragment: pi-family
+IDs have the form `source:uuid:project-scope`. Resolve such a fragment with
+bounded, scoped `sql()` using `instr(id, ?) > 0`, then pass the returned canonical
+`id` to the helpers. The newer upstream fragment-resolution contract described
+in [the API reference](api-reference.md#sessionsopts) is not in the pinned CLI.
+
 Project-like fields are distinct:
 
 - `sessions.project`: provider-normalized project slug.

@@ -5,6 +5,10 @@ mise-packages.txt
 .config/karabiner/automatic_backups
 .config/rustic/*.env
 
+# Skill CLIs generate Python bytecode on each host.
+.agents/skills/**/__pycache__
+.agents/skills/**/__pycache__/**
+
 # SSH client configuration belongs to the administrative workstations and gus-nix.
 {{- if not (has .chezmoi.hostname (list "groves" "john-macbook" "fusco-thinkbook" "gus-nix")) }}
 .ssh

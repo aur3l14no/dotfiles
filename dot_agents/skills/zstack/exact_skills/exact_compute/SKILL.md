@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 The machines are shared with other people and with the user's other sessions. Hold an allocation only while a run uses it.
 
-**Facts.** The repo's `.local/MACHINES.md` describes each machine: access, scheduler, per-user limits, preemption, how to read its live use, storage, network gaps, etiquette, and where the owners' rules live. When it is missing or a machine is new, write the section with the **setup-zstack** skill. Before a large request, check the limits against the owners' rules; they change.
+**Facts.** The repo's `.local/MACHINES.md` describes each machine: access, scheduler, per-user limits, preemption, how to read its live use, storage, network gaps, etiquette, and where the owners' rules live. When it is missing or a machine is new, write the section with the **setup-zstack** skill (`../setup-zstack/SKILL.md` from this file). Before a large request, check the limits against the owners' rules; they change.
 
 **Look before placing.** Read each candidate machine's live use the way its section says, and the ledger. When a command there no longer works, fix the section. Other people's load counts as much as ours. On a GPU shared without a scheduler, processes in other containers can be invisible while their memory use is not.
 
