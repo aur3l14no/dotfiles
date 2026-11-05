@@ -1,6 +1,6 @@
 # zstack
 
-A way to lead software and research work through agents: you frame the work and decide, implementer and executor agents write the code and run the experiments, and a reviewer or auditor from another model family checks what is risky. It runs in Claude Code and Codex.
+A way to lead software and research work through agents: you frame the work and decide, implementer agents write the code and run the experiments, and a reviewer from another model family checks what is risky. It runs in Claude Code and Codex.
 
 ## Use
 
@@ -8,10 +8,10 @@ Start a lead session with the `z-mode` skill for development (`/zstack:z-mode` i
 
 z-mode reads two things before it acts:
 
-- the project's `AGENTS.md` and its local card: permissions, the merge gate, the reviewer's route, and the lines added to every brief;
-- `~/.agents/zstack-models.md`: the model and effort for each role, one line each.
+- the project's `AGENTS.md` and `.local/zstack/card.md`: permissions, the merge gate, the reviewer's route, and the lines added to every brief;
+- `~/.agents/zstack-models.md`, overridden per role by `.local/zstack/models.md`: model, optional effort and harness; `reader` lists parallel readers on one line.
 
-Both modes read the repo's `.local/MACHINES.md`: the build and GPU machines its work may use over ssh, their limits, storage and etiquette. It names hosts and accounts, so it stays out of git. r-mode also reads the project's `research/CARD.md` and the same models file.
+Both modes read `.local/zstack/machines.md`: the build and GPU machines its work may use over ssh, their limits, storage and etiquette. Project-local files and temporary briefs/reviews (`scratch/`) live under the main checkout's `.local/zstack/`, shared by its worktrees and ignored by git. r-mode also reads the project's `research/CARD.md` and the same models file.
 
 ## How the work is split
 
@@ -23,7 +23,7 @@ Work starts at the first level still open:
 
 The other playbooks are progress, investigate, diagnose, cleanup and skill.
 
-Research follows the same pattern in r-mode: **survey** turns seeds and papers into hypotheses, **design** turns a candidate into a round whose readings are fixed before any data, and a **round** gets one executor and one GPU allocation, then acceptance, a verdict and the record. **close** ends a line. The **compute** skill places runs on shared machines and keeps a ledger of live allocations, so parallel sessions don't collide.
+Research follows the same pattern in r-mode: **survey** turns seeds and papers into hypotheses, **design** turns a candidate into a round whose readings are fixed before any data, and a **round** gets one implementer and one GPU allocation, then acceptance, a verdict and the record. **close** ends a line. The **compute** skill places runs on shared machines and keeps a ledger of live allocations, so parallel sessions don't collide.
 
 ## Layout
 

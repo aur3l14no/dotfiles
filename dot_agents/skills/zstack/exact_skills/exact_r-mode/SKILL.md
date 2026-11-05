@@ -1,20 +1,20 @@
 ---
 name: r-mode
-description: Lead research through reader, executor and auditor agents: surveys, pre-registered experiment rounds on shared GPU machines, verdicts and the record. Use for /r-mode, or when the user asks to work this way.
+description: "Lead research through reader, implementer and reviewer agents: surveys, pre-registered experiment rounds on shared GPU machines, verdicts and the record. Use for /r-mode, or when the user asks to work this way."
 disable-model-invocation: true
 ---
 
 # r-mode
 
-You run the research, not the experiments: framing, designs, compute, acceptance, verdicts, the record and the reports. Executor agents write the experiment code and run it on the compute you assign. Readers survey the sources. An auditor from another model family checks a result before it changes a verdict.
+You run the research, not the experiments: framing, designs, compute, acceptance, verdicts, the record and the reports. Implementer agents write the experiment code and run it on the compute you assign. Readers survey the sources. A reviewer from another model family checks a result before it changes a verdict.
 
-Facts live outside this plugin. Read them first:
+Facts live outside this plugin. Project-local paths use the main checkout's ignored `.local/zstack/`, including in worktrees. Read these first:
 
 - the project's `research/CARD.md`: the question, standing constraints, the spending threshold, the lines added to every brief, one status line per line of work, and the idea list. Without one, write it with the user before the first round.
-- the repo's `.local/MACHINES.md`: each machine's access, scheduler, limits, live use, storage and etiquette.
-- `~/.agents/zstack-models.md`: the model and effort for each role.
+- `.local/zstack/machines.md`: each machine's access, scheduler, limits, live use, storage and etiquette.
+- `~/.agents/zstack-models.md` and optional `.local/zstack/models.md`: model choices under z-mode's Subagents rules.
 
-The **setup-zstack** skill writes the machines and models files with the user; run it when one is missing.
+The **setup-zstack** skill writes the machines and models files with the user; run it when machines or required model roles are missing.
 
 Skills sit at `../<name>/SKILL.md`, r-mode's playbooks at `playbooks/<name>.md` and z-mode's at `../z-mode/playbooks/<name>.md`, relative to this file.
 
@@ -55,7 +55,7 @@ When one applies, read its file (`../principle-<name>/SKILL.md`) and name in the
 
 ## Compute
 
-Every round runs on an allocation you make with the **compute** skill; executors never choose machines. Spending above the card's threshold, and any run that needs a machine alone, waits for the user's yes. Smaller probes just run.
+Every round runs on an allocation you make with the **compute** skill; implementers never choose machines. Spending above the card's threshold, and any run that needs a machine alone, waits for the user's yes. Smaller probes just run.
 
 ## Asking and reporting
 
@@ -68,6 +68,6 @@ z-mode's rules apply. For research also:
 
 ## Subagents
 
-z-mode's rules apply: models from `~/.agents/zstack-models.md`, fresh by default, never a fast or priority tier. The roles are `reader` and `second-reader` (two model families, survey only), `executor`, and `auditor` (a family other than the executor's). An executor is reused only while its own run is still going.
+Read z-mode's Subagents rules (`../z-mode/SKILL.md`) for model overrides, effort, harness and fresh agents; never a fast or priority tier. The roles are `reader` (parallel survey readers, different families by default), `implementer`, and `reviewer` (a family other than the implementer's). Temporary briefs and reviews go in `.local/zstack/scratch/`. An implementer is reused only while its own run is still going.
 
 Agents report to you, not to each other. Wait on their completion notices. For a run that outlasts the session, schedule one fallback check the user can see in their host (in T3, a task bound to the thread) and delete it after use. No polling loops, and no frequent high-effort wake-ups for an agent's bookkeeping.

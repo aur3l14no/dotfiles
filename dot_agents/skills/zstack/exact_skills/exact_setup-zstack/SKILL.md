@@ -1,26 +1,26 @@
 ---
 name: setup-zstack
-description: Write or refresh zstack's settings with the user: this host's model and effort for each role, and the repo's description of the build and GPU machines its work may use over ssh. Use for /setup-zstack, when a mode finds one of them missing, or when a model or a machine changes.
+description: "Write or refresh zstack's settings with the user: global and project model, effort and harness choices, and the repo's description of the build and GPU machines its work may use over ssh. Use for /setup-zstack, when a mode finds one of them missing, or when a model or a machine changes."
 disable-model-invocation: true
 ---
 
 # Setup zstack
 
-The modes read a models file on this host and a machines file in the repo, and keep no defaults of their own beyond a fallback. This skill writes both with the user. On a re-run, read what exists first and keep the user's choices; only what changed is asked again.
+The modes read global model defaults and project overrides, plus a machines file. Project-local files live in the main checkout's ignored `.local/zstack/`, shared by its worktrees. This skill writes the requested scope with the user. On a re-run, read what exists first and keep the user's choices; only what changed is asked again.
 
-## Models: `~/.agents/zstack-models.md`
+## Models
 
-A one-line header comment, then one line per role: `role: model-id effort`. The roles are `implementer` and `reviewer` (z-mode), `reader`, `second-reader`, `executor` and `auditor` (r-mode).
+Global defaults: `~/.agents/zstack-models.md`; project overrides: `.local/zstack/models.md`. Read z-mode's Subagents rules (`../z-mode/SKILL.md`) for format and precedence. The roles are `implementer`, `reviewer` and `reader`. Write only overridden roles in the project file.
 
-1. List the models this host can actually start an agent on: the subagent tool's model options, the host's orchestration capabilities, a provider's CLI. Write only models seen there.
-2. Propose one per role: the strongest model at xhigh effort, `reviewer` and `auditor` from a family other than `implementer` and `executor`, `second-reader` from a family other than `reader`. Never a fast or priority tier.
-3. Show the table, take the user's changes, and write the whole file.
+1. Check available models and harnesses through the host's tools or provider CLIs. Write only combinations the host can launch.
+2. Propose one model per role and two for `reader`, preferring the strongest models and high where supported. By default, readers use different families, as do `reviewer` and `implementer`. Never a fast or priority tier.
+3. Show the resolved choices and scope, take the user's changes, and write that scope's file.
 
 If a dotfiles manager deploys the file, change its source and apply it; otherwise the next apply reverts the change.
 
-## Machines: `.local/MACHINES.md`
+## Machines: `.local/zstack/machines.md`
 
-The machines this repo's work may use over ssh: build and test hosts for z-mode, GPU machines for r-mode's runs. The file sits beside the local card in `.local/`, which stays out of git, because it names hosts, accounts and paths.
+The machines this repo's work may use over ssh: build and test hosts for z-mode, GPU machines for r-mode's runs. The file names hosts, accounts and paths, so it stays out of git.
 
 Ask the user only what exploring cannot tell you: which machines, how to connect to each (an ssh alias, or host, user and jump host), and what this repo will use it for. Access is theirs: if a connection fails, stop and say so. Then explore each machine yourself, read-only, and write what an agent needs before it puts work there:
 
@@ -39,4 +39,4 @@ One section per machine, headed by the name agents will use for it, with the dat
 
 ## Project cards
 
-Each mode writes its own card with the user in a new project: z-mode's local card and r-mode's `research/CARD.md`. When the current project lacks the card for the mode the user is about to start, offer once to write it.
+Each mode writes its own card with the user in a new project: z-mode's `.local/zstack/card.md` and r-mode's `research/CARD.md`. When the current project lacks the card for the mode the user is about to start, offer once to write it.
