@@ -76,5 +76,4 @@ After applying, redeploy Rime from Squirrel's menu.
 ## Maintenance
 
 The source lives in `chezmoi/` in nix-config and is mirrored to the dotfiles repo.
-See [maintenance notes](CONTRIBUTING.md) for shared changes and
-[Skill Ops](dot_agents/skills/skill-ops/SKILL.md) for agent skills and their tools.
+See [maintenance notes](CONTRIBUTING.md) for shared changes. Shared agent rules and skills live in `aur3l14no/zskills`.

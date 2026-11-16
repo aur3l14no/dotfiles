@@ -3,17 +3,6 @@
 Edit the source in the nix-config checkout. `just push` there pushes nix-config
 and refreshes the public dotfiles mirror, excluding the private SSH configuration.
 
-## Agent skills
-
-Use [Skill Ops](dot_agents/skills/skill-ops/SKILL.md) to manage skills and executable
-dependencies. It owns the vendoring, update, adaptation, and deployment workflow;
-APM, `npx skills`, and client-specific installers bypass it.
-
-Tool versions and invocation details belong in their wrappers. For example, the
-[lark-cli wrapper](dot_local/bin/executable_lark-cli) owns its npm pin and cache,
-requires Node.js/npm, and blocks mutating `lark-cli update` calls. Update that pin
-through Skill Ops.
-
 ## Rime
 
 Track personal patches in [Library/Rime](Library/Rime), keeping generated runtime

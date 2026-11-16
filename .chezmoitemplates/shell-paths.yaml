@@ -3,7 +3,6 @@
 shellPaths:
   - {{ joinPath .chezmoi.homeDir ".local/bin" | quote }}
   - {{ joinPath .chezmoi.homeDir ".local/share/mise/shims" | quote }}
-  - {{ joinPath .chezmoi.homeDir ".local/opt/npm-global/bin" | quote }}
   - {{ joinPath .chezmoi.homeDir ".cargo/bin" | quote }}
   - {{ joinPath .chezmoi.homeDir "go/bin" | quote }}
   - {{ joinPath "/etc/profiles/per-user" .chezmoi.username "bin" | quote }}

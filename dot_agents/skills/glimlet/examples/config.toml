@@ -1,3 +1,0 @@
-base_url = "https://glimlet.example.com"
-admin_token = "replace-me"
-default_ttl_seconds = 604800

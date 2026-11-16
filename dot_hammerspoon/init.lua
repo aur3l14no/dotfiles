@@ -9,6 +9,7 @@ require("module-window")
 require("module-screen")
 require("module-autohide")
 require("module-kvm")
+require("module-ssh-notify")
 -- require('module-menubar')
 
 -- Inits

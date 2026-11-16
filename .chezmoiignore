@@ -3,20 +3,13 @@ CONTRIBUTING.md
 docs
 mise-packages.txt
 .config/karabiner/automatic_backups
+.config/hammerspoon2/compiled
+.config/hammerspoon2/node_modules
 .config/rustic/*.env
-
-# Skill CLIs generate Python bytecode on each host.
-.agents/skills/**/__pycache__
-.agents/skills/**/__pycache__/**
 
 # SSH client configuration belongs to the administrative workstations and gus-nix.
 {{- if not (has .chezmoi.hostname (list "groves" "john-macbook" "fusco-thinkbook" "gus-nix")) }}
 .ssh
-{{- end }}
-
-# Only the core hosts have warden identities.
-{{- if not (has .chezmoi.hostname (list "groves" "john-macbook" "fusco-thinkbook")) }}
-.agents/skills/warden
 {{- end }}
 
 # Skip encrypted entries until age is configured.
@@ -27,6 +20,7 @@ mise-packages.txt
 # mac-only configs
 {{- if ne .chezmoi.os "darwin" }}
 .hammerspoon
+.config/hammerspoon2
 .config/karabiner
 .config/fish/conf.d/darwin.fish
 Library/Rime
