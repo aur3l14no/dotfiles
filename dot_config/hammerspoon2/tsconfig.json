@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "ES2024",
+    "module": "commonjs",
+    "lib": ["ES2024"],
+    "rootDir": "./src",
+    "outDir": "./compiled",
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "types": []
+  },
+  "files": ["hammerspoon.d.ts"],
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "compiled"]
+}

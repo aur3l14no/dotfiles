@@ -1,0 +1,9 @@
+{
+  "name": "hammerspoon2-config",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "clean": "rm -rf compiled"
+  }
+}
