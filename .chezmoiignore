@@ -8,7 +8,7 @@ mise-packages.txt
 .config/rustic/*.env
 
 # SSH client configuration belongs to the administrative workstations and gus-nix.
-{{- if not (has .chezmoi.hostname (list "groves" "john-macbook" "fusco-thinkbook" "gus-nix")) }}
+{{- if not (has .chezmoi.hostname (list "groves" "john-macbook" "fusco-thinkbook" "murph-troy" "gus-nix")) }}
 .ssh
 {{- end }}
 
