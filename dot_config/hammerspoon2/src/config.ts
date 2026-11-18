@@ -4,7 +4,7 @@ export const superMods: string[] = ["ctrl", "command", "option", "shift"];
 export const key2App: readonly [key: string, bundleID: string][] = [
   ["0", "com.tencent.xinWeChat"],
   ["9", "ru.keepcoder.Telegram"],
-  ["8", "com.openai.codex"],
+  ["8", "com.t3tools.t3code"],
   // ["9", "com.google.Chrome.app.ibblmnobmgdmpoeblocemifbpglakpoi"], // Telegram
   // ["8", "com.google.Chrome.app.cadlkienfkclaiaibeoongdcgmdikeeg"], // ChatGPT
   ["7", "com.google.Chrome.app.bkglifinmphohpcalfapchifmphcimjg"], // DSH
