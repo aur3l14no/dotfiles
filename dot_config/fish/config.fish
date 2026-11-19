@@ -188,7 +188,6 @@ if status is-interactive
     type -q zoxide; and zoxide init fish | source
     type -q starship; and starship init fish | source
     type -q direnv; and direnv hook fish | source
-    type -q atuin; and atuin init fish --disable-up-arrow | source
 end
 
 # Local overrides (not tracked)
